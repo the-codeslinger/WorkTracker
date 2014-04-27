@@ -2,9 +2,12 @@
 #define WORKTASK_H
 
 #include "task.h"
-#include <QVector>
+#include <QList>
 #include <QTime>
 #include <QPair>
+
+class QDomNode;
+class QDomDocument;
 
 class WorkTask
 {
@@ -18,10 +21,18 @@ public:
 
     int totalTime() const;
 
+    bool isNull() const;
+
 private:
     Task  m_task;
     QTime m_start;
     QTime m_stop;
+
+    friend class WorkDay;
+
+    static QList<WorkTask> fromDomNode(QDomNode* node, QDomDocument* dataSource);
+    static int idFromAttr(QDomNode* attr);
+    static QTime timeFromAttr(QDomNode* attr);
 };
 
 #endif // WORKTASK_H

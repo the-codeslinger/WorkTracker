@@ -33,6 +33,7 @@ private:
     QDate   m_lastUsed;
 
     friend class TaskList;
+    friend class WorkDay;
 
     Task(int id, QString name, QDate lastUsed);
 

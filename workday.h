@@ -4,7 +4,7 @@
 #include "worktask.h"
 
 #include <QDate>
-#include <QVector>
+#include <QList>
 #include <QDomElement>
 
 class QDomDocument;
@@ -26,12 +26,14 @@ public:
 
 private:
     QDate m_day;
-    QVector<WorkTask> m_tasks;
+    QList<WorkTask> m_tasks;
 
     friend class WorkDayList;
 
     QDomElement createElement(QDomDocument* dataSource) const;
     QDomElement findTask(QDomElement* day, int id) const;
+
+    static WorkDay fromDomNode(QDomNode* node, QDomDocument* dataSource);
 };
 
 #endif // WORKDAY_H

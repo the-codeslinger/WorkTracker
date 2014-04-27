@@ -125,10 +125,41 @@ WorkDay::generateSummary() const
     QMapIterator<QString, int> iter(durations);
     while (iter.hasNext()) {
         auto item = iter.next();
-        html << "<li><i>" << item.key() << "</i>: " << item.value() << "</li>";
+
+        float hours = item.value() / 60.0f;
+
+        html << "<li><i>" << item.key() << "</i>: ";
+        html << hours << " h (" << item.value() << " min)";
+        html << "</li>";
     }
 
     html << "</ul></body></html>";
 
     return value;
+}
+
+WorkDay
+WorkDay::fromDomNode(QDomNode* node, QDomDocument* dataSource)
+{
+    QDomNamedNodeMap attributes = node->attributes();
+    QDomAttr dateAttr = attributes.namedItem("date").toAttr();
+    if (dateAttr.isNull()) {
+        return WorkDay();
+    }
+
+    QDate date = QDate::fromString(dateAttr.value(), Qt::ISODate);
+    WorkDay day(date);
+
+    QDomNodeList children = node->childNodes();
+
+    int count = children.count();
+    for (int c = 0; c < count; c++) {
+        QDomNode taskNode = children.item(c);
+        if (!taskNode.isNull()) {
+            QList<WorkTask> tasks = WorkTask::fromDomNode(&taskNode, dataSource);
+            day.m_tasks.append(tasks);
+        }
+    }
+
+    return day;
 }

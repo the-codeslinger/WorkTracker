@@ -26,9 +26,10 @@ public:
 public slots:
     void taskSelected();
     void toggleTask();
+    void toggleWorkday();
     void showAnimationFinished();
-    void startWorkday();
     void showSummary();
+    void hideSummary();
 
 private:
     Ui::WorkTracker *ui;
@@ -43,10 +44,12 @@ private:
     WorkDayList    m_workdays;
 
     bool m_isRecording;
+    bool m_isNewWorkDay;
     QTime m_taskStart;
 
     QPropertyAnimation showAnimation;
     QPropertyAnimation hideAnimation;
+    QWidget* m_animatedWidget;
 
     void toggleInput();
 };

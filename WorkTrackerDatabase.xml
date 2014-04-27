@@ -9,7 +9,12 @@
         <item id="3" last_used="2013-04-16" name="schneedl"/>
     </tasks>
 
-    <workdays>
-    </workdays>
+  <workdays>
+    <day date="2014-04-27">
+      <task id="1">
+        <time start="16:29:20" stop="16:29:24"/>
+      </task>
+    </day>
+  </workdays>
 
 </worktrackerdatabase>

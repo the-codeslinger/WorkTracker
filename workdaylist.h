@@ -15,6 +15,7 @@ public:
     void setDataSource(QDomDocument* dataSource);
 
     bool addWorkDay(WorkDay wday);
+    WorkDay findToday() /* const */;
 
 private:
     QDomDocument* m_dataSource;
