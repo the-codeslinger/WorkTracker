@@ -1,0 +1,15 @@
+<worktrackerdatabase>
+
+    <version>1.0</version>
+
+    <tasks>
+        <item id="0" name="f00" last_used="2014-04-12"/>
+        <item id="1" name="n00dl" last_used="2012-04-12" />
+        <item id="2" name="p00dl" last_used="2013-04-12" />
+        <item id="3" last_used="2013-04-16" name="schneedl"/>
+    </tasks>
+
+    <workdays>
+    </workdays>
+
+</worktrackerdatabase>
