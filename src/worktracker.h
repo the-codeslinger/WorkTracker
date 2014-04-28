@@ -1,9 +1,10 @@
 #ifndef WORKTRACKER_H
 #define WORKTRACKER_H
 
-#include "tasklistmodel.h"
-#include "workday.h"
-#include "workdaylist.h"
+#include "model/ui/tasklistmodel.h"
+#include "model/workday.h"
+#include "model/workdaylist.h"
+#include "controller/worktrackercontroller.h"
 
 #include <QMainWindow>
 #include <QDomDocument>
@@ -32,24 +33,24 @@ public slots:
     void hideSummary();
 
 private:
-    Ui::WorkTracker *ui;
-    QLabel* m_statusDay;
-    QLabel* m_statusRecording;
+    Ui::WorkTracker* ui;
+    TaskListModel*   m_taskModel;
+    QLabel*          m_statusDay;
+    QLabel*          m_statusRecording;
+
+    QWidget*           m_animatedWidget;
+    QPropertyAnimation m_showAnimation;
+    QPropertyAnimation m_hideAnimation;
 
     QDomDocument m_xml;
+    WorkTrackerController m_controller;
 
-    TaskList       m_tasks;
-    TaskListModel* m_taskModel;
     WorkDay        m_workday;
     WorkDayList    m_workdays;
 
     bool m_isRecording;
     bool m_isNewWorkDay;
     QTime m_taskStart;
-
-    QPropertyAnimation showAnimation;
-    QPropertyAnimation hideAnimation;
-    QWidget* m_animatedWidget;
 
     void toggleInput();
 };

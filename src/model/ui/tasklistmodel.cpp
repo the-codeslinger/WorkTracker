@@ -1,14 +1,14 @@
 #include "tasklistmodel.h"
-#include "tasklist.h"
+#include "../task.h"
 
 #include <QDomElement>
 #include <QDomNamedNodeMap>
 #include <QDate>
 #include <QDebug>
 
-TaskListModel::TaskListModel(TaskList* tasks, QObject* parent)
+TaskListModel::TaskListModel(QDomDocument* dataSource, QObject* parent)
     : QAbstractListModel(parent)
-    , m_tasks(tasks)
+    , m_dataSource(dataSource)
 {
 }
 
@@ -16,7 +16,7 @@ int
 TaskListModel::rowCount(const QModelIndex&) const
 {
     // We don't have child-parent relationships, thus we can omit the parameter
-    return m_tasks->count();
+    return Task::count(m_dataSource);
 }
 
 QVariant
@@ -28,7 +28,7 @@ TaskListModel::data(const QModelIndex& index, int role) const
 
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
 
-        Task item = m_tasks->itemById(index.row());
+        Task item = Task::get(index.row(), m_dataSource);
         if (item.isNull()) {
             return QVariant();
         }
@@ -56,22 +56,10 @@ TaskListModel::headerData(int , Qt::Orientation, int) const
     return QVariant("Tasks");
 }
 
-bool
-TaskListModel::appendItem(const QString& value)
+void
+TaskListModel::itemAppended()
 {
     int position = rowCount();
     beginInsertRows(QModelIndex(), position, position + 1);
-
-    // Find the item before inserting
-    Task item = m_tasks->itemByName(value);
-    if (!item.isNull()) {
-        // If we already know the value we can quit this
-        endInsertRows();
-        return false;
-    }
-
-    m_tasks->addItem(Task(value, QDate::currentDate()));
-
     endInsertRows();
-    return true;
 }

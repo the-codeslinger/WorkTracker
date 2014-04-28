@@ -12,21 +12,21 @@ TARGET = WorkTracker
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        worktracker.cpp \
-    tasklistmodel.cpp \
-    task.cpp \
-    tasklist.cpp \
-    worktask.cpp \
-    workday.cpp \
-    workdaylist.cpp
+SOURCES += src/main.cpp\
+        src/worktracker.cpp \
+    src/model/ui/tasklistmodel.cpp \
+    src/model/task.cpp \
+    src/model/worktask.cpp \
+    src/model/workday.cpp \
+    src/model/workdaylist.cpp \
+    src/controller/worktrackercontroller.cpp
 
-HEADERS  += worktracker.h \
-    tasklistmodel.h \
-    task.h \
-    tasklist.h \
-    worktask.h \
-    workday.h \
-    workdaylist.h
+HEADERS  += src/worktracker.h \
+    src/model/ui/tasklistmodel.h \
+    src/model/task.h \
+    src/model/worktask.h \
+    src/model/workday.h \
+    src/model/workdaylist.h \
+    src/controller/worktrackercontroller.h
 
-FORMS    += worktracker.ui
+FORMS    += ui/worktracker.ui

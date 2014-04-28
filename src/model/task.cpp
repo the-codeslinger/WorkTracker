@@ -1,6 +1,9 @@
 #include "task.h"
 
 #include <QDomDocument>
+#include <QDomNode>
+#include <QDomNodeList>
+#include <QDomElement>
 
 int Task::invalidId = -1;
 
@@ -66,7 +69,7 @@ Task::isNull() const
 }
 
 QDomElement
-Task::createElement(int id, QDomDocument* dataSource)
+Task::createElement(int id, QDomDocument* dataSource) const
 {
     QDomElement elem = dataSource->createElement("item");
     elem.setAttribute("id",        id);
@@ -74,6 +77,8 @@ Task::createElement(int id, QDomDocument* dataSource)
     elem.setAttribute("name",      m_name);
     return elem;
 }
+
+/* * * * * * * * * * * * static methods * * * * * * * * * * * */
 
 Task
 Task::fromDomNode(QDomNode* node)
@@ -86,6 +91,49 @@ Task::fromDomNode(QDomNode* node)
 
 
     return Task(id, name, lastUsed);
+}
+
+Task
+Task::get(int id, QDomDocument* dataSource)
+{
+    return findTask(dataSource, [id](Task task) {
+        return task.id() == id;
+    });
+}
+
+
+Task
+Task::findByName(QString name, QDomDocument* dataSource)
+{
+    return findTask(dataSource, [name](Task task) {
+        return task.name() == name;
+    });
+}
+
+QList<Task>
+Task::list(QDomDocument* dataSource)
+{
+    QList<Task> tasks;
+
+    QDomNodeList children = getTaskNodes(dataSource);
+    int count = children.count();
+    for (int c = 0; c < count; c++) {
+        QDomNode node = children.item(c);
+        if (node.isNull()) {
+            continue;
+        }
+
+        tasks.append(Task::fromDomNode(&node));
+    }
+
+    return tasks;
+}
+
+int
+Task::count(QDomDocument* dataSource)
+{
+    QDomNodeList children = getTaskNodes(dataSource);
+    return children.count();
 }
 
 int
@@ -125,4 +173,40 @@ Task::lastUsedFromAttr(QDomNode* attr)
     }
 
     return QDate::fromString(a.value(), Qt::ISODate);
+}
+
+Task
+Task::findTask(QDomDocument* dataSource, std::function<bool(Task)> predicate)
+{
+    QDomNodeList children = getTaskNodes(dataSource);
+    int count = children.count();
+    for (int c = 0; c < count; c++) {
+        QDomNode node = children.item(c);
+        if (node.isNull()) {
+            continue;
+        }
+
+        Task item = Task::fromDomNode(&node);
+        if (predicate(item)) {
+            return item;
+        }
+    }
+
+    return Task();
+}
+
+QDomNodeList
+Task::getTaskNodes(QDomDocument* dataSource)
+{
+    QDomElement root  = dataSource->documentElement();
+    if (root.isNull()) {
+        return QDomNodeList();
+    }
+
+    QDomNode tasks = root.firstChildElement("tasks");
+    if (tasks.isNull()) {
+        return QDomNodeList();
+    }
+
+    return tasks.childNodes();
 }

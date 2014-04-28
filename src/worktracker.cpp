@@ -1,6 +1,7 @@
 #include "worktracker.h"
 #include "ui_worktracker.h"
-#include "worktask.h"
+#include "model/worktask.h"
+#include "model/task.h"
 
 #include <QFile>
 #include <QDebug>
@@ -23,13 +24,13 @@ WorkTracker::WorkTracker(QWidget *parent)
 {
     ui->setupUi(this);
 
-    showAnimation.setTargetObject(this);
-    showAnimation.setPropertyName("size");
-    showAnimation.setDuration(200);
+    m_showAnimation.setTargetObject(this);
+    m_showAnimation.setPropertyName("size");
+    m_showAnimation.setDuration(200);
 
-    hideAnimation.setTargetObject(this);
-    hideAnimation.setPropertyName("size");
-    hideAnimation.setDuration(200);
+    m_hideAnimation.setTargetObject(this);
+    m_hideAnimation.setPropertyName("size");
+    m_hideAnimation.setDuration(200);
 
     ui->frame->setVisible(false);
     ui->webView->setVisible(false);
@@ -62,7 +63,8 @@ WorkTracker::WorkTracker(QWidget *parent)
     }
     xmlFile.close();
 
-    m_tasks.setDataSource(&m_xml);
+    m_controller.setDataSource(&m_xml);
+
     m_workdays.setDataSource(&m_xml);
     m_workday = m_workdays.findToday();
     if (!m_workday.isNull()) {
@@ -70,7 +72,7 @@ WorkTracker::WorkTracker(QWidget *parent)
     }
 
     // For the completer
-    m_taskModel = new TaskListModel(&m_tasks, this);
+    m_taskModel = new TaskListModel(&m_xml, this);
 
     QCompleter *completer = new QCompleter(this);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
@@ -82,7 +84,7 @@ WorkTracker::WorkTracker(QWidget *parent)
     connect(ui->taskButton,       SIGNAL(clicked()),  this, SLOT(toggleTask()));
     connect(ui->workdayButton,    SIGNAL(clicked()),  this, SLOT(toggleWorkday()));
     connect(ui->summaryButton,    SIGNAL(clicked()),  this, SLOT(showSummary()));
-    connect(&showAnimation,       SIGNAL(finished()), this, SLOT(showAnimationFinished()));
+    connect(&m_showAnimation,       SIGNAL(finished()), this, SLOT(showAnimationFinished()));
 }
 
 WorkTracker::~WorkTracker()
@@ -113,11 +115,13 @@ WorkTracker::taskSelected()
 
     toggleInput();
 
-    m_taskModel->appendItem(taskName);
+    m_controller.addTask(taskName);
+    m_taskModel->itemAppended();
+
     ui->taskButton->setEnabled(true);
     ui->summaryButton->setEnabled(true);
 
-    Task task = m_tasks.itemByName(taskName);
+    Task task = Task::findByName(taskName, &m_xml);
     m_workday.addTask(WorkTask(task, m_taskStart, QTime::currentTime()));
 }
 
@@ -159,20 +163,20 @@ WorkTracker::toggleInput()
         ui->frame->setVisible(false);
 
         QSize size = this->size();
-        hideAnimation.setStartValue(size);
+        m_hideAnimation.setStartValue(size);
 
         size.setHeight(size.height() - height);
-        hideAnimation.setEndValue(size);
-        hideAnimation.start();
+        m_hideAnimation.setEndValue(size);
+        m_hideAnimation.start();
     }
     else {
         // Expand the window so there's room to display the frame for the task input.
         QSize size = this->size();
-        showAnimation.setStartValue(size);
+        m_showAnimation.setStartValue(size);
 
         size.setHeight(size.height() + height);
-        showAnimation.setEndValue(size);
-        showAnimation.start();
+        m_showAnimation.setEndValue(size);
+        m_showAnimation.start();
         m_animatedWidget = ui->frame;
     }
 }
@@ -229,12 +233,12 @@ WorkTracker::showSummary()
         ui->webView->setHtml(html);
 
         QSize size = this->size();
-        showAnimation.setStartValue(size);
+        m_showAnimation.setStartValue(size);
 
         int height = ui->webView->page()->mainFrame()->contentsSize().height();
         size.setHeight(size.height() + height);
-        showAnimation.setEndValue(size);
-        showAnimation.start();
+        m_showAnimation.setEndValue(size);
+        m_showAnimation.start();
         m_animatedWidget = ui->webView;
     }
 }
@@ -245,9 +249,9 @@ WorkTracker::hideSummary()
     ui->webView->setVisible(false);
 
     QSize size = this->size();
-    hideAnimation.setStartValue(size);
+    m_hideAnimation.setStartValue(size);
 
     size.setHeight(size.height() - ui->webView->height());
-    hideAnimation.setEndValue(size);
-    hideAnimation.start();
+    m_hideAnimation.setEndValue(size);
+    m_hideAnimation.start();
 }

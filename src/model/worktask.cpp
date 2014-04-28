@@ -1,6 +1,6 @@
 #include "worktask.h"
 #include "task.h"
-#include "tasklist.h"
+//#include "tasklist.h"
 
 #include <QDomNode>
 #include <QDomNodeList>
@@ -56,8 +56,7 @@ WorkTask::fromDomNode(QDomNode* node, QDomDocument* dataSource)
         return QList<WorkTask>();
     }
 
-    TaskList tasks(dataSource);
-    Task task = tasks.itemById(id);
+    Task task = Task::get(id, dataSource);
     if (task.isNull()) {
         return QList<WorkTask>();
     }

@@ -1,8 +1,6 @@
 #ifndef TASKLISTMODEL_H
 #define TASKLISTMODEL_H
 
-#include "tasklist.h"
-
 #include <QAbstractListModel>
 #include <QModelIndex>
 #include <QVariant>
@@ -12,9 +10,9 @@ class QDomDocument;
 class TaskListModel : public QAbstractListModel
 {
 public:
-    TaskListModel(TaskList* tasks, QObject* parent = nullptr);
+    TaskListModel(QDomDocument* dataSource, QObject* parent = nullptr);
 
-    bool appendItem(const QString& value);
+    void itemAppended();
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
@@ -23,7 +21,7 @@ public:
                         int role = Qt::DisplayRole) const;
 
 private:
-    TaskList* m_tasks;
+    QDomDocument* m_dataSource;
 
 };
 
