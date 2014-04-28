@@ -6,3 +6,5 @@ Track units of work throughout the day. Provides a simple interface to measure t
 This is very much still work in progress and UI, especially animation and state, need more testing and bugfixing through chaos-tests. The basic functionality is in the application and working. 
 
 Requires basically a complete Qt 5.2 installation's library files. More polish to come!
+
+![Main UI](https://raw.github.com/drunk-on-pain/WorkTracker/master/img/main_ui.png)
