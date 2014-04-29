@@ -2,12 +2,8 @@
 #define WORKTRACKER_H
 
 #include "model/ui/tasklistmodel.h"
-#include "model/workday.h"
-#include "model/workdaylist.h"
-#include "controller/worktrackercontroller.h"
 
 #include <QMainWindow>
-#include <QDomDocument>
 #include <QPropertyAnimation>
 
 namespace Ui {
@@ -15,19 +11,20 @@ namespace Ui {
 }
 
 class QLabel;
+class WorkTrackerController;
 
 class WorkTracker : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit WorkTracker(QWidget *parent = 0);
+    explicit WorkTracker(WorkTrackerController* controller, QWidget *parent = 0);
     ~WorkTracker();
 
 public slots:
     void taskSelected();
     void toggleTask();
-    void toggleWorkday();
+    void toggleWorkday(bool startNewWorkDay = true);
     void showAnimationFinished();
     void showSummary();
     void hideSummary();
@@ -42,15 +39,10 @@ private:
     QPropertyAnimation m_showAnimation;
     QPropertyAnimation m_hideAnimation;
 
-    QDomDocument m_xml;
-    WorkTrackerController m_controller;
-
-    WorkDay        m_workday;
-    WorkDayList    m_workdays;
+    WorkTrackerController* m_controller;
 
     bool m_isRecording;
     bool m_isNewWorkDay;
-    QTime m_taskStart;
 
     void toggleInput();
 };

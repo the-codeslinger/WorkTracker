@@ -2,6 +2,7 @@
 #include "ui_worktracker.h"
 #include "model/worktask.h"
 #include "model/task.h"
+#include "controller/worktrackercontroller.h"
 
 #include <QFile>
 #include <QDebug>
@@ -16,11 +17,12 @@
 #include <QWebFrame>
 #include <QDir>
 
-WorkTracker::WorkTracker(QWidget *parent)
+WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::WorkTracker)
     , m_isRecording(false)
     , m_isNewWorkDay(false)
+    , m_controller(controller)
 {
     ui->setupUi(this);
 
@@ -43,36 +45,9 @@ WorkTracker::WorkTracker(QWidget *parent)
     this->resize(this->width(), this->height() - ui->frame->height()
                                                - ui->webView->height());
 
-    QFile xmlFile(QDir::currentPath() + "/WorkTrackerDatabase.xml");
-    if (!m_xml.setContent(&xmlFile)) {
-        qDebug() << "Unable to load database, create empty";
-
-        QDomNode xmlNode = m_xml.createProcessingInstruction(
-                    "xml", "version=\"1.0\" encoding=\"UTF-8\"");
-        m_xml.appendChild(xmlNode);
-
-        QDomElement root = m_xml.createElement("worktracker");
-        m_xml.appendChild(root);
-
-        QDomElement version = m_xml.createElement("version");
-        version.appendChild(m_xml.createTextNode("1.0"));
-        root.appendChild(version);
-
-        root.appendChild(m_xml.createElement("tasks"));
-        root.appendChild(m_xml.createElement("workdays"));
-    }
-    xmlFile.close();
-
-    m_controller.setDataSource(&m_xml);
-
-    m_workdays.setDataSource(&m_xml);
-    m_workday = m_workdays.findToday();
-    if (!m_workday.isNull()) {
-        toggleWorkday();
-    }
-
     // For the completer
-    m_taskModel = new TaskListModel(&m_xml, this);
+    m_taskModel = m_controller->createUiModel();
+    m_taskModel->setParent(this);
 
     QCompleter *completer = new QCompleter(this);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
@@ -80,28 +55,20 @@ WorkTracker::WorkTracker(QWidget *parent)
     completer->setModel(m_taskModel);
     ui->tasksEdit->setCompleter(completer);
 
+    if (m_controller->isRunningWorkDay()) {
+        toggleWorkday(false);
+    }
+
     connect(ui->selectTaskButton, SIGNAL(clicked()),  this, SLOT(taskSelected()));
     connect(ui->taskButton,       SIGNAL(clicked()),  this, SLOT(toggleTask()));
     connect(ui->workdayButton,    SIGNAL(clicked()),  this, SLOT(toggleWorkday()));
     connect(ui->summaryButton,    SIGNAL(clicked()),  this, SLOT(showSummary()));
-    connect(&m_showAnimation,       SIGNAL(finished()), this, SLOT(showAnimationFinished()));
+    connect(&m_showAnimation,     SIGNAL(finished()), this, SLOT(showAnimationFinished()));
 }
 
 WorkTracker::~WorkTracker()
 {
     delete ui;
-
-    if (!m_workday.isNull()) {
-        m_workdays.addWorkDay(m_workday);
-    }
-
-    QFile xmlFile(QDir::currentPath() + "/WorkTrackerDatabase.xml");
-    xmlFile.open(QIODevice::WriteOnly);
-
-    QTextStream out(&xmlFile);
-    out.setCodec("UTF-8");
-    m_xml.save(out, 2, QDomNode::EncodingFromTextStream);
-    xmlFile.close();
 }
 
 void
@@ -115,19 +82,19 @@ WorkTracker::taskSelected()
 
     toggleInput();
 
-    m_controller.addTask(taskName);
-    m_taskModel->itemAppended();
+    if (m_controller->stopWorkTask(taskName)) {
+        m_taskModel->itemAppended();
+    }
 
     ui->taskButton->setEnabled(true);
     ui->summaryButton->setEnabled(true);
-
-    Task task = Task::findByName(taskName, &m_xml);
-    m_workday.addTask(WorkTask(task, m_taskStart, QTime::currentTime()));
 }
 
 void
 WorkTracker::toggleTask()
 {
+    QTime now = QTime::currentTime();
+
     if (m_isRecording) {
         ui->taskButton->setText(tr("Start &Task"));
         ui->taskButton->setEnabled(false);
@@ -135,17 +102,17 @@ WorkTracker::toggleTask()
         toggleInput();
 
         m_statusRecording->setText(tr("Task stopped at %1")
-                                   .arg(m_taskStart.toString(Qt::TextDate)));
+                                   .arg(now.toString(Qt::TextDate)));
     }
     else {
         hideSummary();
         ui->workdayButton->setEnabled(false);
 
         ui->taskButton->setText(tr("Stop &Task"));
-        m_taskStart = QTime::currentTime();
+        m_controller->startWorkTask();
 
         m_statusRecording->setText(tr("Task started at %1")
-                                   .arg(m_taskStart.toString(Qt::TextDate)));
+                                   .arg(now.toString(Qt::TextDate)));
     }
 
     m_isRecording = !m_isRecording;
@@ -191,7 +158,7 @@ WorkTracker::showAnimationFinished()
 }
 
 void
-WorkTracker::toggleWorkday()
+WorkTracker::toggleWorkday(bool startNewWorkDay)
 {
     QString date = QDateTime::currentDateTime().toString(Qt::TextDate);
 
@@ -199,7 +166,9 @@ WorkTracker::toggleWorkday()
         // Start Workday was clicked
         hideSummary();
 
-        m_workday.setDay(QDate::currentDate());
+        if (startNewWorkDay) {
+            m_controller->startWorkDay();
+        }
 
         m_statusDay->setText(tr("Work started at %1").arg(date));
 
@@ -212,12 +181,9 @@ WorkTracker::toggleWorkday()
 
         ui->workdayButton->setText(tr("Start New Workday"));
         ui->taskButton->setEnabled(false);
-        ui->summaryButton->setEnabled(!m_workday.isNull() && !ui->webView->isVisible());
+        ui->summaryButton->setEnabled(!ui->webView->isVisible());
 
-        if (!m_workday.isNull()) {
-            m_workdays.addWorkDay(m_workday);
-            m_workday.clear();
-        }
+        m_controller->stopWorkDay();
     }
 
     m_isNewWorkDay = !m_isNewWorkDay;
@@ -229,7 +195,7 @@ WorkTracker::showSummary()
     ui->summaryButton->setEnabled(false);
 
     if (!ui->webView->isVisible()) {
-        QString html = m_workday.generateSummary();
+        QString html = m_controller->generateSummary();
         ui->webView->setHtml(html);
 
         QSize size = this->size();

@@ -30,8 +30,9 @@ public:
     void setLastUsed(const QDate& lastUsed);
 
     bool isNull() const;
+    void clear();
 
-    QDomElement createElement(int id, QDomDocument* dataSource) const;
+    QDomElement createElement(QDomDocument* dataSource) const;
 
     // Used to fetch from the data source
     static Task fromDomNode(QDomNode* node);

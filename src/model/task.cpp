@@ -68,11 +68,19 @@ Task::isNull() const
     return Task::invalidId == m_id;
 }
 
+void
+Task::clear()
+{
+    m_id   = Task::invalidId;
+    m_name = "";
+    m_lastUsed.setDate(0, 0, 0);
+}
+
 QDomElement
-Task::createElement(int id, QDomDocument* dataSource) const
+Task::createElement(QDomDocument* dataSource) const
 {
     QDomElement elem = dataSource->createElement("item");
-    elem.setAttribute("id",        id);
+    elem.setAttribute("id",        m_id);
     elem.setAttribute("last_used", m_lastUsed.toString(Qt::ISODate));
     elem.setAttribute("name",      m_name);
     return elem;

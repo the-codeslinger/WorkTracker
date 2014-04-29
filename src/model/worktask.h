@@ -22,6 +22,7 @@ public:
     int totalTime() const;
 
     bool isNull() const;
+    void clear();
 
 private:
     Task  m_task;

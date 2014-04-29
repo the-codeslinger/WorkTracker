@@ -47,6 +47,14 @@ WorkTask::isNull() const
     return m_task.isNull();
 }
 
+void
+WorkTask::clear()
+{
+    m_task.clear();
+    m_start.setHMS(0, 0, 0);
+    m_stop.setHMS(0, 0, 0);
+}
+
 QList<WorkTask>
 WorkTask::fromDomNode(QDomNode* node, QDomDocument* dataSource)
 {
