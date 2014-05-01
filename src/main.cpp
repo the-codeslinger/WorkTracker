@@ -53,7 +53,8 @@ int main(int argc, char *argv[])
 
     WorkTrackerController controller(&dataSource);
     WorkTracker w(&controller);
-    w.show();
+    controller.setUi(&w);
+    controller.run();
 
     int result = a.exec();
 

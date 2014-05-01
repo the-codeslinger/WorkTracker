@@ -10,7 +10,7 @@ WorkTask::WorkTask()
 {
 }
 
-WorkTask::WorkTask(Task task, QTime start, QTime stop)
+WorkTask::WorkTask(Task task, QDateTime start, QDateTime stop)
     : m_task(task)
     , m_start(start)
     , m_stop(stop)
@@ -23,16 +23,34 @@ WorkTask::task() const
     return m_task;
 }
 
-QTime
+void
+WorkTask::setTask(Task task)
+{
+    m_task = task;
+}
+
+QDateTime
 WorkTask::start() const
 {
     return m_start;
 }
 
-QTime
+void
+WorkTask::setStart(QDateTime start)
+{
+    m_start = start;
+}
+
+QDateTime
 WorkTask::stop() const
 {
     return m_stop;
+}
+
+void
+WorkTask::setStop(QDateTime stop)
+{
+    m_stop = stop;
 }
 
 int
@@ -51,8 +69,8 @@ void
 WorkTask::clear()
 {
     m_task.clear();
-    m_start.setHMS(0, 0, 0);
-    m_stop.setHMS(0, 0, 0);
+    m_start = QDateTime();
+    m_stop  = QDateTime();
 }
 
 QList<WorkTask>
@@ -82,10 +100,10 @@ WorkTask::fromDomNode(QDomNode* node, QDomDocument* dataSource)
         attributes = timeNode.attributes();
 
         attrNode = attributes.namedItem("start");
-        QTime start = timeFromAttr(&attrNode);
+        QDateTime start = timestampFromAttr(&attrNode);
 
         attrNode = attributes.namedItem("stop");
-        QTime stop  = timeFromAttr(&attrNode);
+        QDateTime stop  = timestampFromAttr(&attrNode);
 
         if (start.isValid() && stop.isValid()) {
             workTasks.append(WorkTask(task, start, stop));
@@ -95,17 +113,16 @@ WorkTask::fromDomNode(QDomNode* node, QDomDocument* dataSource)
     return workTasks;
 }
 
-QTime
-WorkTask::timeFromAttr(QDomNode* attr)
+QDateTime
+WorkTask::timestampFromAttr(QDomNode* attr)
 {
     QDomAttr a = attr->toAttr();
     if (a.isNull()) {
-        return QTime();
+        return QDateTime();
     }
 
-    return QTime::fromString(a.value(), Qt::TextDate);
+    return QDateTime::fromString(a.value(), Qt::ISODate);
 }
-
 
 int
 WorkTask::idFromAttr(QDomNode* attr)

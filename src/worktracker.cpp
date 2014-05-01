@@ -19,9 +19,8 @@
 WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::WorkTracker)
-    , m_isRecording(false)
-    , m_isNewWorkDay(false)
     , m_controller(controller)
+    , m_collapsedHeight(0)
 {
     ui->setupUi(this);
 
@@ -48,32 +47,39 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     int width = this->width();
     this->adjustSize();
     this->resize(width, this->height());
-
-
-    // For the completer
-    m_taskModel = m_controller->createUiModel();
-    m_taskModel->setParent(this);
+    m_collapsedHeight = this->height();
 
     QCompleter *completer = new QCompleter(this);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setFilterMode(Qt::MatchContains);
-    completer->setModel(m_taskModel);
     ui->tasksEdit->setCompleter(completer);
 
-    if (m_controller->isRunningWorkDay()) {
-        toggleWorkday(false);
-    }
+    connect(ui->workdayButton,    SIGNAL(clicked()),  m_controller, SLOT(toggleWorkDay()));
+    connect(ui->selectTaskButton, SIGNAL(clicked()),  this,         SLOT(taskSelected()));
+    connect(ui->taskButton,       SIGNAL(clicked()),  this,         SLOT(showInput()));
+    connect(ui->summaryButton,    SIGNAL(clicked()),  this,         SLOT(showSummary()));
+    connect(&m_showAnimation,     SIGNAL(finished()), this,         SLOT(showAnimationFinished()));
 
-    connect(ui->selectTaskButton, SIGNAL(clicked()),  this, SLOT(taskSelected()));
-    connect(ui->taskButton,       SIGNAL(clicked()),  this, SLOT(toggleTask()));
-    connect(ui->workdayButton,    SIGNAL(clicked()),  this, SLOT(toggleWorkday()));
-    connect(ui->summaryButton,    SIGNAL(clicked()),  this, SLOT(showSummary()));
-    connect(&m_showAnimation,     SIGNAL(finished()), this, SLOT(showAnimationFinished()));
+    connect(m_controller, SIGNAL(workDayStarted(QDateTime)),
+            this,         SLOT(workDayStarted(QDateTime)));
+    connect(m_controller, SIGNAL(workDayStopped(QDateTime)),
+            this,         SLOT(workDayStopped(QDateTime)));
+    connect(m_controller, SIGNAL(workTaskStarted(QDateTime, QString)),
+            this,         SLOT(workTaskStarted(QDateTime, QString)));
+    connect(m_controller, SIGNAL(workTaskStopped(QDateTime, QString)),
+            this,         SLOT(workTaskStopped(QDateTime, QString)));
 }
 
 WorkTracker::~WorkTracker()
 {
     delete ui;
+}
+
+void
+WorkTracker::setTaskListModel(TaskListModel* model)
+{
+    ui->tasksEdit->completer()->setModel(model);
+    m_taskModel = model;
 }
 
 void
@@ -85,72 +91,67 @@ WorkTracker::taskSelected()
         return;
     }
 
-    toggleInput();
-
-    if (m_controller->stopWorkTask(taskName)) {
-        m_taskModel->itemAppended();
-    }
+    m_controller->toggleTask(taskName);
 
     ui->taskButton->setEnabled(true);
     ui->summaryButton->setEnabled(true);
+
+    hideInput();
 }
 
 void
-WorkTracker::toggleTask()
+WorkTracker::workTaskStarted(QDateTime now, QString name)
 {
-    QTime now = QTime::currentTime();
+    QString dateString = now.toLocalTime().toString(Qt::TextDate);
 
-    if (m_isRecording) {
-        ui->taskButton->setText(tr("Start &Task"));
-        ui->taskButton->setEnabled(false);
-        ui->summaryButton->setEnabled(false);
-        toggleInput();
-
-        m_statusRecording->setText(tr("Task stopped at %1")
-                                   .arg(now.toString(Qt::TextDate)));
-    }
-    else {
-        hideSummary();
-        ui->workdayButton->setEnabled(false);
-
-        ui->taskButton->setText(tr("Stop &Task"));
-        m_controller->startWorkTask();
-
-        m_statusRecording->setText(tr("Task started at %1")
-                                   .arg(now.toString(Qt::TextDate)));
-    }
-
-    m_isRecording = !m_isRecording;
+    hideSummary();
+    ui->workdayButton->setEnabled(false);
+    ui->taskButton->setText(tr("Stop &Task"));
+    m_statusRecording->setText(tr("Task %1 started at %2")
+                               .arg(name)
+                               .arg(dateString));
 }
 
 void
-WorkTracker::toggleInput()
+WorkTracker::workTaskStopped(QDateTime now, QString name)
 {
-    int height = ui->frame->height();
+    QString dateString = now.toLocalTime().toString(Qt::TextDate);
 
-    if (!m_isRecording) {
-        ui->workdayButton->setEnabled(true);
+    hideSummary();
+    ui->workdayButton->setEnabled(true);
+    ui->taskButton->setText(tr("Start &Task"));
+    m_statusRecording->setText(tr("Task %1 stopped at %2")
+                               .arg(name)
+                               .arg(dateString));
+}
 
-        // Hide the frame and shrink the window
-        ui->frame->setVisible(false);
+void
+WorkTracker::showInput()
+{
+    ui->textEdit->setVisible(false);
+    ui->taskButton->setEnabled(false);
 
-        QSize size = this->size();
-        m_hideAnimation.setStartValue(size);
+    QSize size = this->size();
+    m_showAnimation.setStartValue(size);
 
-        size.setHeight(size.height() - height);
-        m_hideAnimation.setEndValue(size);
-        m_hideAnimation.start();
-    }
-    else {
-        // Expand the window so there's room to display the frame for the task input.
-        QSize size = this->size();
-        m_showAnimation.setStartValue(size);
+    size.setHeight(m_collapsedHeight + ui->frame->height());
+    m_showAnimation.setEndValue(size);
+    m_showAnimation.start();
+    m_animatedWidget = ui->frame;
+}
 
-        size.setHeight(size.height() + height);
-        m_showAnimation.setEndValue(size);
-        m_showAnimation.start();
-        m_animatedWidget = ui->frame;
-    }
+void
+WorkTracker::hideInput()
+{
+    // Hide the frame and shrink the window
+    ui->frame->setVisible(false);
+
+    QSize size = this->size();
+    m_hideAnimation.setStartValue(size);
+
+    size.setHeight(m_collapsedHeight);
+    m_hideAnimation.setEndValue(size);
+    m_hideAnimation.start();
 }
 
 void
@@ -163,35 +164,26 @@ WorkTracker::showAnimationFinished()
 }
 
 void
-WorkTracker::toggleWorkday(bool startNewWorkDay)
+WorkTracker::workDayStarted(QDateTime now)
 {
-    QString date = QDateTime::currentDateTime().toString(Qt::TextDate);
+    hideSummary();
 
-    if (!m_isNewWorkDay) {
-        // Start Workday was clicked
-        hideSummary();
+    QString dateString = now.toLocalTime().toString(Qt::TextDate);
+    m_statusDay->setText(tr("Working since %1").arg(dateString));
 
-        if (startNewWorkDay) {
-            m_controller->startWorkDay();
-        }
+    ui->workdayButton->setText(tr("Stop Workday"));
+    ui->taskButton->setEnabled(true);
+}
 
-        m_statusDay->setText(tr("Work started at %1").arg(date));
+void
+WorkTracker::workDayStopped(QDateTime now)
+{
+    QString dateString = now.toLocalTime().toString(Qt::TextDate);
+    m_statusDay->setText(tr("Work finished at %1").arg(dateString));
 
-        ui->workdayButton->setText(tr("Stop Workday"));
-        ui->taskButton->setEnabled(true);
-    }
-    else {
-        // Stop Workday was clicked
-        m_statusDay->setText(tr("Work stopped at %1").arg(date));
-
-        ui->workdayButton->setText(tr("Start New Workday"));
-        ui->taskButton->setEnabled(false);
-        ui->summaryButton->setEnabled(!ui->textEdit->isVisible());
-
-        m_controller->stopWorkDay();
-    }
-
-    m_isNewWorkDay = !m_isNewWorkDay;
+    ui->workdayButton->setText(tr("Start New Workday"));
+    ui->taskButton->setEnabled(false);
+    ui->summaryButton->setEnabled(!ui->textEdit->isVisible());
 }
 
 void
@@ -200,13 +192,15 @@ WorkTracker::showSummary()
     ui->summaryButton->setEnabled(false);
 
     if (!ui->textEdit->isVisible()) {
+        ui->frame->setVisible(false);
+
         QString html = m_controller->generateSummary();
         ui->textEdit->setHtml(html);
 
         QSize size = this->size();
         m_showAnimation.setStartValue(size);
 
-        size.setHeight(size.height() + ui->textEdit->height());
+        size.setHeight(m_collapsedHeight + ui->textEdit->height());
         m_showAnimation.setEndValue(size);
         m_showAnimation.start();
         m_animatedWidget = ui->textEdit;
@@ -222,7 +216,7 @@ WorkTracker::hideSummary()
         QSize size = this->size();
         m_hideAnimation.setStartValue(size);
 
-        size.setHeight(size.height() - ui->textEdit->height());
+        size.setHeight(m_collapsedHeight);
         m_hideAnimation.setEndValue(size);
         m_hideAnimation.start();
     }

@@ -3,7 +3,7 @@
 
 #include "worktask.h"
 
-#include <QDate>
+#include <QDateTime>
 #include <QList>
 #include <QDomElement>
 
@@ -13,10 +13,10 @@ class WorkDay
 {
 public:
     WorkDay();
-    WorkDay(QDate day);
+    WorkDay(QDateTime day);
 
-    QDate day() const;
-    void setDay(QDate day);
+    QDateTime started() const;
+    void setStarted(QDateTime started);
 
     void addTask(WorkTask task);
     void clear();
@@ -25,7 +25,7 @@ public:
     QString generateSummary() const;
 
 private:
-    QDate m_day;
+    QDateTime m_started;
     QList<WorkTask> m_tasks;
 
     friend class WorkDayList;

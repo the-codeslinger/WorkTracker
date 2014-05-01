@@ -3,7 +3,7 @@
 
 #include "task.h"
 #include <QList>
-#include <QTime>
+#include <QDateTime>
 #include <QPair>
 
 class QDomNode;
@@ -13,11 +13,16 @@ class WorkTask
 {
 public:
     WorkTask();
-    WorkTask(Task task, QTime start, QTime stop);
+    WorkTask(Task task, QDateTime start, QDateTime stop);
 
     Task task() const;
-    QTime start() const;
-    QTime stop() const;
+    void setTask(Task task);
+
+    QDateTime start() const;
+    void setStart(QDateTime start);
+
+    QDateTime stop() const;
+    void setStop(QDateTime stop);
 
     int totalTime() const;
 
@@ -25,15 +30,15 @@ public:
     void clear();
 
 private:
-    Task  m_task;
-    QTime m_start;
-    QTime m_stop;
+    Task      m_task;
+    QDateTime m_start;
+    QDateTime m_stop;
 
     friend class WorkDay;
 
     static QList<WorkTask> fromDomNode(QDomNode* node, QDomDocument* dataSource);
     static int idFromAttr(QDomNode* attr);
-    static QTime timeFromAttr(QDomNode* attr);
+    static QDateTime timestampFromAttr(QDomNode* attr);
 };
 
 #endif // WORKTASK_H

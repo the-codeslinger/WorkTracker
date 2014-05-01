@@ -8,21 +8,21 @@ WorkDay::WorkDay()
 {
 }
 
-WorkDay::WorkDay(QDate day)
-    : m_day(day)
+WorkDay::WorkDay(QDateTime started)
+    : m_started(started)
 {
 }
 
-QDate
-WorkDay::day() const
+QDateTime
+WorkDay::started() const
 {
-    return m_day;
+    return m_started;
 }
 
 void
-WorkDay::setDay(QDate day)
+WorkDay::setStarted(QDateTime started)
 {
-    m_day = day;
+    m_started = started;
 }
 
 void
@@ -34,25 +34,25 @@ WorkDay::addTask(WorkTask task)
 void
 WorkDay::clear()
 {
-    m_day.setDate(0, 0, 0);
+    m_started = QDateTime();
     m_tasks.clear();
 }
 
 bool
 WorkDay::isNull() const
 {
-    return m_day.isNull() && m_tasks.isEmpty();
+    return m_started.isNull() && m_tasks.isEmpty();
 }
 
 QDomElement
 WorkDay::createElement(QDomDocument* dataSource) const
 {
-    if (m_day.isNull()) {
+    if (m_started.isNull()) {
         return QDomElement();
     }
 
     QDomElement day = dataSource->createElement("day");
-    day.setAttribute("date", m_day.toString(Qt::ISODate));
+    day.setAttribute("start", m_started.toString(Qt::ISODate));
 
     for (WorkTask task : m_tasks) {
         QDomElement taskElem = findTask(&day, task.task().id());
@@ -63,8 +63,8 @@ WorkDay::createElement(QDomDocument* dataSource) const
         }
 
         QDomElement timeElem = dataSource->createElement("time");
-        timeElem.setAttribute("start", task.start().toString(Qt::TextDate));
-        timeElem.setAttribute("stop",  task.stop().toString(Qt::TextDate));
+        timeElem.setAttribute("start", task.start().toString(Qt::ISODate));
+        timeElem.setAttribute("stop",  task.stop().toString(Qt::ISODate));
 
         taskElem.appendChild(timeElem);
     }
@@ -142,13 +142,12 @@ WorkDay
 WorkDay::fromDomNode(QDomNode* node, QDomDocument* dataSource)
 {
     QDomNamedNodeMap attributes = node->attributes();
-    QDomAttr dateAttr = attributes.namedItem("date").toAttr();
+    QDomAttr dateAttr = attributes.namedItem("start").toAttr();
     if (dateAttr.isNull()) {
         return WorkDay();
     }
 
-    QDate date = QDate::fromString(dateAttr.value(), Qt::ISODate);
-    WorkDay day(date);
+    WorkDay day(QDateTime::fromString(dateAttr.value(), Qt::ISODate));
 
     QDomNodeList children = node->childNodes();
 

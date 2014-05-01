@@ -5,6 +5,7 @@
 
 #include <QMainWindow>
 #include <QPropertyAnimation>
+#include <QDateTime>
 
 namespace Ui {
     class WorkTracker;
@@ -16,18 +17,26 @@ class WorkTrackerController;
 class WorkTracker : public QMainWindow
 {
     Q_OBJECT
-
 public:
     explicit WorkTracker(WorkTrackerController* controller, QWidget *parent = 0);
     ~WorkTracker();
 
+    void setTaskListModel(TaskListModel* model);
+
 public slots:
+    void workDayStarted(QDateTime now);
+    void workDayStopped(QDateTime now);
+
+    void workTaskStarted(QDateTime now, QString name);
+    void workTaskStopped(QDateTime now, QString name);
+
+private slots:
     void taskSelected();
-    void toggleTask();
-    void toggleWorkday(bool startNewWorkDay = true);
     void showAnimationFinished();
     void showSummary();
     void hideSummary();
+    void showInput();
+    void hideInput();
 
 private:
     Ui::WorkTracker* ui;
@@ -41,10 +50,7 @@ private:
 
     WorkTrackerController* m_controller;
 
-    bool m_isRecording;
-    bool m_isNewWorkDay;
-
-    void toggleInput();
+    int m_collapsedHeight;
 };
 
 #endif // WORKTRACKER_H

@@ -1,5 +1,7 @@
 #include "workdaylist.h"
 
+#include <QDebug>
+
 WorkDayList::WorkDayList(QDomDocument* dataSource)
 {
     setDataSource(dataSource);
@@ -37,12 +39,12 @@ WorkDayList::findToday() /* const */
         QDomNode day = children.item(c);
 
         QDomNamedNodeMap attributes = day.attributes();
-        QDomAttr dateAttr = attributes.namedItem("date").toAttr();
+        QDomAttr dateAttr = attributes.namedItem("start").toAttr();
         if (!dateAttr.isNull()) {
-            QDate date  = QDate::fromString(dateAttr.value(), Qt::ISODate);
+            QDateTime started = QDateTime::fromString(dateAttr.value(), Qt::ISODate);
             QDate today = QDate::currentDate();
 
-            if (date == today) {
+            if (started.date() == today) {
                 m_days.removeChild(day); // Hack. Future versions should be able to merge
                                          // existing days with new in addWorkDay(). This
                                          // shall prevent duplicate days when closing the
