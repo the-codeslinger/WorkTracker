@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>454</width>
-    <height>152</height>
+    <height>223</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -130,13 +130,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QWebView" name="webView">
-      <property name="url">
-       <url>
-        <string>about:blank</string>
-       </url>
-      </property>
-     </widget>
+     <widget class="QTextEdit" name="textEdit"/>
     </item>
     <item>
      <spacer name="verticalSpacer">
@@ -157,7 +151,7 @@
    </layout>
    <zorder>frame</zorder>
    <zorder>verticalSpacer</zorder>
-   <zorder>webView</zorder>
+   <zorder>textEdit</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -184,13 +178,6 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <customwidgets>
-  <customwidget>
-   <class>QWebView</class>
-   <extends>QWidget</extends>
-   <header>QtWebKitWidgets/QWebView</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

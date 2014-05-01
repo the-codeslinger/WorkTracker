@@ -13,8 +13,7 @@
 #include <QTime>
 #include <QDateTime>
 #include <QLabel>
-#include <QWebView>
-#include <QWebFrame>
+#include <QTextEdit>
 #include <QDir>
 
 WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
@@ -35,15 +34,21 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     m_hideAnimation.setDuration(200);
 
     ui->frame->setVisible(false);
-    ui->webView->setVisible(false);
+    ui->textEdit->setVisible(false);
 
     m_statusDay       = new QLabel(tr("Waiting to start a new workday"), this);
     m_statusRecording = new QLabel(tr("Not recording anything yet"), this);
     ui->statusBar->addWidget(m_statusDay, 1);
     ui->statusBar->addWidget(m_statusRecording, 1);
 
-    this->resize(this->width(), this->height() - ui->frame->height()
-                                               - ui->webView->height());
+    // Capture the current width which is set by the designer. Then we resize the window
+    // to only take up as much space as is needed with the edit field and text edit not
+    // being visible. Since this also changes the width we restore it using the value
+    // saved earliert. Voila, our UI looks correct.
+    int width = this->width();
+    this->adjustSize();
+    this->resize(width, this->height());
+
 
     // For the completer
     m_taskModel = m_controller->createUiModel();
@@ -181,7 +186,7 @@ WorkTracker::toggleWorkday(bool startNewWorkDay)
 
         ui->workdayButton->setText(tr("Start New Workday"));
         ui->taskButton->setEnabled(false);
-        ui->summaryButton->setEnabled(!ui->webView->isVisible());
+        ui->summaryButton->setEnabled(!ui->textEdit->isVisible());
 
         m_controller->stopWorkDay();
     }
@@ -194,30 +199,31 @@ WorkTracker::showSummary()
 {
     ui->summaryButton->setEnabled(false);
 
-    if (!ui->webView->isVisible()) {
+    if (!ui->textEdit->isVisible()) {
         QString html = m_controller->generateSummary();
-        ui->webView->setHtml(html);
+        ui->textEdit->setHtml(html);
 
         QSize size = this->size();
         m_showAnimation.setStartValue(size);
 
-        int height = ui->webView->page()->mainFrame()->contentsSize().height();
-        size.setHeight(size.height() + height);
+        size.setHeight(size.height() + ui->textEdit->height());
         m_showAnimation.setEndValue(size);
         m_showAnimation.start();
-        m_animatedWidget = ui->webView;
+        m_animatedWidget = ui->textEdit;
     }
 }
 
 void
 WorkTracker::hideSummary()
 {
-    ui->webView->setVisible(false);
+    if (ui->textEdit->isVisible()) {
+        ui->textEdit->setVisible(false);
 
-    QSize size = this->size();
-    m_hideAnimation.setStartValue(size);
+        QSize size = this->size();
+        m_hideAnimation.setStartValue(size);
 
-    size.setHeight(size.height() - ui->webView->height());
-    m_hideAnimation.setEndValue(size);
-    m_hideAnimation.start();
+        size.setHeight(size.height() - ui->textEdit->height());
+        m_hideAnimation.setEndValue(size);
+        m_hideAnimation.start();
+    }
 }
