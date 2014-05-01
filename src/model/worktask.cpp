@@ -59,7 +59,9 @@ QList<WorkTask>
 WorkTask::fromDomNode(QDomNode* node, QDomDocument* dataSource)
 {
     QDomNamedNodeMap attributes = node->attributes();
-    int id = idFromAttr(&attributes.namedItem("id"));
+
+    QDomNode attrNode = attributes.namedItem("id");
+    int id = idFromAttr(&attrNode);
     if (Task::invalidId == id) {
         return QList<WorkTask>();
     }
@@ -79,8 +81,11 @@ WorkTask::fromDomNode(QDomNode* node, QDomDocument* dataSource)
         QDomNode timeNode = children.item(c);
         attributes = timeNode.attributes();
 
-        QTime start = timeFromAttr(&attributes.namedItem("start"));
-        QTime stop  = timeFromAttr(&attributes.namedItem("stop"));
+        attrNode = attributes.namedItem("start");
+        QTime start = timeFromAttr(&attrNode);
+
+        attrNode = attributes.namedItem("stop");
+        QTime stop  = timeFromAttr(&attrNode);
 
         if (start.isValid() && stop.isValid()) {
             workTasks.append(WorkTask(task, start, stop));

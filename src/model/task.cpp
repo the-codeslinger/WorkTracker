@@ -93,9 +93,14 @@ Task::fromDomNode(QDomNode* node)
 {
     QDomNamedNodeMap attrs = node->attributes();
 
-    int id = idFromAttr(&attrs.namedItem("id"));
-    QString name = nameFromAttr(&attrs.namedItem("name"));
-    QDate lastUsed = lastUsedFromAttr(&attrs.namedItem("last_used"));
+    QDomNode attrNode = attrs.namedItem("id");
+    int id = idFromAttr(&attrNode);
+
+    attrNode = attrs.namedItem("name");
+    QString name = nameFromAttr(&attrNode);
+
+    attrNode = attrs.namedItem("last_used");
+    QDate lastUsed = lastUsedFromAttr(&attrNode);
 
 
     return Task(id, name, lastUsed);
