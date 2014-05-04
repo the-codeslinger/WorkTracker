@@ -2,6 +2,8 @@
 #define WORKTASK_H
 
 #include "task.h"
+#include "xmldata.h"
+
 #include <QList>
 #include <QDateTime>
 #include <QPair>
@@ -9,11 +11,12 @@
 class QDomNode;
 class QDomDocument;
 
-class WorkTask
+class WorkTask : public XmlData
 {
 public:
     WorkTask();
-    WorkTask(Task task, QDateTime start, QDateTime stop);
+    WorkTask(QDomDocument* dataSource);
+    WorkTask(QDomDocument* dataSource, Task task, QDateTime start, QDateTime stop);
 
     Task task() const;
     void setTask(Task task);
@@ -25,9 +28,10 @@ public:
     void setStop(QDateTime stop);
 
     int totalTime() const;
-
     bool isNull() const;
     void clear();
+
+    static WorkTask nullObject();
 
 private:
     Task      m_task;

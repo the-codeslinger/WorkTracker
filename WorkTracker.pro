@@ -18,15 +18,15 @@ SOURCES += src/main.cpp\
     src/model/task.cpp \
     src/model/worktask.cpp \
     src/model/workday.cpp \
-    src/model/workdaylist.cpp \
-    src/controller/worktrackercontroller.cpp
+    src/controller/worktrackercontroller.cpp \
+    src/model/xmldata.cpp
 
 HEADERS  += src/worktracker.h \
     src/model/ui/tasklistmodel.h \
     src/model/task.h \
     src/model/worktask.h \
     src/model/workday.h \
-    src/model/workdaylist.h \
-    src/controller/worktrackercontroller.h
+    src/controller/worktrackercontroller.h \
+    src/model/xmldata.h
 
 FORMS    += ui/worktracker.ui

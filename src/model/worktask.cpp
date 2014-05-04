@@ -5,13 +5,20 @@
 #include <QDomNode>
 #include <QDomNodeList>
 
-
 WorkTask::WorkTask()
+    : XmlData(nullptr)
 {
 }
 
-WorkTask::WorkTask(Task task, QDateTime start, QDateTime stop)
-    : m_task(task)
+WorkTask::WorkTask(QDomDocument* dataSource)
+    : XmlData(dataSource)
+    , m_task(dataSource)
+{
+}
+
+WorkTask::WorkTask(QDomDocument* dataSource, Task task, QDateTime start, QDateTime stop)
+    : XmlData(dataSource)
+    , m_task(task)
     , m_start(start)
     , m_stop(stop)
 {
@@ -73,6 +80,12 @@ WorkTask::clear()
     m_stop  = QDateTime();
 }
 
+WorkTask
+WorkTask::nullObject()
+{
+    return WorkTask();
+}
+
 QList<WorkTask>
 WorkTask::fromDomNode(QDomNode* node, QDomDocument* dataSource)
 {
@@ -106,7 +119,7 @@ WorkTask::fromDomNode(QDomNode* node, QDomDocument* dataSource)
         QDateTime stop  = timestampFromAttr(&attrNode);
 
         if (start.isValid() && stop.isValid()) {
-            workTasks.append(WorkTask(task, start, stop));
+            workTasks.append(WorkTask(dataSource, task, start, stop));
         }
     }
 

@@ -1,24 +1,30 @@
 #ifndef TASK_H
 #define TASK_H
 
+#include "xmldata.h"
+
 #include <QString>
 #include <QDate>
-#include <QDomElement>
+#include <QDomNode>
 #include <QList>
+#include <QVariant>
 
 #include <functional>
 
-class QDomNode;
 class QDomDocument;
+class QDomAttr;
 
-class Task
+class Task : public XmlData
 {
 public:
     static int invalidId;
 
     Task();
-    Task(QString name, QDate lastUsed);
-    Task(int id, QString name, QDate lastUsed);
+    Task(QDomDocument* dataSource);
+    Task(QDomDocument* dataSource, QDomElement node);
+    Task(QDomDocument* dataSource, QString name, QDate lastUsed);
+    Task(QDomDocument* dataSource, int id, QString name, QDate lastUsed);
+    Task(const Task& other);
 
     int id() const;
     void setId(int id);
@@ -29,26 +35,17 @@ public:
     QDate lastUsed() const;
     void setLastUsed(const QDate& lastUsed);
 
-    bool isNull() const;
-    void clear();
-
-    QDomElement createElement(QDomDocument* dataSource) const;
-
     // Used to fetch from the data source
-    static Task fromDomNode(QDomNode* node);
+    static Task fromDomNode(QDomElement node, QDomDocument* dataSource);
     static Task get(int id, QDomDocument* dataSource);
     static Task findByName(QString name, QDomDocument* dataSource);
     static QList<Task> list(QDomDocument* dataSource);
     static int count(QDomDocument* dataSource);
 
 private:
-    int     m_id;
-    QString m_name;
-    QDate   m_lastUsed;
 
-    static int idFromAttr(QDomNode* attr);
-    static QString nameFromAttr(QDomNode* attr);
-    static QDate lastUsedFromAttr(QDomNode* attr);
+    void createNode(int id, QString name, QDate lastUsed);
+    QVariant attributeValue(QString name) const;
 
     static Task findTask(QDomDocument* dataSource, std::function<bool(Task)> predicate);
 

@@ -9,7 +9,8 @@
 WorkTrackerController::WorkTrackerController(QDomDocument* dataSource)
     : m_dataSource(dataSource)
     , m_taskListModel(nullptr)
-    , m_workdays(dataSource)
+    , m_workday(dataSource)
+    , m_recordingWorkTask(dataSource)
     , m_isNewWorkDay(false)
     , m_isRecording(false)
 {
@@ -26,10 +27,10 @@ WorkTrackerController::setUi(WorkTracker* ui)
 void
 WorkTrackerController::run()
 {
-    m_workday      = m_workdays.findToday();
+    m_workday = WorkDay::findLastOpen(m_dataSource);
     m_isNewWorkDay = !m_workday.isNull();
     if (m_isNewWorkDay) {
-        emit workDayStarted(m_workday.started());
+        emit workDayStarted(m_workday.start());
     }
     m_ui->show();
 }
@@ -85,8 +86,20 @@ WorkTrackerController::generateSummary() const
 void
 WorkTrackerController::startWorkDay(QDateTime now)
 {
-    m_workday.clear();
-    m_workday.setStarted(now);
+    m_workday = WorkDay(m_dataSource, now);
+
+    QDomElement root = m_dataSource->documentElement();
+    QDomElement days = root.firstChildElement("workdays");
+
+    QDomNode elem = m_workday.node();
+    if (elem.isNull()) {
+        emit error(tr("Could not create <workday> XML element"));
+    }
+
+    QDomNode result = days.appendChild(elem);
+    if (result.isNull()) {
+        emit error(tr("Could not add <workday> to <workdays> XML element"));
+    }
 
     emit workDayStarted(now);
 }
@@ -94,9 +107,11 @@ WorkTrackerController::startWorkDay(QDateTime now)
 void
 WorkTrackerController::stopWorkDay(QDateTime now)
 {
-    if (!m_workday.isNull()) {
-        m_workdays.addWorkDay(m_workday);
+    if (m_workday.isNull()) {
+        emit error(tr("No active work-day"));
     }
+
+    m_workday.setStop(now);
 
     emit workDayStopped(now);
 }
@@ -105,7 +120,7 @@ void
 WorkTrackerController::startWorkTask(QString name)
 {
     // Always reset before starting a new one
-    m_recordingWorkTask = WorkTask();
+    m_recordingWorkTask = WorkTask(m_dataSource);
 
     QDateTime now = QDateTime::currentDateTimeUtc();
     m_recordingWorkTask.setStart(now);
@@ -138,7 +153,7 @@ WorkTrackerController::stopWorkTask(QString name)
     m_workday.addTask(m_recordingWorkTask);
     m_taskListModel->itemAppended();
     // Always reset after it is not needed any more
-    m_recordingWorkTask = WorkTask();
+    m_recordingWorkTask = WorkTask(m_dataSource);
 
     emit workTaskStopped(now, name);
 }
@@ -149,18 +164,18 @@ WorkTrackerController::findOrCreateTaskItem(QString name)
     Task taskItem = Task::findByName(name, m_dataSource);
     if (taskItem.isNull()) {
         // Create a new one
-        taskItem = Task(Task::count(m_dataSource), name, QDate::currentDate());
-        QDomElement taskElem = taskItem.createElement(m_dataSource);
-        if (taskElem.isNull()) {
-            qDebug() << "Could not create a new task XML element";
+        taskItem = Task(m_dataSource, Task::count(m_dataSource), name,
+                        QDate::currentDate());
+        if (taskItem.node().isNull()) {
+            emit error(tr("Could not create <item> XML element"));
             return Task();
         }
 
         QDomElement root   = m_dataSource->documentElement();
         QDomElement tasks  = root.firstChildElement("tasks");
-        QDomNode    result = tasks.appendChild(taskElem);
+        QDomNode    result = tasks.appendChild(taskItem.node());
         if (result.isNull()) {
-            qDebug() << "Could append task XML element to tasks element";
+            emit error(tr("Could not add <item> to <tasks> XML element"));
             return Task();
         }
     }

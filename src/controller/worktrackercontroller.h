@@ -3,7 +3,6 @@
 
 #include "../model/task.h"
 #include "../model/workday.h"
-#include "../model/workdaylist.h"
 
 #include <QObject>
 #include <QString>
@@ -35,6 +34,8 @@ signals:
     void workTaskStarted(QDateTime now, QString name);
     void workTaskStopped(QDateTime now, QString name);
 
+    void error(QString text);
+
 public slots:
     void toggleWorkDay();
     void toggleTask(QString name);
@@ -44,9 +45,8 @@ private:
     WorkTracker*   m_ui;
     TaskListModel* m_taskListModel;
 
-    WorkDay     m_workday;
-    WorkDayList m_workdays;
-    WorkTask    m_recordingWorkTask;
+    WorkDay  m_workday;
+    WorkTask m_recordingWorkTask;
 
     bool m_isNewWorkDay;
     bool m_isRecording;

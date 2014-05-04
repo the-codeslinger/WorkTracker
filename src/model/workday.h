@@ -2,38 +2,45 @@
 #define WORKDAY_H
 
 #include "worktask.h"
+#include "xmldata.h"
 
 #include <QDateTime>
 #include <QList>
-#include <QDomElement>
+#include <QDomNode>
 
 class QDomDocument;
 
-class WorkDay
+class WorkDay : public XmlData
 {
 public:
     WorkDay();
-    WorkDay(QDateTime day);
+    WorkDay(QDomDocument* dataSource);
+    WorkDay(QDomDocument* dataSource, QDomElement node);
+    WorkDay(QDomDocument* dataSource, QDateTime start);
+    WorkDay(QDomDocument* dataSource, QDateTime start, QDateTime stop);
 
-    QDateTime started() const;
-    void setStarted(QDateTime started);
+    QDateTime start() const;
+    void setStart(QDateTime start);
+
+    QDateTime stop() const;
+    void setStop(QDateTime stop);
 
     void addTask(WorkTask task);
     void clear();
-    bool isNull() const;
 
     QString generateSummary() const;
 
+
+    static WorkDay findLastOpen(QDomDocument* dataSource);
+
 private:
-    QDateTime m_started;
     QList<WorkTask> m_tasks;
 
-    friend class WorkDayList;
+    void createNode(QDateTime start, QDateTime stop);
 
-    QDomElement createElement(QDomDocument* dataSource) const;
-    QDomElement findTask(QDomElement* day, int id) const;
+    QDomNode findTask(QDomNode day, int id) const;
 
-    static WorkDay fromDomNode(QDomNode* node, QDomDocument* dataSource);
+    static WorkDay fromDomNode(QDomElement node, QDomDocument* dataSource);
 };
 
 #endif // WORKDAY_H
