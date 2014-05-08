@@ -72,14 +72,26 @@ XmlData::addAttribute(QString name, QString value)
 QDomNode
 XmlData::findAttribute(QString name) const
 {
-    QDomNamedNodeMap attributes = m_node.attributes();
-    return attributes.namedItem(name);
+    return findAttributeFromNode(m_node, name);
 }
 
 QVariant
 XmlData::attributeValue(QString name) const
 {
-    QDomNode attrNode = findAttribute(name);
+    return attributeValueFromNode(m_node, name);
+}
+
+QDomNode
+XmlData::findAttributeFromNode(QDomNode node, QString name) const
+{
+    QDomNamedNodeMap attributes = node.attributes();
+    return attributes.namedItem(name);
+}
+
+QVariant
+XmlData::attributeValueFromNode(QDomNode node, QString name) const
+{
+    QDomNode attrNode = findAttributeFromNode(node, name);
     if (attrNode.isNull() || !attrNode.isAttr()) {
         return QVariant();
     }

@@ -62,15 +62,6 @@ WorkTrackerController::toggleTask(QString name)
     m_isRecording = !m_isRecording;
 }
 
-void
-WorkTrackerController::close()
-{
-    // If there's an ongoing workday close it and save it
-    // TODO Add methods to WorkDayList (or replace it as was the case with TaskList) to
-    //      figure out whether the current day has already been added.
-    //      For now one has to explicitly close off the current day.
-}
-
 bool
 WorkTrackerController::isRecording() const
 {

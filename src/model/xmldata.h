@@ -27,6 +27,9 @@ protected:
     QDomNode findAttribute(QString name) const;
     QVariant attributeValue(QString name) const;
 
+    QDomNode findAttributeFromNode(QDomNode node, QString name) const;
+    QVariant attributeValueFromNode(QDomNode node, QString name) const;
+
     QDomDocument* m_dataSource;
     QDomElement   m_node;
 };

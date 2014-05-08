@@ -22,7 +22,6 @@ public:
 
     void setUi(WorkTracker* ui);
     void run();
-    void close();
 
     bool isRecording() const;
     QString generateSummary() const;

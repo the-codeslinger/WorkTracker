@@ -80,12 +80,6 @@ WorkTask::clear()
     m_stop  = QDateTime();
 }
 
-WorkTask
-WorkTask::nullObject()
-{
-    return WorkTask();
-}
-
 QList<WorkTask>
 WorkTask::fromDomNode(QDomNode* node, QDomDocument* dataSource)
 {

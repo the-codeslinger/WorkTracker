@@ -61,6 +61,21 @@ void
 WorkDay::addTask(WorkTask task)
 {
     m_tasks.append(task);
+    QDomElement workTask = findTask(task.task().id());
+    if (workTask.isNull()) {
+        // Create a new work task
+        workTask = m_dataSource->createElement("task");
+        workTask.setAttribute("id", task.task().id());
+
+        m_node.appendChild(workTask);
+    }
+
+    // Append the new times to either the found one or the created one
+    QDomElement timeElem = m_dataSource->createElement("time");
+    timeElem.setAttribute("start", task.start().toString(Qt::ISODate));
+    timeElem.setAttribute("stop",  task.stop().toString(Qt::ISODate));
+
+    workTask.appendChild(timeElem);
 }
 
 void
@@ -77,60 +92,31 @@ WorkDay::createNode(QDateTime start, QDateTime stop)
 
     addAttribute("start", start.toString(Qt::ISODate));
     addAttribute("stop",  stop.toString(Qt::ISODate));
-
-
-    /*for (WorkTask task : m_tasks) {
-        // Check if there's already a work-task with the id of the task-item. If so,
-        // we can append another set of times, otherwise we'll create a new one.
-        QDomNode taskElem = findTask(day, task.task().id());
-        if (taskElem.isNull()) {
-            QDomAttr idAttr = dataSource->createAttribute("id");
-            idAttr.setValue(QString::number(task.task().id()));
-
-            taskElem = dataSource->createElement("task");
-            taskElem.appendChild(idAttr);
-
-            day.appendChild(taskElem);
-        }
-
-        QDomElement timeElem = dataSource->createElement("time");
-        timeElem.setAttribute("start", task.start().toString(Qt::ISODate));
-        timeElem.setAttribute("stop",  task.stop().toString(Qt::ISODate));
-
-        taskElem.appendChild(timeElem);
-    }
-
-    m_node = day;
-    return day;*/
 }
 
-QDomNode
-WorkDay::findTask(QDomNode day, int id) const
+QDomElement
+WorkDay::findTask(int id) const
 {
-    QDomNodeList tasks = day.childNodes();
+    QDomNodeList tasks = m_node.childNodes();
     if (tasks.isEmpty()) {
-        return QDomNode();
+        return QDomElement();
     }
 
     int count = tasks.count();
     for (int c = 0; c < count; c++) {
         QDomNode node = tasks.item(c);
         if (!node.isNull() && node.isElement()) {
-            QDomNamedNodeMap attrs = node.attributes();
-            QDomAttr idAttr = attrs.namedItem("id").toAttr();
-            if (!idAttr.isNull()) {
-                bool ok = false;
-                int foundId = idAttr.value().toInt(&ok);
-                if (ok) {
-                    if (foundId == id) {
-                        return node;
-                    }
-                }
+            QVariant idValue = attributeValueFromNode(node, "id");
+
+            bool ok = false;
+            int foundId = idValue.toInt(&ok);
+            if (ok && foundId == id) {
+                return node.toElement();
             }
         }
     }
 
-    return QDomNode();
+    return QDomElement();
 }
 
 QString

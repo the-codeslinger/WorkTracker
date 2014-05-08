@@ -31,16 +31,13 @@ public:
     bool isNull() const;
     void clear();
 
-    static WorkTask nullObject();
+    static QList<WorkTask> fromDomNode(QDomNode* node, QDomDocument* dataSource);
 
 private:
     Task      m_task;
     QDateTime m_start;
     QDateTime m_stop;
 
-    friend class WorkDay;
-
-    static QList<WorkTask> fromDomNode(QDomNode* node, QDomDocument* dataSource);
     static int idFromAttr(QDomNode* attr);
     static QDateTime timestampFromAttr(QDomNode* attr);
 };

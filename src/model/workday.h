@@ -6,7 +6,7 @@
 
 #include <QDateTime>
 #include <QList>
-#include <QDomNode>
+#include <QDomElement>
 
 class QDomDocument;
 
@@ -38,7 +38,7 @@ private:
 
     void createNode(QDateTime start, QDateTime stop);
 
-    QDomNode findTask(QDomNode day, int id) const;
+    QDomElement findTask(int id) const;
 
     static WorkDay fromDomNode(QDomElement node, QDomDocument* dataSource);
 };
