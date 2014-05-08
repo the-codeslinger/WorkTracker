@@ -62,6 +62,16 @@ WorkTrackerController::toggleTask(QString name)
     m_isRecording = !m_isRecording;
 }
 
+void
+WorkTrackerController::close()
+{
+    if (m_isRecording) {
+        // Stop the running task by using the current name. Better than nothing
+        stopWorkTask(m_recordingWorkTask.task().name());
+    }
+    // Do not mess with the workday. That can be correctly reloaded.
+}
+
 bool
 WorkTrackerController::isRecording() const
 {

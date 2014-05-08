@@ -58,6 +58,8 @@ int main(int argc, char *argv[])
 
     int result = a.exec();
 
+    controller.close();
+
     // Save the database now that the application is finished
     if (!xmlFile.open(QIODevice::WriteOnly)) {
         qDebug() << "Cannot open database for writing; Save current data not possible";
