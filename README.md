@@ -39,6 +39,18 @@ The latest version for Windows can be found on [Sourceforge](https://sourceforge
 
 The application is able to run on all platforms that are supported by Qt 5.2. Development takes place on Windows. An early version of the application has been successfuly compiled and run on Linux, Mac OS X should be fine as well.
 
+You compiler of choice should support C++11 although this is not yet used extensibly (only `nullptr` and lambdas at the moment). The reference compiler used is Microsofts Visual Studio 2013.
+
 ## Database File
 
-All data is written to and read from an XML file that is located in the current user's `AppData` folder on Windows, e.g. `C:\Users\Robert\AppData\Local\Typical Nerd\WorkTracker\Database.xml`. 
+All data is written to and read from an XML file that is located in the current user's `AppData` folder on Windows, e.g. `C:\Users\Robert\AppData\Local\Typical Nerd\WorkTracker\Database.xml`.
+
+## Known Issues
+
+*   Depending on the length of the task description, the UI's width grows
+*   The `Quit` option in the `File` menu doesn't work
+
+## Future Plans
+
+*   Support global hotkeys
+*   Hide UI in sys-tray and only show an input field for the task description on demand 
