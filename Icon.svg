@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r"
+   sodipodi:docname="Icon.svg"
+   inkscape:export-filename="D:\RobertLohr\Programmieren\Cpp\WorkTracker\Icon256.png"
+   inkscape:export-xdpi="92.089996"
+   inkscape:export-ydpi="92.089996">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient3847">
+      <stop
+         style="stop-color:#c07305;stop-opacity:1;"
+         offset="0"
+         id="stop3849" />
+      <stop
+         style="stop-color:#d4b363;stop-opacity:0;"
+         offset="1"
+         id="stop3851" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3796">
+      <stop
+         style="stop-color:#808080;stop-opacity:1;"
+         offset="0"
+         id="stop3798" />
+      <stop
+         style="stop-color:#dbdbdb;stop-opacity:1;"
+         offset="1"
+         id="stop3800" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3755">
+      <stop
+         style="stop-color:#979797;stop-opacity:1;"
+         offset="0"
+         id="stop3757" />
+      <stop
+         style="stop-color:#e6e6e6;stop-opacity:0;"
+         offset="1"
+         id="stop3759" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.4081735"
+     inkscape:cx="316.11664"
+     inkscape:cy="490.42041"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer2"
+     showgrid="false"
+     inkscape:window-width="1856"
+     inkscape:window-height="1057"
+     inkscape:window-x="56"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline">
+    <rect
+       transform="scale(-1,-1)"
+       style="fill:#555753;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3767"
+       width="250.18982"
+       height="188.37401"
+       x="-477.05603"
+       y="-633.56836"
+       ry="7.7974334"
+       rx="33.171989"
+       inkscape:export-filename="D:\RobertLohr\Programmieren\Cpp\WorkTracker\Icon.png"
+       inkscape:export-xdpi="9.1907072"
+       inkscape:export-ydpi="9.1907072" />
+    <rect
+       style="fill:#e9b96e;fill-opacity:1;stroke:none"
+       id="rect3785"
+       width="187.7464"
+       height="136.75209"
+       x="258.08795"
+       y="446.59726"
+       inkscape:export-filename="D:\RobertLohr\Programmieren\Cpp\WorkTracker\Icon.png"
+       inkscape:export-xdpi="9.1907072"
+       inkscape:export-ydpi="9.1907072" />
+    <rect
+       y="571.19458"
+       x="258.08795"
+       height="33.840343"
+       width="187.7464"
+       id="rect3830"
+       style="fill:#e9b96e;fill-opacity:1;stroke:none"
+       ry="11.300358"
+       rx="46.54871"
+       inkscape:export-filename="D:\RobertLohr\Programmieren\Cpp\WorkTracker\Icon.png"
+       inkscape:export-xdpi="9.1907072"
+       inkscape:export-ydpi="9.1907072" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Paper">
+    <rect
+       style="fill:#2e3436;fill-opacity:1;stroke:none"
+       id="rect3975"
+       width="176.96429"
+       height="21.428572"
+       x="263.479"
+       y="463.79074"
+       ry="0" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#c17405;stroke-width:17.02899933000000100;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3833"
+       width="132.93019"
+       height="75.580063"
+       x="285.18912"
+       y="392.08096"
+       rx="0"
+       ry="0"
+       inkscape:export-filename="D:\RobertLohr\Programmieren\Cpp\WorkTracker\Icon.png"
+       inkscape:export-xdpi="9.1907072"
+       inkscape:export-ydpi="9.1907072" />
+    <rect
+       style="fill:#eeeeec;fill-opacity:1;stroke:none"
+       id="rect3985"
+       width="116.68594"
+       height="76.19883"
+       x="292.96063"
+       y="400.20819" />
+    <rect
+       ry="0"
+       y="472.71866"
+       x="263.479"
+       height="12.500644"
+       width="176.96429"
+       id="rect3987"
+       style="fill:#2e3436;fill-opacity:1;stroke:none" />
+    <rect
+       style="fill:#ffb380;fill-opacity:1;stroke:none"
+       id="rect3857"
+       width="95.002502"
+       height="8.0834913"
+       x="303.19882"
+       y="410.0386"
+       ry="4.0417457"
+       rx="3.2479663"
+       inkscape:export-filename="D:\RobertLohr\Programmieren\Cpp\WorkTracker\Icon.png"
+       inkscape:export-xdpi="9.1907072"
+       inkscape:export-ydpi="9.1907072" />
+    <rect
+       style="fill:#b3b3b3;fill-opacity:1;stroke:none"
+       id="rect3869"
+       width="43.316162"
+       height="35.807487"
+       x="353.90479"
+       y="425.37708"
+       rx="2.0688448"
+       ry="1.2608273"
+       inkscape:export-filename="D:\RobertLohr\Programmieren\Cpp\WorkTracker\Icon.png"
+       inkscape:export-xdpi="9.1907072"
+       inkscape:export-ydpi="9.1907072" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#333333;fill-opacity:1;stroke:none"
+       id="path3875"
+       sodipodi:cx="374.32465"
+       sodipodi:cy="412.24115"
+       sodipodi:rx="12.563772"
+       sodipodi:ry="12.563772"
+       d="m 384.37731,404.70508 a 12.563772,12.563772 0 1 1 -0.015,-0.02"
+       sodipodi:start="5.6399023"
+       sodipodi:end="11.9211"
+       sodipodi:open="true"
+       transform="matrix(0.72258606,0,0,0.56367653,104.69315,205.46345)"
+       inkscape:export-filename="D:\RobertLohr\Programmieren\Cpp\WorkTracker\Icon.png"
+       inkscape:export-xdpi="9.1907072"
+       inkscape:export-ydpi="9.1907072" />
+    <g
+       id="g3951"
+       transform="matrix(0.82949798,0,0,0.7334827,68.659948,122.08316)">
+      <path
+         inkscape:export-ydpi="9.1907072"
+         inkscape:export-xdpi="9.1907072"
+         inkscape:export-filename="D:\RobertLohr\Programmieren\Cpp\WorkTracker\Icon.png"
+         transform="matrix(0.99747357,0,0,0.89938708,-1.5183876,59.130364)"
+         sodipodi:open="true"
+         sodipodi:end="11.9211"
+         sodipodi:start="5.6399023"
+         d="m 387.21916,425.3613 c 6.14897,2.00874 4.48438,4.8579 -3.71797,6.36376 -8.20236,1.50587 -19.8364,1.09822 -25.98537,-0.91052 -6.14897,-2.00874 -4.48437,-4.85789 3.71798,-6.36376 8.19083,-1.50376 19.80661,-1.09962 25.96321,0.9033"
+         sodipodi:ry="4.5456862"
+         sodipodi:rx="18.561554"
+         sodipodi:cy="428.08792"
+         sodipodi:cx="372.36749"
+         id="path3879"
+         style="fill:#333333;fill-opacity:1;stroke:none"
+         sodipodi:type="arc" />
+      <rect
+         inkscape:export-ydpi="9.1907072"
+         inkscape:export-xdpi="9.1907072"
+         inkscape:export-filename="D:\RobertLohr\Programmieren\Cpp\WorkTracker\Icon.png"
+         ry="0.58895725"
+         rx="0"
+         y="444.01611"
+         x="351.39368"
+         height="9.1950979"
+         width="37.016243"
+         id="rect3881"
+         style="fill:#333333;fill-opacity:1;stroke:none" />
+    </g>
+    <rect
+       rx="1.2265773"
+       ry="3.8913302"
+       y="437.48611"
+       x="303.19882"
+       height="7.7826605"
+       width="35.87722"
+       id="rect3927"
+       style="fill:#ffb380;fill-opacity:1;stroke:none"
+       inkscape:export-filename="D:\RobertLohr\Programmieren\Cpp\WorkTracker\Icon.png"
+       inkscape:export-xdpi="9.1907072"
+       inkscape:export-ydpi="9.1907072" />
+    <rect
+       rx="1.2265773"
+       ry="3.8913302"
+       y="450.99893"
+       x="303.19882"
+       height="7.7826605"
+       width="35.87722"
+       id="rect3949"
+       style="fill:#ffb380;fill-opacity:1;stroke:none"
+       inkscape:export-filename="D:\RobertLohr\Programmieren\Cpp\WorkTracker\Icon.png"
+       inkscape:export-xdpi="9.1907072"
+       inkscape:export-ydpi="9.1907072" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Display">
+    <text
+       xml:space="preserve"
+       style="font-size:77.75998688px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#2e3436;fill-opacity:1;stroke:none;font-family:Verdana;-inkscape-font-specification:Verdana Bold"
+       x="344.66479"
+       y="432.8306"
+       id="text3824"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="D:\RobertLohr\Programmieren\Cpp\WorkTracker\Icon.png"
+       inkscape:export-xdpi="9.1907072"
+       inkscape:export-ydpi="9.1907072"
+       transform="scale(0.74653228,1.3395268)"><tspan
+         sodipodi:role="line"
+         id="tspan3826"
+         x="344.66479"
+         y="432.8306"
+         style="font-size:77.75998688px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#2e3436;font-family:Verdana;-inkscape-font-specification:Verdana Bold">07:54</tspan></text>
+  </g>
+</svg>
