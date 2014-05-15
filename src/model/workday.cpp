@@ -160,10 +160,11 @@ WorkDay::generateSummary() const
     while (iter.hasNext()) {
         auto item = iter.next();
 
-        float hours = item.value() / 60.0f;
+        float minutes = item.value() / 60.0f;
+        float hours   = minutes      / 60.0f;
 
         html << "<li><i>" << item.key() << "</i>: ";
-        html << hours << " h (" << item.value() << " min)";
+        html << roundTwoDecimals(hours) << " h (" << qRound(minutes) << " min)";
         html << "</li>";
     }
 
@@ -236,4 +237,10 @@ WorkDay::fromDomNode(QDomElement node, QDomDocument* dataSource)
     }
 
     return day;
+}
+
+float
+WorkDay::roundTwoDecimals(float number) const
+{
+    return static_cast<float>(static_cast<int>(number * 100 + 0.5)) / 100.0;
 }

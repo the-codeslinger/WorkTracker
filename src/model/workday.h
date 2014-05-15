@@ -55,6 +55,7 @@ private:
     void createNode(QDateTime start, QDateTime stop);
 
     QDomElement findTask(int id) const;
+    float roundTwoDecimals(float number) const;
 
     static WorkDay fromDomNode(QDomElement node, QDomDocument* dataSource);
 };

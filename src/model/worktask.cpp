@@ -78,7 +78,7 @@ WorkTask::setStop(QDateTime stop)
 int
 WorkTask::totalTime() const
 {
-    return m_start.secsTo(m_stop) / 60;
+    return m_start.secsTo(m_stop);
 }
 
 bool
