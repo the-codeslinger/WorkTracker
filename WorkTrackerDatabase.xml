@@ -10,9 +10,9 @@
     </tasks>
 
   <workdays>
-    <day date="2014-04-27">
+    <day start="2014-04-27T08:00:00Z" stop="2014-04-27T20:15:00Z">
       <task id="1">
-        <time start="16:29:20" stop="16:29:24"/>
+        <time start="16:29:20T08:00:00Z" stop="16:29:24T09:23:17Z"/>
       </task>
     </day>
   </workdays>
