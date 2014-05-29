@@ -23,20 +23,63 @@
 
 class QDomDocument;
 
+/*!
+ * \brief Specific model implementation for the Qt Model View architecture.
+ *
+ * Internally this uses the DOM document as data source and the `Task` class to conform
+ * to the API dictated by Qt.
+ */
 class TaskListModel : public QAbstractListModel
 {
 public:
+    /*!
+     * Create a new model with a data source and a parent.
+     *
+     * \param dataSource
+     * The data source is only used, ownership stays with the calling code.
+     *
+     * \param parent
+     * The parent of the `TaskListModel`.
+     */
     TaskListModel(QDomDocument* dataSource, QObject* parent = nullptr);
 
+    /*!
+     * This method must be called if a new `Task` has been added to the database. Since
+     * adding is performed outside of this model, the necessary Qt methods need to be
+     * triggered explicitly from outside this model as well.
+     */
     void itemAppended();
 
+    /*!
+     * \return
+     * Returns the number of tasks in the database.
+     */
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
+
+    /*!
+     * \return
+     * Gets a specific task from the database. The index corresponds to the database id.
+     */
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+
+    /*!
+     * \return
+     * If `index` is valid then `QAbstractItemModel::flags(index) | Qt::ItemIsEditable` is
+     * returned.
+     */
     Qt::ItemFlags flags(const QModelIndex & index) const;
+
+    /*!
+     * \return
+     * Returns "Tasks".
+     */
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const;
 
 private:
+    /*!
+     * The data source that has been passed via the constructor.
+     */
     QDomDocument* m_dataSource;
 
 };
