@@ -40,15 +40,16 @@ int main(int argc, char *argv[])
         filePath = argv[1];
     }
     else {
-        // Set up the data source for our application, i.e. load an existing database or, e.g.
-        // on the first start, create a new database.
+        // Set up the data source for our application, i.e. load an existing database or,
+        // e.g. on the first start, create a new database.
         QString dataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
         qDebug() << "Write database to " << dataPath;
 
         QDir dir(dataPath);
         if (!dir.exists()) {
             if (!dir.mkpath(dataPath)) {
-                qDebug() << "Cannot create dir " << dataPath << ". Database cannot be saved";
+                qDebug() << "Cannot create dir " << dataPath
+                         << ". Database cannot be saved";
             }
         }
         filePath = dataPath + "/Database.xml";

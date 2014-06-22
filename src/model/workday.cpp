@@ -73,10 +73,20 @@ WorkDay::setStop(QDateTime stop)
     addAttribute("stop", stop.toString(Qt::ISODate));
 }
 
-void
+WorkTask
 WorkDay::addTask(WorkTask task)
 {
-    m_tasks.append(task);
+    // Find the original parent DOM node (= the real task) based on the currently known
+    // task's node
+    QDomElement origWorkTask;
+    QDomNode workTaskNode = task.node();
+    if (!workTaskNode.isNull()) {
+        // Parent cannot be null if the node is valid (ignoring tampering of the database
+        // by users)
+        origWorkTask = workTaskNode.parentNode().toElement();
+    }
+
+    // Find or create the current parent DOM node based on the associated task-id
     QDomElement workTask = findTask(task.task().id());
     if (workTask.isNull()) {
         // Create a new work task
@@ -86,12 +96,41 @@ WorkDay::addTask(WorkTask task)
         m_node.appendChild(workTask);
     }
 
-    // Append the new times to either the found one or the created one
-    QDomElement timeElem = m_dataSource->createElement("time");
-    timeElem.setAttribute("start", task.start().toString(Qt::ISODate));
-    timeElem.setAttribute("stop",  task.stop().toString(Qt::ISODate));
+    // If the task has no node assigned yet, then it can't have any parent yet. This means
+    // this particular work task is not yet known.
+    QDomElement workTaskElem;
+    if (workTaskNode.isNull()) {
+        workTaskElem = m_dataSource->createElement("time");
+        workTask.appendChild(workTaskElem);
+    }
+    else {
+        // If the original and current task are not equal then we need to remove the
+        // task's node from the original one and move it to the new node. If they are the
+        // same then we don't need to do anything.
 
-    workTask.appendChild(timeElem);
+        // The original work task cannot be null if we get to this point, but better be
+        // safe than sorry.
+        if (!origWorkTask.isNull() && workTask != origWorkTask) {
+            // This automatically reparents the node from its old parent to the new
+            workTaskNode = workTask.appendChild(workTaskNode);
+
+            if (workTaskNode.isNull()) {
+                // Reparenting didn't work
+                return WorkTask();
+            }
+        }
+
+        workTaskElem = workTaskNode.toElement();
+    }
+
+    // Now we can simply set the values and be sure it's on the right node
+    workTaskElem.setAttribute("start", task.start().toString(Qt::ISODate));
+    workTaskElem.setAttribute("stop",  task.stop().toString(Qt::ISODate));
+
+    task.setNode(workTaskElem);
+    m_tasks.append(task);
+
+    return task;
 }
 
 void
@@ -211,7 +250,7 @@ WorkDay::fromDomNode(QDomElement node, QDomDocument* dataSource)
         return WorkDay();
     }
 
-    // There's at least a start data so let's treat it as a valid (although maybe
+    // There's at least a start date so let's treat it as a valid (although maybe
     // incomplete) day object
     QDateTime start = QDateTime::fromString(dateAttr.value(), Qt::ISODate);
     QDateTime stop;
@@ -243,4 +282,16 @@ float
 WorkDay::roundTwoDecimals(float number) const
 {
     return static_cast<float>(static_cast<int>(number * 100 + 0.5)) / 100.0;
+}
+
+WorkTask
+WorkDay::runningWorkTask() const
+{
+    for (WorkTask task : m_tasks) {
+        if (!task.stop().isValid()) {
+            return task;
+        }
+    }
+
+    return WorkTask();
 }

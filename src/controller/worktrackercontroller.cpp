@@ -44,11 +44,23 @@ void
 WorkTrackerController::run()
 {
     m_workday = WorkDay::findLastOpen(m_dataSource);
+
+    // The UI needs to be shown first or otherwise the displaying the status text for a
+    // running task can end up very short. If there's no UI then the shortening algorithm
+    // won't know the true available length of the label.
+    m_ui->show();
+
     m_isNewWorkDay = !m_workday.isNull();
     if (m_isNewWorkDay) {
         emit workDayStarted(m_workday.start());
+
+        m_recordingWorkTask = m_workday.runningWorkTask();
+        m_isRecording = !m_recordingWorkTask.isNull();
+        if (m_isRecording) {
+            emit workTaskStarted(m_recordingWorkTask.start(),
+                                 m_recordingWorkTask.task().name());
+        }
     }
-    m_ui->show();
 }
 
 void
@@ -81,11 +93,7 @@ WorkTrackerController::toggleTask(QString name)
 void
 WorkTrackerController::close()
 {
-    if (m_isRecording) {
-        // Stop the running task by using the current name. Better than nothing
-        stopWorkTask(m_recordingWorkTask.task().name());
-    }
-    // Do not mess with the workday. That can be correctly reloaded.
+    // Nothing to do (any more) at the moment
 }
 
 bool
@@ -144,6 +152,10 @@ WorkTrackerController::startWorkTask(QString name)
     if (!name.isEmpty()) {
         Task task = findOrCreateTaskItem(name);
         m_recordingWorkTask.setTask(task);
+
+        // Add the task right now, to have in the database in case the application is
+        // closed
+        m_recordingWorkTask = m_workday.addTask(m_recordingWorkTask);
     }
 
     emit workTaskStarted(now, name);
@@ -167,8 +179,9 @@ WorkTrackerController::stopWorkTask(QString name)
     QDateTime now = QDateTime::currentDateTimeUtc();
 
     m_recordingWorkTask.setStop(now);
-    m_workday.addTask(m_recordingWorkTask);
-    m_taskListModel->itemAppended();
+    // Add the worktask again, to have it written with the stop date. This also moves the
+    // node to another task if it changed.
+    m_recordingWorkTask = m_workday.addTask(m_recordingWorkTask);
     // Always reset after it is not needed any more
     m_recordingWorkTask = WorkTask(m_dataSource);
 
@@ -195,6 +208,8 @@ WorkTrackerController::findOrCreateTaskItem(QString name)
             emit error(tr("Could not add <item> to <tasks> XML element"));
             return Task();
         }
+
+        m_taskListModel->itemAppended();
     }
 
     return taskItem;

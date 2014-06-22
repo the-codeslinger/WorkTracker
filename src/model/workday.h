@@ -85,9 +85,15 @@ public:
     void setStop(QDateTime stop);
 
     /*!
-     * Add a completed `task` to the list of already completed tasks.
+     * Add a completed `task` to the list of already completed tasks. If the task already
+     * exists its values are overridden. If the work task has moved to a different task-id
+     * then it will also be moved in the DOM document.
+     *
+     * \return
+     * Returns the task instance that was passed in as a parameter associated with an
+     * XML node.
      */
-    void addTask(WorkTask task);
+    WorkTask addTask(WorkTask task);
 
     /*!
      * Resets the complete workday by invalidating the timestamps and removing all work
@@ -114,6 +120,15 @@ public:
      * \endcode
      */
     QString generateSummary() const;
+
+    /*!
+     * Searches the list of tasks to find one that is not yet finished.
+     *
+     * \return
+     * If there's a running task (one with an invalid stop-date) then this task is
+     * returned, otherwise a null-task.
+     */
+    WorkTask runningWorkTask() const;
 
     /*!
      * Checks the database if the last workday has not been finished and loads it.

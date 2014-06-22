@@ -54,6 +54,14 @@ public:
     QDomNode node() const;
 
     /*!
+     * Set a new node.
+     *
+     * \param node
+     * The new XML node for the model.
+     */
+    void setNode(QDomNode node);
+
+    /*!
      * \return
      * Returns `true` if the node isn't yet valid or `false` if it is valid.
      */

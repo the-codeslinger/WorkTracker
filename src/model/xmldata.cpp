@@ -56,6 +56,12 @@ XmlData::node() const
     return m_node;
 }
 
+void
+XmlData::setNode(QDomNode node)
+{
+    m_node = node.toElement();
+}
+
 bool
 XmlData::isNull() const
 {

@@ -31,8 +31,9 @@ WorkTask::WorkTask(QDomDocument* dataSource)
 {
 }
 
-WorkTask::WorkTask(QDomDocument* dataSource, Task task, QDateTime start, QDateTime stop)
-    : XmlData(dataSource)
+WorkTask::WorkTask(QDomDocument* dataSource, QDomElement node, Task task, QDateTime start,
+                   QDateTime stop)
+    : XmlData(dataSource, node)
     , m_task(task)
     , m_start(start)
     , m_stop(stop)
@@ -127,8 +128,11 @@ WorkTask::fromDomNode(QDomNode* node, QDomDocument* dataSource)
         attrNode = attributes.namedItem("stop");
         QDateTime stop  = timestampFromAttr(&attrNode);
 
-        if (start.isValid() && stop.isValid()) {
-            workTasks.append(WorkTask(dataSource, task, start, stop));
+        // Only start needs to be valid. Stop may be empty which makes this an ongoing
+        // task (maybe a sudden shutdown f the application).
+        if (start.isValid()) {
+            workTasks.append(WorkTask(dataSource, timeNode.toElement(), task, start,
+                                      stop));
         }
     }
 

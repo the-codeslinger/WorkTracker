@@ -51,9 +51,11 @@ public:
     WorkTask(QDomDocument* dataSource);
 
     /*!
-     * Creates a new `Task` with a data source, a task and its start and stop timestamp.
+     * Creates a new `Task` with a data source, the DOM node, a task and its start and
+     * stop timestamp.
      */
-    WorkTask(QDomDocument* dataSource, Task task, QDateTime start, QDateTime stop);
+    WorkTask(QDomDocument* dataSource, QDomElement node, Task task, QDateTime start,
+             QDateTime stop);
 
     /*!
      * \return

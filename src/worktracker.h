@@ -121,6 +121,11 @@ private slots:
      */
     void hideInput();
 
+    /*!
+     * Shows the about dialog
+     */
+    void about();
+
 private:
     /*!
      * Contains the UI widgets from the form file.
@@ -164,6 +169,15 @@ private:
      * is always used to shrink back to the small size.
      */
     int m_collapsedHeight;
+
+    /**
+     * Uses the task status label's font metrics to calculate a shortened version of the
+     * text in order to not resize the window.
+     *
+     * @param text
+     * The full text that shall be displayed and eventually shortened.
+     */
+    void setShortenedTaskStatusText(const QString& text) const;
 };
 
 #endif // WORKTRACKER_H
