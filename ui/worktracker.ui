@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>454</width>
+    <width>499</width>
     <height>223</height>
    </rect>
   </property>
@@ -46,6 +46,10 @@
         <property name="text">
          <string>Start &amp;New Workday</string>
         </property>
+        <property name="icon">
+         <iconset resource="../icons.qrc">
+          <normaloff>:/icon/Start-Day.svg</normaloff>:/icon/Start-Day.svg</iconset>
+        </property>
        </widget>
       </item>
       <item>
@@ -61,6 +65,10 @@
         </property>
         <property name="text">
          <string>Start &amp;Task</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../icons.qrc">
+          <normaloff>:/icon/Start-Task.svg</normaloff>:/icon/Start-Task.svg</iconset>
         </property>
        </widget>
       </item>
@@ -83,6 +91,10 @@
         </property>
         <property name="text">
          <string>Show &amp;Summary</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../icons.qrc">
+          <normaloff>:/icon/Summary.svg</normaloff>:/icon/Summary.svg</iconset>
         </property>
        </widget>
       </item>
@@ -124,6 +136,10 @@
          <property name="text">
           <string>S&amp;elect Task</string>
          </property>
+         <property name="icon">
+          <iconset resource="../icons.qrc">
+           <normaloff>:/icon/Select.svg</normaloff>:/icon/Select.svg</iconset>
+         </property>
         </widget>
        </item>
       </layout>
@@ -158,26 +174,67 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>454</width>
+     <width>499</width>
      <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>&amp;File</string>
     </property>
     <addaction name="actionQuit"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actionAbout_QT"/>
+    <addaction name="actionAbout"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionQuit">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icon/Quit.svg</normaloff>:/icon/Quit.svg</iconset>
+   </property>
    <property name="text">
-    <string>Quit</string>
+    <string>&amp;Quit</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::QuitRole</enum>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icon/About.svg</normaloff>:/icon/About.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;About WorkTracker</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutRole</enum>
+   </property>
+  </action>
+  <action name="actionAbout_QT">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icon/About -Qt.svg</normaloff>:/icon/About -Qt.svg</iconset>
+   </property>
+   <property name="text">
+    <string>About &amp;Qt</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutQtRole</enum>
    </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="../icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icon/Icon128.png</file>
+        <file>icon/Icon16.png</file>
+        <file>icon/Start-Day.svg</file>
+        <file>icon/Stop-Day.svg</file>
+        <file>icon/Summary.svg</file>
+        <file>icon/Stop-Task.svg</file>
+        <file>icon/Start-Task.svg</file>
+        <file>icon/Select.svg</file>
+        <file>icon/About -Qt.svg</file>
+        <file>icon/About.svg</file>
+        <file>icon/Quit.svg</file>
+    </qresource>
+</RCC>
