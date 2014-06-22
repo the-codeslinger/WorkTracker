@@ -33,7 +33,7 @@ The source code and binary files are distributed under the [Apache 2.0 license](
 
 ## Binaries
 
-The latest version for Windows can be found on [Sourceforge](https://sourceforge.net/projects/tnworktracker/files/) as a 7-Zip archive. Copy the contents of the archive to a location on your computer (you can use a USB flash drive if you like) and you are good to go.
+I only provide binaries for Windows 7 + 8 x64 operating systems on the [releases][] page. The application should be able to run on earlier version of Windows as well, given you are willing to compile it yourself (which, in theory, is quite easy). The mingw package should contain everything you need. Other operating systems like Mac OS X or Linux should also work. Again, you'll need to compile the application yourself.
 
 ## Supported Platforms
 
@@ -54,3 +54,5 @@ All data is written to and read from an XML file that is located in the current 
 
 *   Support global hotkeys
 *   Hide UI in sys-tray and only show an input field for the task description on demand 
+
+[releases]: https://github.com/drunk-on-pain/WorkTracker/releases
