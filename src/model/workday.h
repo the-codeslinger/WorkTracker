@@ -131,6 +131,13 @@ public:
     WorkTask runningWorkTask() const;
 
     /*!
+     * \return
+     * Returns the total amount of seconds that has been spent on all finished tasks
+     * combined.
+     */
+    int totalTime() const;
+
+    /*!
      * Checks the database if the last workday has not been finished and loads it.
      *
      * \param dataSource
@@ -159,11 +166,6 @@ private:
      * DOM or determine if a new worktask item needs to be created.
      */
     QDomElement findTask(int id) const;
-
-    /*!
-     * Helper that rounds `number` to two decimals for use in the summary.
-     */
-    float roundTwoDecimals(float number) const;
 
     /*!
      * Create a new `WorkDay` from the DOM node.

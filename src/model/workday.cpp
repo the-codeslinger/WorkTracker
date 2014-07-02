@@ -16,6 +16,7 @@
 
 #include "workday.h"
 #include "task.h"
+#include "../helper.h"
 
 #include <QDomDocument>
 #include <QTextStream>
@@ -86,6 +87,8 @@ WorkDay::addTask(WorkTask task)
         origWorkTask = workTaskNode.parentNode().toElement();
     }
 
+    bool appendTask = workTaskNode.isNull();
+
     // Find or create the current parent DOM node based on the associated task-id
     QDomElement workTask = findTask(task.task().id());
     if (workTask.isNull()) {
@@ -118,6 +121,19 @@ WorkDay::addTask(WorkTask task)
                 // Reparenting didn't work
                 return WorkTask();
             }
+
+            // As is the case with the parent node, we have to replace the task first
+            // pushed into m_tasks with the updated one.
+            auto pos = std::find_if(std::begin(m_tasks), std::end(m_tasks),
+                         [task](const WorkTask& item){
+                return task.node() == item.node();
+            });
+
+            if (pos != std::end(m_tasks)) {
+                m_tasks.erase(pos);
+            }
+
+            appendTask = true;
         }
 
         workTaskElem = workTaskNode.toElement();
@@ -128,7 +144,12 @@ WorkDay::addTask(WorkTask task)
     workTaskElem.setAttribute("stop",  task.stop().toString(Qt::ISODate));
 
     task.setNode(workTaskElem);
-    m_tasks.append(task);
+
+    // Only append if this is a new task (=start a new task) or an existing one was
+    // replaced by a different task (=stop task)
+    if (appendTask) {
+        m_tasks.append(task);
+    }
 
     return task;
 }
@@ -278,12 +299,6 @@ WorkDay::fromDomNode(QDomElement node, QDomDocument* dataSource)
     return day;
 }
 
-float
-WorkDay::roundTwoDecimals(float number) const
-{
-    return static_cast<float>(static_cast<int>(number * 100 + 0.5)) / 100.0;
-}
-
 WorkTask
 WorkDay::runningWorkTask() const
 {
@@ -294,4 +309,14 @@ WorkDay::runningWorkTask() const
     }
 
     return WorkTask();
+}
+
+int
+WorkDay::totalTime() const
+{
+    int duration = 0;
+    for (WorkTask task : m_tasks) {
+        duration += task.totalTime();
+    }
+    return duration;
 }
