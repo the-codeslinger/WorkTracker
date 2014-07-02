@@ -54,10 +54,10 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     ui->frame->setVisible(false);
     ui->textEdit->setVisible(false);
 
-    m_statusDay       = new QLabel(tr("Waiting to start a new workday"), this);
     m_statusRecording = new QLabel(tr("Not recording anything yet"), this);
-    ui->statusBar->addWidget(m_statusDay, 1);
+    m_statusDuration  = new QLabel(tr("Total time %1h %2m").arg(0).arg(0), this);
     ui->statusBar->addWidget(m_statusRecording, 1);
+    ui->statusBar->addWidget(m_statusDuration, 0);
 
     // Capture the current width which is set by the designer. Then we resize the window
     // to only take up as much space as is needed with the edit field and text edit not
@@ -87,6 +87,8 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
             this,         SLOT(workTaskStarted(QDateTime, QString)));
     connect(m_controller, SIGNAL(workTaskStopped(QDateTime, QString)),
             this,         SLOT(workTaskStopped(QDateTime, QString)));
+    connect(m_controller, SIGNAL(totalTimeChanged(int, int)),
+            this,         SLOT(totalTimeChanged(int, int)));
 
     // Menu
     connect(ui->actionQuit,     SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -133,7 +135,7 @@ WorkTracker::workTaskStarted(QDateTime now, QString name)
     ui->taskButton->setText(tr("Stop &Task"));
     ui->taskButton->setIcon(QIcon(":/icon/Stop-Task.svg"));
     ui->tasksEdit->setText(name); // After restart this would be empty
-    setShortenedTaskStatusText(tr("Task %1 started at %2").arg(name).arg(dateString));
+    setShortenedTaskStatusText(tr("%1 started at %2").arg(name).arg(dateString));
 }
 
 void
@@ -146,7 +148,7 @@ WorkTracker::workTaskStopped(QDateTime now, QString name)
     ui->taskButton->setText(tr("Start &Task"));
     ui->taskButton->setIcon(QIcon(":/icon/Start-Task.svg"));
 
-    setShortenedTaskStatusText(tr("Task %1 stopped at %2").arg(name).arg(dateString));
+    setShortenedTaskStatusText(tr("%1 stopped at %2").arg(name).arg(dateString));
 }
 
 void
@@ -192,9 +194,6 @@ WorkTracker::workDayStarted(QDateTime now)
 {
     hideSummary();
 
-    QString dateString = now.toLocalTime().toString(Qt::TextDate);
-    m_statusDay->setText(tr("Working since %1").arg(dateString));
-
     ui->workdayButton->setText(tr("Stop Workday"));
     ui->workdayButton->setIcon(QIcon(":/icon/Stop-Day.svg"));
     ui->taskButton->setEnabled(true);
@@ -203,9 +202,6 @@ WorkTracker::workDayStarted(QDateTime now)
 void
 WorkTracker::workDayStopped(QDateTime now)
 {
-    QString dateString = now.toLocalTime().toString(Qt::TextDate);
-    m_statusDay->setText(tr("Work finished at %1").arg(dateString));
-
     ui->workdayButton->setText(tr("Start New Workday"));
     ui->workdayButton->setIcon(QIcon(":/icon/Start-Day.svg"));
     ui->taskButton->setEnabled(false);
@@ -264,4 +260,10 @@ WorkTracker::setShortenedTaskStatusText(const QString& text) const
     QString elidedString = metrics.elidedText(text, Qt::ElideMiddle, maxWidth);
 
     m_statusRecording->setText(elidedString);
+}
+
+void
+WorkTracker::totalTimeChanged(int hours, int minutes)
+{
+    m_statusDuration->setText(tr("Total time %1h %2m").arg(hours).arg(minutes));
 }

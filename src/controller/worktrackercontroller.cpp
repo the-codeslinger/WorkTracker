@@ -17,10 +17,13 @@
 #include "worktrackercontroller.h"
 #include "../model/ui/tasklistmodel.h"
 #include "../worktracker.h"
+#include "../helper.h"
 
 #include <QDomDocument>
 #include <QDateTime>
 #include <QDebug>
+
+static const int TIMER_TIMEOUT = 60 * 1000;
 
 WorkTrackerController::WorkTrackerController(QDomDocument* dataSource)
     : m_dataSource(dataSource)
@@ -30,6 +33,7 @@ WorkTrackerController::WorkTrackerController(QDomDocument* dataSource)
     , m_isNewWorkDay(false)
     , m_isRecording(false)
 {
+    connect(&m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
 }
 
 void
@@ -57,6 +61,7 @@ WorkTrackerController::run()
         m_recordingWorkTask = m_workday.runningWorkTask();
         m_isRecording = !m_recordingWorkTask.isNull();
         if (m_isRecording) {
+            m_timer.start(TIMER_TIMEOUT);
             emit workTaskStarted(m_recordingWorkTask.start(),
                                  m_recordingWorkTask.task().name());
         }
@@ -144,6 +149,8 @@ WorkTrackerController::stopWorkDay(QDateTime now)
 void
 WorkTrackerController::startWorkTask(QString name)
 {
+    m_timer.start(TIMER_TIMEOUT);
+
     // Always reset before starting a new one
     m_recordingWorkTask = WorkTask(m_dataSource);
 
@@ -164,6 +171,8 @@ WorkTrackerController::startWorkTask(QString name)
 void
 WorkTrackerController::stopWorkTask(QString name)
 {
+    m_timer.stop();
+
     // First check if there's already a task attached and if it is a different one. Maybe
     // we don't need to look for one
     Task taskItem = m_recordingWorkTask.task();
@@ -213,4 +222,15 @@ WorkTrackerController::findOrCreateTaskItem(QString name)
     }
 
     return taskItem;
+}
+
+void
+WorkTrackerController::timeout()
+{
+    int totalMinutes = static_cast<int>(m_workday.totalTime() / 60);
+
+    int hours   = static_cast<int>(totalMinutes / 60);
+    int minutes = static_cast<int>(totalMinutes % 60);
+
+    emit totalTimeChanged(hours, minutes);
 }

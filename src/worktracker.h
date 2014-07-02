@@ -87,6 +87,12 @@ public slots:
      */
     void workTaskStopped(QDateTime now, QString name);
 
+    /*!
+     * \see
+     * WorkTrackerController::totalTimeChanged(int, int)
+     */
+    void totalTimeChanged(int hours, int minutes);
+
 private slots:
     /*!
      * The user clicked on the "Select Task" button to confirm the name of a task.
@@ -138,7 +144,7 @@ private:
     /*!
      * Label for the left part of the status bar.
      */
-    QLabel* m_statusDay;
+    QLabel* m_statusDuration;
     /*!
      * Label for the right part of the status bar.
      */

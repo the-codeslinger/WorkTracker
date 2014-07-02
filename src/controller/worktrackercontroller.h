@@ -25,6 +25,7 @@
 #include <QDate>
 #include <QTime>
 #include <QDateTime>
+#include <QTimer>
 
 class QDomDocument;
 class TaskListModel;
@@ -134,6 +135,18 @@ signals:
      */
     void error(QString text);
 
+    /*!
+     * Emitted every minute if the status is recording, which means that a task is
+     * currently running.
+     *
+     * \param hours
+     * The amount of hours already spent on tasks.
+     *
+     * \param minutes
+     * The amount of minutes of a started hour already spent on tasks.
+     */
+    void totalTimeChanged(int hours, int minutes);
+
 public slots:
     /*!
      * Starts or stops a new workday. The current state is managed by the controller and
@@ -149,6 +162,12 @@ public slots:
      * finished.
      */
     void toggleTask(QString name);
+
+    /*!
+     * Connected to q `QTimer` once a task is running. Calculates the total sum of all
+     * tasks and displays it through the UI.
+     */
+    void timeout();
 
 private:
     /*!
@@ -181,6 +200,10 @@ private:
      * The current state of the task.
      */
     bool m_isRecording;
+    /*!
+     * The timer is used to fire every minute when a task is currently running.
+     */
+    QTimer m_timer;
 
     /*!
      * The actual implementation that starts a new workday. Called by `toggleWorkDay()`.

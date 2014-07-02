@@ -30,7 +30,8 @@ SOURCES += src/main.cpp\
     src/model/workday.cpp \
     src/controller/worktrackercontroller.cpp \
     src/model/xmldata.cpp \
-    src/aboutdialog.cpp
+    src/aboutdialog.cpp \
+    src/helper.cpp
 
 HEADERS  += src/worktracker.h \
     src/model/ui/tasklistmodel.h \
@@ -39,7 +40,8 @@ HEADERS  += src/worktracker.h \
     src/model/workday.h \
     src/controller/worktrackercontroller.h \
     src/model/xmldata.h \
-    src/aboutdialog.h
+    src/aboutdialog.h \
+    src/helper.h
 
 FORMS    += ui/worktracker.ui \
     ui/aboutdialog.ui

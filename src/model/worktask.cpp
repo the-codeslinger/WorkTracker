@@ -79,7 +79,11 @@ WorkTask::setStop(QDateTime stop)
 int
 WorkTask::totalTime() const
 {
-    return m_start.secsTo(m_stop);
+    QDateTime stop = m_stop;
+    if (!stop.isValid()) {
+        stop = QDateTime::currentDateTimeUtc();
+    }
+    return m_start.secsTo(stop);
 }
 
 bool
