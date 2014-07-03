@@ -34,8 +34,11 @@ class QDomDocument;
  * `WorkTask` can reference the same `Task`. The sum of all worktasks combined make up
  * the total time of work spent on a single task.
  *
- * Although this class is derived from `XmlData` it is no direct representation of an XML
- * node. Merely a few helper methods are used for convenience.
+ * This class is a hybrid between an direct link to aa DOM node via `XmlData` as well as
+ * a plain old C++ class in that is has member variables. This class is created by
+ * entities that do not interact with the DOM and thus need a temporary storage for
+ * information, which is in member variables. As soon as a DOM node is associated the
+ * data is written to that node as well.
  */
 class WorkTask : public XmlData
 {
@@ -56,6 +59,11 @@ public:
      */
     WorkTask(QDomDocument* dataSource, QDomElement node, Task task, QDateTime start,
              QDateTime stop);
+
+    /*!
+     * Calls the base class' implementation and immediately adds start and stop as well.
+     */
+    void setNode(QDomNode node);
 
     /*!
      * \return
@@ -109,6 +117,17 @@ public:
      * Resets the complete worktask by invalidating the timestamps task.
      */
     void clear();
+
+    /**
+     * Two tasks are considered equal if they refer to the same DOM node.
+     *
+     * @param other
+     * The other task to compare to.
+     *
+     * @return
+     * `true` if both refer to the same DOM node or `false` if not.
+     */
+    bool operator==(const WorkTask& other) const;
 
     /*!
      * Reads all the individual timestamps from the <task> XML node inside a <day> node.

@@ -21,6 +21,7 @@
 #include <QDomDocument>
 #include <QTextStream>
 #include <QMapIterator>
+#include <QDebug>
 
 WorkDay::WorkDay()
     : XmlData(nullptr)
@@ -77,18 +78,6 @@ WorkDay::setStop(QDateTime stop)
 WorkTask
 WorkDay::addTask(WorkTask task)
 {
-    // Find the original parent DOM node (= the real task) based on the currently known
-    // task's node
-    QDomElement origWorkTask;
-    QDomNode workTaskNode = task.node();
-    if (!workTaskNode.isNull()) {
-        // Parent cannot be null if the node is valid (ignoring tampering of the database
-        // by users)
-        origWorkTask = workTaskNode.parentNode().toElement();
-    }
-
-    bool appendTask = workTaskNode.isNull();
-
     // Find or create the current parent DOM node based on the associated task-id
     QDomElement workTask = findTask(task.task().id());
     if (workTask.isNull()) {
@@ -99,59 +88,46 @@ WorkDay::addTask(WorkTask task)
         m_node.appendChild(workTask);
     }
 
-    // If the task has no node assigned yet, then it can't have any parent yet. This means
-    // this particular work task is not yet known.
-    QDomElement workTaskElem;
-    if (workTaskNode.isNull()) {
-        workTaskElem = m_dataSource->createElement("time");
+    // Find the original parent DOM node (= the real task) based on the currently known
+    // task's node
+    int index = m_tasks.indexOf(task);
+    if (-1 == index) {
+        // This work task has just been started. Create a new DOM node
+        QDomElement workTaskElem = m_dataSource->createElement("time");
         workTask.appendChild(workTaskElem);
+
+        task.setNode(workTaskElem);
+        m_tasks.append(task);
+
+        return task;
     }
     else {
-        // If the original and current task are not equal then we need to remove the
-        // task's node from the original one and move it to the new node. If they are the
-        // same then we don't need to do anything.
+        // Here we can assume that the task found in the list has a DOM element associated
+        // with it (created when added to the list)
+        WorkTask& wota = m_tasks[index];
 
-        // The original work task cannot be null if we get to this point, but better be
-        // safe than sorry.
-        if (!origWorkTask.isNull() && workTask != origWorkTask) {
+        QDomNode    workTaskNode = wota.node();
+        QDomElement origWorkTask = workTaskNode.parentNode().toElement();
+
+        if (workTask != origWorkTask) {
             // This automatically reparents the node from its old parent to the new
             workTaskNode = workTask.appendChild(workTaskNode);
-
             if (workTaskNode.isNull()) {
                 // Reparenting didn't work
                 return WorkTask();
             }
 
-            // As is the case with the parent node, we have to replace the task first
-            // pushed into m_tasks with the updated one.
-            auto pos = std::find_if(std::begin(m_tasks), std::end(m_tasks),
-                         [task](const WorkTask& item){
-                return task.node() == item.node();
-            });
-
-            if (pos != std::end(m_tasks)) {
-                m_tasks.erase(pos);
-            }
-
-            appendTask = true;
+            // Now set the node on the reference object retrieved from the list. Fetching
+            // the task as reference from the list avoids removing it and then append it
+            // again with the new values. This way we modify it in place.
+            wota.setNode(workTaskNode);
+            wota.setTask(task.task());
         }
 
-        workTaskElem = workTaskNode.toElement();
+        wota.setStop(task.stop());
+
+        return wota;
     }
-
-    // Now we can simply set the values and be sure it's on the right node
-    workTaskElem.setAttribute("start", task.start().toString(Qt::ISODate));
-    workTaskElem.setAttribute("stop",  task.stop().toString(Qt::ISODate));
-
-    task.setNode(workTaskElem);
-
-    // Only append if this is a new task (=start a new task) or an existing one was
-    // replaced by a different task (=stop task)
-    if (appendTask) {
-        m_tasks.append(task);
-    }
-
-    return task;
 }
 
 void
@@ -316,6 +292,9 @@ WorkDay::totalTime() const
 {
     int duration = 0;
     for (WorkTask task : m_tasks) {
+        qDebug() << "Task <" << task.task().id() << "> Start <" << task.start()
+                 << "> Stop <" << task.stop() << "> Time <" << task.totalTime() << ">";
+
         duration += task.totalTime();
     }
     return duration;
