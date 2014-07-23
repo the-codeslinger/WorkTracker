@@ -23,6 +23,7 @@
 #include <QDateTime>
 #include <QList>
 #include <QDomElement>
+#include <QMetaType>
 
 class QDomDocument;
 
@@ -149,6 +150,32 @@ public:
      */
     static WorkDay findLastOpen(QDomDocument* dataSource);
 
+    /*!
+     * Get the number of workdays in the database.
+     *
+     * \param p_dataSource
+     * The database that contains the list of tasks.
+     *
+     * \return
+     * Returns the number of workdays in the database.
+     */
+    static int count(QDomDocument* p_dataSource);
+
+    /*!
+     * Returns the workday that can be found at the specified position in the DOM tree.
+     *
+     * \param p_index
+     * The position in the DOM tree.
+     *
+     * \param p_dataSource
+     * The database that contains the list of tasks.
+     *
+     * \return
+     * If the `p_index` is valid then a valid workday is returned. Otherwise the workday
+     * instance returned is null.
+     */
+    static WorkDay at(int p_index, QDomDocument* p_dataSource);
+
 private:
     /*!
      * The list of work task items.
@@ -171,6 +198,13 @@ private:
      * Create a new `WorkDay` from the DOM node.
      */
     static WorkDay fromDomNode(QDomElement node, QDomDocument* dataSource);
+
+    /*!
+     * Convenience method that hides some of the ugly DOM API.
+     */
+    static QDomNodeList getWorkDayNodes(QDomDocument* p_dataSource);
 };
+
+Q_DECLARE_METATYPE(WorkDay)
 
 #endif // WORKDAY_H

@@ -292,10 +292,38 @@ WorkDay::totalTime() const
 {
     int duration = 0;
     for (WorkTask task : m_tasks) {
-        qDebug() << "Task <" << task.task().id() << "> Start <" << task.start()
-                 << "> Stop <" << task.stop() << "> Time <" << task.totalTime() << ">";
-
         duration += task.totalTime();
     }
     return duration;
+}
+
+int
+WorkDay::count(QDomDocument* p_dataSource)
+{
+    QDomNodeList nodes = getWorkDayNodes(p_dataSource);
+    return nodes.size();
+}
+
+WorkDay
+WorkDay::at(int p_index, QDomDocument* p_dataSource)
+{
+    QDomNodeList nodes = getWorkDayNodes(p_dataSource);
+    QDomNode workday = nodes.at(p_index);
+    return fromDomNode(workday.toElement(), p_dataSource);
+}
+
+QDomNodeList
+WorkDay::getWorkDayNodes(QDomDocument* p_dataSource)
+{
+    QDomElement root  = p_dataSource->documentElement();
+    if (root.isNull()) {
+        return QDomNodeList();
+    }
+
+    QDomNode workdays = root.firstChildElement("workdays");
+    if (workdays.isNull()) {
+        return QDomNodeList();
+    }
+
+    return workdays.childNodes();
 }

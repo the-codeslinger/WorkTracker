@@ -182,6 +182,7 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <addaction name="actionEditor"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -229,6 +230,11 @@
    </property>
    <property name="menuRole">
     <enum>QAction::AboutQtRole</enum>
+   </property>
+  </action>
+  <action name="actionEditor">
+   <property name="text">
+    <string>Editor</string>
    </property>
   </action>
  </widget>

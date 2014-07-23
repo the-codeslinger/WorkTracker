@@ -24,8 +24,6 @@
 class QDomDocument;
 
 /*!
- * \brief Specific model implementation for the Qt Model View architecture.
- *
  * Internally this uses the DOM document as data source and the `Task` class to conform
  * to the API dictated by Qt.
  */

@@ -169,6 +169,11 @@ public slots:
      */
     void timeout();
 
+    /*!
+     * Shows the editor wizard.
+     */
+    void showEditor();
+
 private:
     /*!
      * The loaded XML database.

@@ -94,6 +94,7 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     connect(ui->actionQuit,     SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(ui->actionAbout_QT, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
     connect(ui->actionAbout,    SIGNAL(triggered()), this, SLOT(about()));
+    connect(ui->actionEditor,   SIGNAL(triggered()), m_controller, SLOT(showEditor()));
 }
 
 WorkTracker::~WorkTracker()

@@ -18,10 +18,14 @@
 #include "../model/ui/tasklistmodel.h"
 #include "../worktracker.h"
 #include "../helper.h"
+#include "../selectworkdaypage.h"
+#include "../editworktaskpage.h"
+#include "editorcontroller.h"
 
 #include <QDomDocument>
 #include <QDateTime>
 #include <QDebug>
+#include <QWizard>
 
 static const int TIMER_TIMEOUT = 60 * 1000;
 
@@ -233,4 +237,16 @@ WorkTrackerController::timeout()
     int minutes = static_cast<int>(totalMinutes % 60);
 
     emit totalTimeChanged(hours, minutes);
+}
+
+void
+WorkTrackerController::showEditor()
+{
+    EditorController econ(m_dataSource, this);
+    QWizard wizard(m_ui);
+    wizard.setWindowTitle(tr("Edit Work Tasks"));
+
+    wizard.addPage(new SelectWorkdayPage(&econ, &wizard));
+    wizard.addPage(new EditWorkTaskPage(&econ, &wizard));
+    wizard.exec();
 }
