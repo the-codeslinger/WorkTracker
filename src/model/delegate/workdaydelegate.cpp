@@ -56,9 +56,16 @@ WorkDayDelegate::paint(QPainter* p_painter, const QStyleOptionViewItem& p_option
         int hours   = static_cast<int>(totalMinutes / 60);
         int minutes = static_cast<int>(totalMinutes % 60);
 
+        // If the dates are different then the end string displays the date in addition
+        // to the time
+        QString endDateStr = localEnd.time().toString();
+        if (localStart.date() != localEnd.date()) {
+            endDateStr = localEnd.toString(Qt::SystemLocaleLongDate);
+        }
+
         QString topString = tr("%1 (%2h %3m)").arg(startDay).arg(hours).arg(minutes);
         QString staString = tr("Start: %1").arg(localStart.time().toString());
-        QString stoString = tr("End: %1").arg(localEnd.time().toString());
+        QString stoString = tr("End: %1").arg(endDateStr);
 
         p_painter->drawText(topRect, p_option.displayAlignment, topString);
 
