@@ -27,10 +27,15 @@ SelectWorkdayWidget::SelectWorkdayWidget(EditorController* p_controller, QWidget
     ui->setupUi(this);
     ui->daysListView->setModel(p_controller->workDayModel(ui->daysListView));
     ui->daysListView->setItemDelegate(new WorkDayDelegate(ui->daysListView));
-
 }
 
 SelectWorkdayWidget::~SelectWorkdayWidget()
 {
     delete ui;
+}
+
+QItemSelectionModel*
+SelectWorkdayWidget::selectionModel() const
+{
+    return ui->daysListView->selectionModel();
 }

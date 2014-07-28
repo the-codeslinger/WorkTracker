@@ -24,6 +24,7 @@ namespace Ui {
 }
 
 class EditorController;
+class QItemSelectionModel;
 
 /*!
  * Widget component used by `SelectWorkdayPage` to show a list view of available workdays
@@ -49,6 +50,13 @@ public:
      * Releases the resources of the UI widgets.
      */
     ~SelectWorkdayWidget();
+
+    /**
+     * @return
+     * Returns the selection model of the list view. Can be used to track selection
+     * changes.
+     */
+    QItemSelectionModel* selectionModel() const;
 
 private:
     Ui::SelectWorkdayWidget *ui;

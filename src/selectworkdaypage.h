@@ -20,6 +20,7 @@
 #include <QWizardPage>
 
 class EditorController;
+class QItemSelection;
 
 /*!
  * UI page to be used with a `QWizard` that shows the list to select the workday that
@@ -38,10 +39,21 @@ public:
     explicit SelectWorkdayPage(EditorController* p_controller,
                                QWidget* p_parent = nullptr);
 
-signals:
+    /**
+     * @return
+     * Only returns `true` if one item in the list has been selected.
+     */
+    bool isComplete() const;
 
 public slots:
+    /**
+     * Connected to the selection model of the list view and called when the selection
+     * changes.
+     */
+    void itemSelected(const QItemSelection& p_selected);
 
+private:
+    bool m_isComplete;
 
 };
 
