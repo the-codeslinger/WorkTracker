@@ -37,7 +37,9 @@ WorkDayModel::data(const QModelIndex& p_index, int p_role) const
     }
 
     if (Qt::DisplayRole == p_role || Qt::EditRole == p_role) {
-        WorkDay workday = WorkDay::at(p_index.row(), m_dataSource);
+        // Descending order means treating the last item in the tree as "0"
+        int reversedIndex = rowCount() - 1 - p_index.row();
+        WorkDay workday = WorkDay::at(reversedIndex, m_dataSource);
         if (workday.isNull()) {
             return QVariant();
         }
