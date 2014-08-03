@@ -34,9 +34,9 @@ EditWorkTaskPage::EditWorkTaskPage(EditorController* p_controller, QWidget* p_pa
     ui->splitter->setStretchFactor(1, 2);
 
     setTitle(tr("Edit Worktask"));
-    setSubTitle(tr("Select the task for which you want to change the start and stop "
-                   "times. You can go back to the previous page with or without saving "
-                   "the changes you make on this page."));
+    setSubTitle(tr("Select the task you want to edit. Changes are immediately saved. You "
+                   "can also go back to the previous page and select a different day to "
+                   "edit."));
 
     connect(ui->tasksListView, SIGNAL(clicked(QModelIndex)),
             this,              SLOT(taskSelected(QModelIndex)));
