@@ -204,6 +204,9 @@
    <property name="text">
     <string>&amp;Quit</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
    <property name="menuRole">
     <enum>QAction::QuitRole</enum>
    </property>
@@ -233,8 +236,15 @@
    </property>
   </action>
   <action name="actionEditor">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icon/Edit.svg</normaloff>:/icon/Edit.svg</iconset>
+   </property>
    <property name="text">
     <string>Editor</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
    </property>
   </action>
  </widget>

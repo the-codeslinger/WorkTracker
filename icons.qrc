@@ -11,5 +11,6 @@
         <file>icon/About -Qt.svg</file>
         <file>icon/About.svg</file>
         <file>icon/Quit.svg</file>
+        <file>icon/Edit.svg</file>
     </qresource>
 </RCC>
