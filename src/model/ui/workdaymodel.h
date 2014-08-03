@@ -31,13 +31,19 @@ public:
     /*!
      * Create a new model with a data source and a parent.
      *
-     * \param dataSource
-     * The data source is only used, ownership stays with the calling code.
-     *
      * \param parent
      * The parent of the `TaskListModel`.
      */
-    explicit WorkDayModel(QDomDocument* p_dataSource, QObject* p_parent = nullptr);
+    explicit WorkDayModel(QObject* p_parent = nullptr);
+
+    /*!
+     * Set a new data source.
+     *
+     * \param p_dataSource
+     * The new data source from which to read the values. This replaces the old one. The
+     * data source is only used, ownership stays with the calling code.
+     */
+    void setDataSource(QDomDocument* p_dataSource);
 
     /*!
      * \return

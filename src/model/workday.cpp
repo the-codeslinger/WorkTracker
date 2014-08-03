@@ -23,6 +23,8 @@
 #include <QMapIterator>
 #include <QDebug>
 
+#include <algorithm>
+
 WorkDay::WorkDay()
     : XmlData(nullptr)
 {
@@ -326,4 +328,33 @@ WorkDay::getWorkDayNodes(QDomDocument* p_dataSource)
     }
 
     return workdays.childNodes();
+}
+
+QList<Task>
+WorkDay::distinctTasks() const
+{
+    QList<Task> tasks;
+    for (const WorkTask& worktask : m_tasks) {
+        auto found = std::find_if(std::begin(tasks), std::end(tasks),
+                                  [worktask](const Task& p_task) {
+            return worktask.task().id() == p_task.id();
+        });
+
+        if (found == std::end(tasks)) {
+            tasks << worktask.task();
+        }
+    }
+    return tasks;
+}
+
+QList<WorkTask>
+WorkDay::workTasks(Task p_task) const
+{
+    QList<WorkTask> worktasks;
+    for (const WorkTask& worktask : m_tasks) {
+        if (worktask.task().id() == p_task.id()) {
+            worktasks << worktask;
+        }
+    }
+    return worktasks;
 }

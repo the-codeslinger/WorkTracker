@@ -32,13 +32,13 @@ SOURCES += src/main.cpp\
     src/model/xmldata.cpp \
     src/aboutdialog.cpp \
     src/helper.cpp \
-    src/selectworkdaywidget.cpp \
     src/selectworkdaypage.cpp \
-    src/editworktaskwidget.cpp \
     src/editworktaskpage.cpp \
     src/controller/editorcontroller.cpp \
     src/model/ui/workdaymodel.cpp \
-    src/model/delegate/workdaydelegate.cpp
+    src/model/delegate/workdaydelegate.cpp \
+    src/model/ui/selectedworkdaymodel.cpp \
+    src/model/ui/worktaskmodel.cpp
 
 HEADERS  += src/worktracker.h \
     src/model/ui/tasklistmodel.h \
@@ -49,13 +49,13 @@ HEADERS  += src/worktracker.h \
     src/model/xmldata.h \
     src/aboutdialog.h \
     src/helper.h \
-    src/selectworkdaywidget.h \
     src/selectworkdaypage.h \
-    src/editworktaskwidget.h \
     src/editworktaskpage.h \
     src/controller/editorcontroller.h \
     src/model/ui/workdaymodel.h \
-    src/model/delegate/workdaydelegate.h
+    src/model/delegate/workdaydelegate.h \
+    src/model/ui/selectedworkdaymodel.h \
+    src/model/ui/worktaskmodel.h
 
 FORMS    += ui/worktracker.ui \
     ui/aboutdialog.ui \

@@ -19,6 +19,10 @@
 
 #include <QWizardPage>
 
+namespace Ui {
+    class EditWorktaskWidget;
+}
+
 class EditorController;
 
 /*!
@@ -37,11 +41,36 @@ public:
      * \param p_parent
      * Parent of the widget.
      */
-    explicit EditWorkTaskPage(EditorController* p_controller, QWidget* p_parent = nullptr);
+    EditWorkTaskPage(EditorController* p_controller, QWidget* p_parent = nullptr);
+
+    /*!
+     * Releases the resources of the UI widgets.
+     */
+    ~EditWorkTaskPage();
+
+    /*!
+     * initialize the page with the selected work day from the previous page.
+     */
+    void initializePage();
+
+    /*!
+     * \return
+     * Returns the index of the selected task.
+     */
+    QModelIndex selectedTask() const;
 
 signals:
 
 public slots:
+    /*!
+     * Handles a selected task item. This refreshes the table view to contain the values
+     * of the newly selected item.
+     */
+    void taskSelected(const QModelIndex& p_index);
+
+private:
+    Ui::EditWorktaskWidget* ui;
+    EditorController*       m_controller;
 
 };
 

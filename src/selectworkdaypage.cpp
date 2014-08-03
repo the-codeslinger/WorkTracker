@@ -15,40 +15,67 @@
  */
 
 #include "selectworkdaypage.h"
-#include "selectworkdaywidget.h"
+#include "ui_selectworkdaywidget.h"
 #include "controller/editorcontroller.h"
+#include "model/ui/workdaymodel.h"
+#include "model/delegate/workdaydelegate.h"
 
 #include <QVBoxLayout>
 #include <QItemSelectionModel>
 
-SelectWorkdayPage::SelectWorkdayPage(EditorController* p_controller, QWidget* p_parent)
+SelectWorkDayPage::SelectWorkDayPage(EditorController* p_controller, QWidget* p_parent)
     : QWizardPage(p_parent)
+    , ui(new Ui::SelectWorkdayWidget)
+    , m_controller(p_controller)
     , m_isComplete(false)
 {
-    SelectWorkdayWidget* widget = new SelectWorkdayWidget(p_controller, this);
-    QItemSelectionModel* select = widget->selectionModel();
+    ui->setupUi(this);
+    ui->daysListView->setModel(new WorkDayModel(ui->daysListView));
+    ui->daysListView->setItemDelegate(new WorkDayDelegate(ui->daysListView));
+
     setTitle(tr("Select Workday"));
     setSubTitle(tr("Select the specific workday for which you want to edit individual "
                    "task items. You can always come back to this page."));
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
-    layout->addWidget(widget);
+    connect(ui->daysListView, SIGNAL(clicked(QModelIndex)),
+            this,             SLOT(itemSelected(QModelIndex)));
+}
 
-    connect(select, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this,   SLOT(itemSelected(QItemSelection)));
-
-    setLayout(layout);
+SelectWorkDayPage::~SelectWorkDayPage()
+{
+    delete ui;
 }
 
 bool
-SelectWorkdayPage::isComplete() const
+SelectWorkDayPage::isComplete() const
 {
     return m_isComplete;
 }
 
 void
-SelectWorkdayPage::itemSelected(const QItemSelection& p_selected)
+SelectWorkDayPage::initializePage()
 {
-    m_isComplete = !p_selected.isEmpty();
+    m_controller->setModelData(qobject_cast<WorkDayModel*>(ui->daysListView->model()));
+
+    if (0 < ui->daysListView->model()->rowCount()) {
+        QModelIndex index = ui->daysListView->model()->index(0, 0);
+        ui->daysListView->selectionModel()->select(index, QItemSelectionModel::Select);
+        itemSelected(index);
+    }
+}
+
+void
+SelectWorkDayPage::itemSelected(const QModelIndex& p_index)
+{
+    m_isComplete = p_index.isValid();
     emit completeChanged();
+}
+
+QVariant
+SelectWorkDayPage::selectedItem() const
+{
+    // The index returned could be invalid, but the model can cope with that. In that
+    // case we'll get an invalid QVariant back
+    QAbstractItemModel* model = ui->daysListView->model();
+    return model->data(ui->daysListView->selectionModel()->currentIndex());
 }

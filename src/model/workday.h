@@ -133,6 +133,18 @@ public:
 
     /*!
      * \return
+     * Returns a list of distinct tasks this workday is comprised of.
+     */
+    QList<Task> distinctTasks() const;
+
+    /*!
+     * \return
+     * Returns all `WorkTask` items that match the given `Task`.
+     */
+    QList<WorkTask> workTasks(Task p_task) const;
+
+    /*!
+     * \return
      * Returns the total amount of seconds that has been spent on all finished tasks
      * combined.
      */

@@ -17,16 +17,28 @@
 #include "workdaymodel.h"
 #include "../workday.h"
 
-WorkDayModel::WorkDayModel(QDomDocument* p_dataSource, QObject* p_parent)
+WorkDayModel::WorkDayModel(QObject* p_parent)
     : QAbstractListModel(p_parent)
-    , m_dataSource(p_dataSource)
+    , m_dataSource(nullptr)
 {
+}
+
+void
+WorkDayModel::setDataSource(QDomDocument* p_dataSource)
+{
+    beginResetModel();
+    m_dataSource = p_dataSource;
+    endResetModel();
 }
 
 int
 WorkDayModel::rowCount(const QModelIndex& /* ignored */) const
 {
-    return WorkDay::count(m_dataSource);
+    if (nullptr != m_dataSource) {
+        return WorkDay::count(m_dataSource);
+    }
+
+    return 0;
 }
 
 QVariant

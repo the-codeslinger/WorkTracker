@@ -15,22 +15,58 @@
  */
 
 #include "editworktaskpage.h"
-#include "editworktaskwidget.h"
+#include "ui_editworktaskwidget.h"
 #include "controller/editorcontroller.h"
+#include "model/ui/selectedworkdaymodel.h"
+#include "model/ui/worktaskmodel.h"
 
 #include <QVBoxLayout>
 
 EditWorkTaskPage::EditWorkTaskPage(EditorController* p_controller, QWidget* p_parent)
     : QWizardPage(p_parent)
+    , ui(new Ui::EditWorktaskWidget)
+    , m_controller(p_controller)
 {
-    EditWorktaskWidget* widget = new EditWorktaskWidget(p_controller, this);
+    ui->setupUi(this);
+    ui->tasksListView->setModel(new SelectedWorkDayModel(ui->tasksListView));
+    ui->taskTimesTableView->setModel(new WorkTaskModel(ui->taskTimesTableView));
+    ui->splitter->setStretchFactor(0, 1);
+    ui->splitter->setStretchFactor(1, 2);
+
     setTitle(tr("Edit Worktask"));
     setSubTitle(tr("Select the task for which you want to change the start and stop "
                    "times. You can go back to the previous page with or without saving "
                    "the changes you make on this page."));
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
-    layout->addWidget(widget);
+    connect(ui->tasksListView, SIGNAL(clicked(QModelIndex)),
+            this,              SLOT(taskSelected(QModelIndex)));
+}
 
-    setLayout(layout);
+EditWorkTaskPage::~EditWorkTaskPage()
+{
+    delete ui;
+}
+
+void
+EditWorkTaskPage::initializePage()
+{
+    auto* model = qobject_cast<SelectedWorkDayModel*>(ui->tasksListView->model());
+    m_controller->setModelData(model);
+
+    // Select the first item if there is one
+    if (0 < ui->tasksListView->model()->rowCount()) {
+        QModelIndex index = ui->tasksListView->model()->index(0, 0);
+        ui->tasksListView->selectionModel()->select(index, QItemSelectionModel::Select);
+        taskSelected(index);
+    }
+}
+
+void
+EditWorkTaskPage::taskSelected(const QModelIndex& p_index)
+{
+    if (p_index.isValid()) {
+        auto* source = qobject_cast<SelectedWorkDayModel*>(ui->tasksListView->model());
+        auto* destin = qobject_cast<WorkTaskModel*>(ui->taskTimesTableView->model());
+        m_controller->setModelData(p_index, source, destin);
+    }
 }

@@ -15,7 +15,13 @@
  */
 
 #include "editorcontroller.h"
+#include "../selectworkdaypage.h"
+#include "../editworktaskpage.h"
 #include "../model/ui/workdaymodel.h"
+#include "../model/ui/worktaskmodel.h"
+#include "../model/ui/selectedworkdaymodel.h"
+
+#include <QWizard>
 
 EditorController::EditorController(QDomDocument* p_dataSource, QObject* p_parent)
     : QObject(p_parent)
@@ -23,8 +29,39 @@ EditorController::EditorController(QDomDocument* p_dataSource, QObject* p_parent
 {
 }
 
-WorkDayModel*
-EditorController::workDayModel(QObject* p_parent) const
+void
+EditorController::run()
 {
-    return new WorkDayModel(m_dataSource, p_parent);
+    QWizard wizard(nullptr, Qt::WindowTitleHint | Qt::WindowSystemMenuHint
+                            | Qt::WindowCloseButtonHint);
+    wizard.setWindowTitle(tr("Edit Work Tasks"));
+
+    m_selectWorkDayPage = new SelectWorkDayPage(this, &wizard);
+    m_editWorkTaskPage  = new EditWorkTaskPage(this, &wizard);
+
+    wizard.addPage(m_selectWorkDayPage);
+    wizard.addPage(m_editWorkTaskPage);
+    wizard.exec();
+}
+
+void
+EditorController::setModelData(WorkDayModel* p_model)
+{
+    p_model->setDataSource(m_dataSource);
+}
+
+void
+EditorController::setModelData(SelectedWorkDayModel* p_model)
+{
+    QVariant value = m_selectWorkDayPage->selectedItem();
+    if (value.canConvert<WorkDay>()) {
+        p_model->setWorkDay(qvariant_cast<WorkDay>(value));
+    }
+}
+
+void
+EditorController::setModelData(const QModelIndex& p_index, SelectedWorkDayModel* p_source,
+                               WorkTaskModel* p_destination)
+{
+    p_destination->setWorkTasks(p_source->workTasks(p_index));
 }

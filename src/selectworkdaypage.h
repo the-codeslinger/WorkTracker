@@ -19,6 +19,10 @@
 
 #include <QWizardPage>
 
+namespace Ui {
+    class SelectWorkdayWidget;
+}
+
 class EditorController;
 class QItemSelection;
 
@@ -26,7 +30,7 @@ class QItemSelection;
  * UI page to be used with a `QWizard` that shows the list to select the workday that
  * shall be edited.
  */
-class SelectWorkdayPage : public QWizardPage
+class SelectWorkDayPage : public QWizardPage
 {
     Q_OBJECT
 public:
@@ -36,24 +40,41 @@ public:
      * \param p_parent
      * Parent of the page.
      */
-    explicit SelectWorkdayPage(EditorController* p_controller,
+    explicit SelectWorkDayPage(EditorController* p_controller,
                                QWidget* p_parent = nullptr);
 
-    /**
-     * @return
+    /*!
+     * Releases the resources of the UI widgets.
+     */
+    ~SelectWorkDayPage();
+
+    /*!
+     * \return
      * Only returns `true` if one item in the list has been selected.
      */
     bool isComplete() const;
 
+    /*!
+     * Selects the first item if there is any.
+     */
+    void initializePage();
+
+    /*!
+     * \return
+     * Returns the selected item.
+     */
+    QVariant selectedItem() const;
+
 public slots:
     /**
-     * Connected to the selection model of the list view and called when the selection
-     * changes.
+     * Sets `m_isComplete` to true if `p_index` is valid.
      */
-    void itemSelected(const QItemSelection& p_selected);
+    void itemSelected(const QModelIndex& p_index);
 
 private:
-    bool m_isComplete;
+    Ui::SelectWorkdayWidget* ui;
+    EditorController*        m_controller;
+    bool                     m_isComplete;
 
 };
 

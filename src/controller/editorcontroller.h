@@ -21,6 +21,10 @@
 
 class QDomDocument;
 class WorkDayModel;
+class WorkTaskModel;
+class SelectedWorkDayModel;
+class SelectWorkDayPage;
+class EditWorkTaskPage;
 
 /*!
  * Handles all the requests and necessary tasks that are part of editing workdays and
@@ -40,13 +44,38 @@ public:
      * \param p_parent
      * Parent of the controller.
      */
-    explicit EditorController(QDomDocument* p_dataSource, QObject* p_parent = nullptr);
+    EditorController(QDomDocument* p_dataSource, QObject* p_parent = nullptr);
+
+    /**
+     * Show a modal wizard dialog and block until it is finished.
+     */
+    void run();
 
     /*!
-     * \return
-     * Returns a list-model for use with workdays.
+     * Set the wizard page that lets the user select a workday for editing.
      */
-    WorkDayModel* workDayModel(QObject* p_parent) const;
+    void setWizardPage(SelectWorkDayPage* p_page);
+
+    /*!
+     * Set the wizard page that lets the
+     */
+    void setWizardPage(EditWorkTaskPage* p_page);
+
+    /*!
+     * Sets context specific data for the model of the select-workday page.
+     */
+    void setModelData(WorkDayModel* p_model);
+
+    /*!
+     * Sets context specific data for the select-task model of the edit-workday page.
+     */
+    void setModelData(SelectedWorkDayModel* p_model);
+
+    /*!
+     * Sets context specific data for the edit-worktask model of the edit-workday page.
+     */
+    void setModelData(const QModelIndex& p_index, SelectedWorkDayModel* p_source,
+                      WorkTaskModel* p_destination);
 
 signals:
 
@@ -57,6 +86,9 @@ private:
      * The loaded XML database.
      */
     QDomDocument* m_dataSource;
+
+    SelectWorkDayPage* m_selectWorkDayPage;
+    EditWorkTaskPage*  m_editWorkTaskPage;
 
 };
 
