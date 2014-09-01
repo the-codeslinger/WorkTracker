@@ -66,3 +66,7 @@ OTHER_FILES +=
 
 RESOURCES += \
     icons.qrc
+
+TRANSLATIONS = WorkTracker_de_DE.ts
+
+CODECFORSRC = UTF-8

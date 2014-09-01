@@ -26,12 +26,31 @@
 #include <QDomElement>
 #include <QFile>
 #include <QDir>
+#include <QTranslator>
+#include <QLibraryInfo>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     a.setOrganizationName("Typical Nerd");
     a.setApplicationName("WorkTracker");
+
+    QString appDir = QCoreApplication::applicationDirPath();
+    QString locale = QLocale::system().name();
+
+    QTranslator qtTranslator;
+    if (!qtTranslator.load(appDir + "/qt_" + locale + ".qm")) {
+        qDebug() << "Cannot load Qt translations";
+    }
+    a.installTranslator(&qtTranslator);
+
+    QTranslator translator;
+    if (!translator.load(appDir + "/WorkTracker_" + locale + ".qm")) {
+        qDebug() << "Cannot load WorkTracker translation";
+    }
+    else {
+        a.installTranslator(&translator);
+    }
 
     QString filePath;
 
