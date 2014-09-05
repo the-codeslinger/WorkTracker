@@ -79,3 +79,13 @@ SelectWorkDayPage::selectedItem() const
     QAbstractItemModel* model = ui->daysListView->model();
     return model->data(ui->daysListView->selectionModel()->currentIndex());
 }
+
+void 
+SelectWorkDayPage::changeEvent(QEvent* p_event)
+{
+    if (QEvent::LanguageChange == p_event->type()) {
+        ui->retranslateUi(this);
+    }
+    
+    QWizardPage::changeEvent(p_event);
+}

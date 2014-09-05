@@ -42,6 +42,15 @@ public:
      * Deletes the ui resources.
      */
     ~AboutDialog();
+    
+protected:
+    /*!
+     * Acts on the `QEvent::LanguageChange` event and retranslates the ui.
+     * 
+     * \param p_event
+     * The event that happened.
+     */
+    void changeEvent(QEvent* p_event);
 
 private:
     Ui::AboutDialog *ui;

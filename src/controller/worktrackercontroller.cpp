@@ -19,6 +19,7 @@
 #include "../worktracker.h"
 #include "../helper.h"
 #include "editorcontroller.h"
+#include "preferencescontroller.h"
 
 #include <QDomDocument>
 #include <QDateTime>
@@ -33,6 +34,7 @@ WorkTrackerController::WorkTrackerController(QDomDocument* dataSource)
     , m_recordingWorkTask(dataSource)
     , m_isNewWorkDay(false)
     , m_isRecording(false)
+    , m_preferencesController(nullptr)
 {
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
 }
@@ -241,4 +243,14 @@ WorkTrackerController::showEditor()
 {
     EditorController econ(m_dataSource, this);
     econ.run();
+}
+
+void 
+WorkTrackerController::showPreferences()
+{
+    if (nullptr == m_preferencesController) {
+        m_preferencesController = new PreferencesController(m_ui, this);
+    }
+    
+    m_preferencesController->run();
 }

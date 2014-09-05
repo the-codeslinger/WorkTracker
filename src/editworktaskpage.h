@@ -67,6 +67,15 @@ public slots:
      * of the newly selected item.
      */
     void taskSelected(const QModelIndex& p_index);
+    
+protected:
+    /*!
+     * Acts on the `QEvent::LanguageChange` event and retranslates the ui.
+     * 
+     * \param p_event
+     * The event that happened.
+     */
+    void changeEvent(QEvent* p_event);
 
 private:
     Ui::EditWorktaskWidget* ui;

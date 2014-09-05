@@ -30,6 +30,7 @@
 class QDomDocument;
 class TaskListModel;
 class WorkTracker;
+class PreferencesController;
 
 /*!
  * \brief Contains the business logic of the WorkTracker application.
@@ -173,6 +174,11 @@ public slots:
      * Shows the editor wizard.
      */
     void showEditor();
+    
+    /*!
+     * Shows the settings dialog.
+     */
+    void showPreferences();
 
 private:
     /*!
@@ -209,6 +215,11 @@ private:
      * The timer is used to fire every minute when a task is currently running.
      */
     QTimer m_timer;
+    
+    /*!
+     * Lazily created settings controller and dialog.
+     */
+    PreferencesController* m_preferencesController;
 
     /*!
      * The actual implementation that starts a new workday. Called by `toggleWorkDay()`.

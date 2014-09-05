@@ -95,6 +95,8 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     connect(ui->actionAbout_QT, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
     connect(ui->actionAbout,    SIGNAL(triggered()), this, SLOT(about()));
     connect(ui->actionEditor,   SIGNAL(triggered()), m_controller, SLOT(showEditor()));
+    connect(ui->actionPreferences, &QAction::triggered, 
+            m_controller,          &WorkTrackerController::showPreferences);
 }
 
 WorkTracker::~WorkTracker()
@@ -267,4 +269,14 @@ void
 WorkTracker::totalTimeChanged(int hours, int minutes)
 {
     m_statusDuration->setText(tr("Total time %1h %2m").arg(hours).arg(minutes));
+}
+
+void 
+WorkTracker::changeEvent(QEvent* p_event)
+{
+    if (QEvent::LanguageChange == p_event->type()) {
+        ui->retranslateUi(this);
+    }
+    
+    QMainWindow::changeEvent(p_event);
 }

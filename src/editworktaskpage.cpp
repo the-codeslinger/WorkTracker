@@ -70,3 +70,13 @@ EditWorkTaskPage::taskSelected(const QModelIndex& p_index)
         m_controller->setModelData(p_index, source, destin);
     }
 }
+
+void 
+EditWorkTaskPage::changeEvent(QEvent* p_event)
+{
+    if (QEvent::LanguageChange == p_event->type()) {
+        ui->retranslateUi(this);
+    }
+    
+    QWizardPage::changeEvent(p_event);
+}

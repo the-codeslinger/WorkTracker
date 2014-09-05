@@ -70,6 +70,15 @@ public slots:
      * Sets `m_isComplete` to true if `p_index` is valid.
      */
     void itemSelected(const QModelIndex& p_index);
+    
+protected:
+    /*!
+     * Acts on the `QEvent::LanguageChange` event and retranslates the ui.
+     * 
+     * \param p_event
+     * The event that happened.
+     */
+    void changeEvent(QEvent* p_event);
 
 private:
     Ui::SelectWorkdayWidget* ui;

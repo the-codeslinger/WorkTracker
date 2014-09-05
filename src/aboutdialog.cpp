@@ -32,3 +32,13 @@ AboutDialog::~AboutDialog()
 {
     delete ui;
 }
+
+void 
+AboutDialog::changeEvent(QEvent* p_event)
+{
+    if (QEvent::LanguageChange == p_event->type()) {
+        ui->retranslateUi(this);
+    }
+    
+    QDialog::changeEvent(p_event);
+}
