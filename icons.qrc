@@ -8,9 +8,14 @@
         <file>icon/Stop-Task.svg</file>
         <file>icon/Start-Task.svg</file>
         <file>icon/Select.svg</file>
-        <file>icon/About -Qt.svg</file>
         <file>icon/About.svg</file>
         <file>icon/Quit.svg</file>
         <file>icon/Edit.svg</file>
+        <file>icon/Preferences.svg</file>
+        <file>icon/Flag_de_DE.svg</file>
+        <file>icon/Flag_en_US.svg</file>
+        <file>icon/About-Qt.svg</file>
+        <file>icon/Add.svg</file>
+        <file>icon/Remove.svg</file>
     </qresource>
 </RCC>
