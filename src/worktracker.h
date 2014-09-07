@@ -61,6 +61,24 @@ public:
      * used to show suggestions to the user based on previous input.
      */
     void setTaskListModel(TaskListModel* model);
+    
+    /**
+     * Set a specific language menu item to checked. This unchecks all other items.
+     * 
+     * @param p_locale
+     * The locale of the item to check. `QAction::setData(const QVariant&)` must have been
+     * called on the menu actions with the locale for this to work.
+     */
+    void setLanguageChecked(const QString& p_locale);
+    
+signals:
+    /*!
+     * Emitted when a different language has been selected in the ui.
+     *
+     * \param p_locale
+     * The locale of the selected language.
+     */
+    void languageChanged(const QString& p_locale);
 
 public slots:
     /*!
@@ -132,6 +150,11 @@ private slots:
      */
     void about();
     
+    /*!
+     * Handles the `QAction::triggered` signals related to language selection;
+     */
+    void languageSelected();
+    
 protected:
     /*!
      * Acts on the `QEvent::LanguageChange` event and retranslates the ui.
@@ -193,6 +216,18 @@ private:
      * The full text that shall be displayed and eventually shortened.
      */
     void setShortenedTaskStatusText(const QString& text) const;
+    
+    /*!
+     * Sets the user visible strings on widgets not created by designer, e.g. status bar
+     * labels.
+     */
+    void translate();
+    
+    /*!
+     * Sets custom data for all language based `QAction` objects. Every action then 
+     * contains the locale-string which is easy to query by event handlers.
+     */
+    void setupLanguageMenu();
 };
 
 #endif // WORKTRACKER_H

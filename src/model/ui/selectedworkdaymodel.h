@@ -36,18 +36,42 @@ public:
      */
     explicit SelectedWorkDayModel(QObject* p_parent = nullptr);
 
-    /**
-     * @return
+    /*!
+     * \return
      * Returns the distinct number of worktasks.
      */
     int rowCount(const QModelIndex& p_parent) const;
 
-    /**
-     * @return
+    /*!
+     * \return
      * Returns the name of the work task at the given position if the index is valid.
      */
     QVariant data(const QModelIndex& p_index, int p_role = Qt::DisplayRole) const;
+    
+    /*!
+     * Set name of a specific task.
+     * 
+     * \param p_index
+     * The position of the task in the model.
+     * 
+     * \param p_value
+     * The new name of the task.
+     * 
+     * \param p_role
+     * The role for which to edit the task. Only `Qt::EditRole` is handled.
+     * 
+     * \return 
+     * Returns `true` if the name was changed or `false` otherwise.
+     */
+    bool setData(const QModelIndex& p_index, const QVariant& p_value, 
+                 int p_role = Qt::EditRole);
 
+    /*!
+     * \return 
+     * Returns the supported flags for the item at the specified index.
+     */
+    Qt::ItemFlags flags(const QModelIndex& p_index) const;
+    
     /*!
      * Set a new workday for the model. This replaces the old one.
      */

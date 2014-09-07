@@ -23,6 +23,7 @@
 #include <QRect>
 #include <QStyle>
 #include <QApplication>
+#include <QLocale>
 
 WorkDayDelegate::WorkDayDelegate(QObject* p_parent)
     : QStyledItemDelegate(p_parent)
@@ -66,7 +67,7 @@ WorkDayDelegate::paint(QPainter* p_painter, const QStyleOptionViewItem& p_option
         QDateTime localStart = workday.start().toLocalTime();
         QDateTime localEnd   = workday.stop().toLocalTime();
 
-        QString startDay = localStart.date().toString(Qt::SystemLocaleLongDate);
+        QString startDay = localStart.date().toString(Qt::DefaultLocaleLongDate);
         int totalMinutes = static_cast<int>(workday.totalTime() / 60);
 
         int hours   = static_cast<int>(totalMinutes / 60);
@@ -76,7 +77,9 @@ WorkDayDelegate::paint(QPainter* p_painter, const QStyleOptionViewItem& p_option
         // to the time
         QString endDateStr = localEnd.time().toString();
         if (localStart.date() != localEnd.date()) {
-            endDateStr = localEnd.toString(Qt::SystemLocaleLongDate);
+            endDateStr = QString("%1 %2")
+                            .arg(localEnd.date().toString(Qt::DefaultLocaleLongDate))
+                            .arg(localEnd.time().toString(Qt::DefaultLocaleShortDate));
         }
 
         QString topString = tr("%1 (%2h %3m)").arg(startDay).arg(hours).arg(minutes);

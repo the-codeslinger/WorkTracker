@@ -31,6 +31,7 @@ class QDomDocument;
 class TaskListModel;
 class WorkTracker;
 class PreferencesController;
+class QTranslator;
 
 /*!
  * \brief Contains the business logic of the WorkTracker application.
@@ -163,6 +164,24 @@ public slots:
      * finished.
      */
     void toggleTask(QString name);
+    
+    /*!
+     * Replaces the currently running task with a new one. If the current task is not yet
+     * finished then the current time is used.
+     * 
+     * \param p_task
+     * The new task to replace an existing one. It is only accepted if `WorkTask::task()`
+     * returns a valid instance. If the start time is missing the current one will be 
+     * used.
+     */
+    void setActiveTask(WorkTask p_task);
+    
+    /*!
+     * Stops recording time for the current task. This method can be used to "flush the
+     * pipeline" if the task has been modified outside the controller (e.g. through the
+     * editor). If the task doesn't have a stop time the current one will be used.
+     */
+    void closeCurrentTask();
 
     /*!
      * Connected to q `QTimer` once a task is running. Calculates the total sum of all
@@ -179,6 +198,15 @@ public slots:
      * Shows the settings dialog.
      */
     void showPreferences();
+
+    /**
+     * Installs the language based on the locale.
+     *
+     * @param p_locale
+     * The locale for which to install the language. If the locale doesn't exist then the
+     * language is not changed.
+     */
+    void setLanguage(const QString& p_locale);
 
 private:
     /*!
@@ -222,6 +250,16 @@ private:
     PreferencesController* m_preferencesController;
 
     /*!
+     * Maps the locale to the Qt and the application translation.
+     */
+    QMap<QString, QPair<QTranslator*, QTranslator*>> m_translations;
+    /*!
+     * The currently used language. This is needed to remove the currently installed
+     * translations when `WorkTrackerController::setLanguage(const QString&)` is called.
+     */
+    QString m_currentLocale;
+
+    /*!
      * The actual implementation that starts a new workday. Called by `toggleWorkDay()`.
      */
     void startWorkDay(QDateTime now);
@@ -247,6 +285,12 @@ private:
      * Searches the database for a task by `name` or adds a new one if it can't be found.
      */
     Task findOrCreateTaskItem(QString name);
+    
+    /*!
+     * Sets up the language and translation related objects. Loads the translation files
+     * and sets the system's language or the one the user selected.
+     */
+    void loadTranslations();
 };
 
 #endif // WORKTRACKERCONTROLLER_H

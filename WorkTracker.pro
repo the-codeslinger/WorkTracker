@@ -72,6 +72,7 @@ OTHER_FILES +=
 RESOURCES += \
     icons.qrc
 
-TRANSLATIONS = WorkTracker_de_DE.ts
+TRANSLATIONS = l10n/de_DE.ts \
+               l10n/en_US.ts
 
 CODECFORSRC = UTF-8

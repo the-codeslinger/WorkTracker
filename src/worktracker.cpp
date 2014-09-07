@@ -42,6 +42,7 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     , m_collapsedHeight(0)
 {
     ui->setupUi(this);
+    setupLanguageMenu();
 
     m_showAnimation.setTargetObject(this);
     m_showAnimation.setPropertyName("size");
@@ -54,10 +55,11 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     ui->frame->setVisible(false);
     ui->textEdit->setVisible(false);
 
-    m_statusRecording = new QLabel(tr("Not recording anything yet"), this);
-    m_statusDuration  = new QLabel(tr("Total time %1h %2m").arg(0).arg(0), this);
+    m_statusRecording = new QLabel(this);
+    m_statusDuration  = new QLabel(this);
     ui->statusBar->addWidget(m_statusRecording, 1);
     ui->statusBar->addWidget(m_statusDuration, 0);
+    translate();
 
     // Capture the current width which is set by the designer. Then we resize the window
     // to only take up as much space as is needed with the edit field and text edit not
@@ -276,7 +278,51 @@ WorkTracker::changeEvent(QEvent* p_event)
 {
     if (QEvent::LanguageChange == p_event->type()) {
         ui->retranslateUi(this);
+        translate();
     }
     
     QMainWindow::changeEvent(p_event);
+}
+
+void 
+WorkTracker::translate()
+{
+    m_statusRecording->setText(tr("Not recording anything yet"));
+    m_statusDuration->setText(tr("Total time %1h %2m").arg(0).arg(0));
+}
+
+void 
+WorkTracker::setupLanguageMenu()
+{
+    ui->actionEnUS->setData(QVariant("en_US"));
+    ui->actionDeDE->setData(QVariant("de_DE"));
+    
+    connect(ui->actionEnUS, &QAction::triggered, this, &WorkTracker::languageSelected);
+    connect(ui->actionDeDE, &QAction::triggered, this, &WorkTracker::languageSelected);
+    
+    connect(this,         &WorkTracker::languageChanged, 
+            m_controller, &WorkTrackerController::setLanguage);
+}
+
+void 
+WorkTracker::languageSelected()
+{
+    QAction* source = qobject_cast<QAction*>(sender());
+    if (nullptr == source) {
+        qDebug() << "Sender is not a QAction. Cannot change language.";
+        return;
+    }
+    
+    QString locale = source->data().toString();
+    setLanguageChecked(locale);
+    emit languageChanged(locale);
+}
+
+void 
+WorkTracker::setLanguageChecked(const QString& p_locale)
+{
+    for (QAction* action : ui->menuLanguage->actions()) {
+        QString locale = action->data().toString();
+        action->setChecked(locale == p_locale);
+    }
 }

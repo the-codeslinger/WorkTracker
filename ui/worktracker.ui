@@ -175,7 +175,7 @@
      <x>0</x>
      <y>0</y>
      <width>499</width>
-     <height>31</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -193,7 +193,15 @@
     <addaction name="actionAbout_QT"/>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuLanguage">
+    <property name="title">
+     <string>&amp;Language</string>
+    </property>
+    <addaction name="actionEnUS"/>
+    <addaction name="actionDeDE"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuLanguage"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -227,7 +235,7 @@
   <action name="actionAbout_QT">
    <property name="icon">
     <iconset resource="../icons.qrc">
-     <normaloff>:/icon/About -Qt.svg</normaloff>:/icon/About -Qt.svg</iconset>
+     <normaloff>:/icon/About-Qt.svg</normaloff>:/icon/About-Qt.svg</iconset>
    </property>
    <property name="text">
     <string>About &amp;Qt</string>
@@ -242,21 +250,55 @@
      <normaloff>:/icon/Edit.svg</normaloff>:/icon/Edit.svg</iconset>
    </property>
    <property name="text">
-    <string>Editor</string>
+    <string>&amp;Editor</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+E</string>
    </property>
   </action>
   <action name="actionPreferences">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icon/Preferences.svg</normaloff>:/icon/Preferences.svg</iconset>
+   </property>
    <property name="text">
     <string>Preferences</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+,</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
    <property name="menuRole">
     <enum>QAction::PreferencesRole</enum>
+   </property>
+  </action>
+  <action name="actionEnUS">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icon/Flag_en_US.svg</normaloff>:/icon/Flag_en_US.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;English (US)</string>
+   </property>
+  </action>
+  <action name="actionDeDE">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icon/Flag_de_DE.svg</normaloff>:/icon/Flag_de_DE.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;German</string>
    </property>
   </action>
  </widget>

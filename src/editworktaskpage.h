@@ -24,6 +24,7 @@ namespace Ui {
 }
 
 class EditorController;
+class QItemSelection;
 
 /*!
  * UI page to be used with a `QWizard` that shows the list to edit worktask items.
@@ -66,7 +67,7 @@ public slots:
      * Handles a selected task item. This refreshes the table view to contain the values
      * of the newly selected item.
      */
-    void taskSelected(const QModelIndex& p_index);
+    void taskSelected(const QItemSelection& p_selection);
     
 protected:
     /*!

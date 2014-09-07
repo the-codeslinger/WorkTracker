@@ -34,11 +34,39 @@ SelectedWorkDayModel::data(const QModelIndex& p_index, int p_role) const
         return QVariant();
     }
 
-    if (Qt::DisplayRole == p_role) {
+    if (Qt::DisplayRole == p_role || Qt::EditRole == p_role) {
         return QVariant(m_tasks.at(p_index.row()).name());
     }
 
     return QVariant();
+}
+
+bool 
+SelectedWorkDayModel::setData(const QModelIndex& p_index, const QVariant& p_value, 
+                              int p_role)
+{
+    if (!p_index.isValid() || p_index.row() >= m_tasks.count()) {
+        return false;
+    }
+    
+    if (Qt::EditRole == p_role) {
+        Task task = m_tasks.at(p_index.row());
+        QString name = p_value.toString();
+        if (!name.isEmpty()) {
+            task.setName(name);
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+Qt::ItemFlags 
+SelectedWorkDayModel::flags(const QModelIndex& p_index) const
+{
+    Qt::ItemFlags flags = QAbstractListModel::flags(p_index);
+    flags |= Qt::ItemIsEditable;
+    return flags;
 }
 
 void

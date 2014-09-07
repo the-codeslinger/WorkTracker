@@ -21,6 +21,7 @@
 #include "model/ui/worktaskmodel.h"
 
 #include <QVBoxLayout>
+#include <QItemSelection>
 
 EditWorkTaskPage::EditWorkTaskPage(EditorController* p_controller, QWidget* p_parent)
     : QWizardPage(p_parent)
@@ -38,8 +39,9 @@ EditWorkTaskPage::EditWorkTaskPage(EditorController* p_controller, QWidget* p_pa
                    "can also go back to the previous page and select a different day to "
                    "edit."));
 
-    connect(ui->tasksListView, SIGNAL(clicked(QModelIndex)),
-            this,              SLOT(taskSelected(QModelIndex)));
+    connect(ui->tasksListView->selectionModel(), 
+                  SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            this, SLOT(taskSelected(QItemSelection)));
 }
 
 EditWorkTaskPage::~EditWorkTaskPage()
@@ -57,17 +59,21 @@ EditWorkTaskPage::initializePage()
     if (0 < ui->tasksListView->model()->rowCount()) {
         QModelIndex index = ui->tasksListView->model()->index(0, 0);
         ui->tasksListView->selectionModel()->select(index, QItemSelectionModel::Select);
-        taskSelected(index);
     }
 }
 
 void
-EditWorkTaskPage::taskSelected(const QModelIndex& p_index)
+EditWorkTaskPage::taskSelected(const QItemSelection& p_selection)
 {
-    if (p_index.isValid()) {
-        auto* source = qobject_cast<SelectedWorkDayModel*>(ui->tasksListView->model());
-        auto* destin = qobject_cast<WorkTaskModel*>(ui->taskTimesTableView->model());
-        m_controller->setModelData(p_index, source, destin);
+    QModelIndexList indexes = p_selection.indexes();
+    if (!indexes.isEmpty()) {
+        // Only single selection allowed
+        QModelIndex index = indexes.at(0);
+        if (index.isValid()) {
+            auto* source = qobject_cast<SelectedWorkDayModel*>(ui->tasksListView->model());
+            auto* destin = qobject_cast<WorkTaskModel*>(ui->taskTimesTableView->model());
+            m_controller->setModelData(index, source, destin);
+        }
     }
 }
 
