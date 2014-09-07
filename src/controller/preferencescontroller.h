@@ -38,6 +38,14 @@ signals:
      * `false` if all changes have been discarded.
      */
     void finished(bool p_saved);
+
+    /*!
+     * Emitted when a different language has been selected in the ui.
+     *
+     * \param p_locale
+     * The locale of the selected language.
+     */
+    void languageChanged(const QString& p_locale);
     
 public slots:
     /*!

@@ -3,32 +3,20 @@
  <class>PreferencesDialog</class>
  <widget class="QDialog" name="PreferencesDialog">
   <property name="windowModality">
-   <enum>Qt::ApplicationModal</enum>
+   <enum>Qt::NonModal</enum>
   </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>389</width>
-    <height>180</height>
+    <height>106</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Preferences</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
-   <item>
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
-      <string>Language</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QComboBox" name="languageBox"/>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item>
     <spacer name="verticalSpacer">
      <property name="orientation">

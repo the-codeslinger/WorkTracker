@@ -34,6 +34,15 @@ public:
      */
     ~PreferencesDialog();
     
+protected:
+    /*!
+     * Acts on the `QEvent::LanguageChange` event and retranslates the ui.
+     *
+     * \param p_event
+     * The event that happened.
+     */
+    void changeEvent(QEvent* p_event);
+    
 private:
     Ui::PreferencesDialog* ui;
     PreferencesController* m_controller;

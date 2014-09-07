@@ -1,6 +1,8 @@
 #include "preferencescontroller.h"
 #include "../preferencesdialog.h"
 
+#include <QSettings>
+
 PreferencesController::PreferencesController(QWidget* p_parentWidget, QObject* p_parent)
     : QObject(p_parent)
     , m_dialog(new PreferencesDialog(this, p_parentWidget))
@@ -14,7 +16,6 @@ PreferencesController::PreferencesController(QWidget* p_parentWidget, QObject* p
 void
 PreferencesController::run()
 {
-    m_dialog->setModal(true);
     m_dialog->show();
 }
 
