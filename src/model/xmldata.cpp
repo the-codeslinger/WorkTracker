@@ -44,6 +44,12 @@ XmlData::XmlData(XmlData&& temp)
     temp.m_dataSource = nullptr;
 }
 
+QDomDocument* 
+XmlData::dataSource() const
+{
+    return m_dataSource;
+}
+
 void
 XmlData::setDataSource(QDomDocument* dataSource)
 {

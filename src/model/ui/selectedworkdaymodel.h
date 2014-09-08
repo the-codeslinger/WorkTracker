@@ -65,6 +65,15 @@ public:
      */
     bool setData(const QModelIndex& p_index, const QVariant& p_value, 
                  int p_role = Qt::EditRole);
+    
+    /*!
+     * Removes a task and all of its recorded times from the list. This is permanent and
+     * cannot be undone.
+     * 
+     * \return 
+     * `true` on success and `false` on error.
+     */
+    bool removeTask();
 
     /*!
      * \return 
@@ -82,6 +91,16 @@ public:
      * Returns the list of work task items for the selected index.
      */
     QList<WorkTask> workTasks(const QModelIndex& p_index) const;
+    
+public slots:
+    /*!
+     * Creates a task without a name and appends it to the list of existing tasks.
+     * 
+     * \return 
+     * `true` on success and `false` on error.
+     */
+    bool appendTask();
+    
 
 private:
     WorkDay     m_workday;

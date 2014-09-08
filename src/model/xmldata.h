@@ -40,6 +40,13 @@ class XmlData
 {
 public:
     /*!
+     * \return 
+     * Returns the data source of this XML data object. Do not delete the `QDomDocument`
+     * instance.
+     */
+    QDomDocument* dataSource() const;
+    
+    /*!
      * Set the data source from which to read the data.
      *
      * \param dataSource

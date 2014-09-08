@@ -22,6 +22,7 @@
 
 #include <QVBoxLayout>
 #include <QItemSelection>
+#include <QToolButton>
 
 EditWorkTaskPage::EditWorkTaskPage(EditorController* p_controller, QWidget* p_parent)
     : QWizardPage(p_parent)
@@ -29,8 +30,12 @@ EditWorkTaskPage::EditWorkTaskPage(EditorController* p_controller, QWidget* p_pa
     , m_controller(p_controller)
 {
     ui->setupUi(this);
-    ui->tasksListView->setModel(new SelectedWorkDayModel(ui->tasksListView));
-    ui->taskTimesTableView->setModel(new WorkTaskModel(ui->taskTimesTableView));
+    
+    SelectedWorkDayModel* tasks = new SelectedWorkDayModel(ui->tasksListView);
+    WorkTaskModel* times = new WorkTaskModel(ui->taskTimesTableView);
+            
+    ui->tasksListView->setModel(tasks);
+    ui->taskTimesTableView->setModel(times);
     ui->splitter->setStretchFactor(0, 1);
     ui->splitter->setStretchFactor(1, 2);
 
@@ -42,6 +47,8 @@ EditWorkTaskPage::EditWorkTaskPage(EditorController* p_controller, QWidget* p_pa
     connect(ui->tasksListView->selectionModel(), 
                   SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             this, SLOT(taskSelected(QItemSelection)));
+    connect(ui->addTaskButton, &QToolButton::clicked, 
+            tasks,             &SelectedWorkDayModel::appendTask);
 }
 
 EditWorkTaskPage::~EditWorkTaskPage()

@@ -79,7 +79,26 @@ public:
 
 signals:
 
-public slots:
+protected slots:
+    /*!
+     *
+     */
+    void addTask();
+    
+    /*!
+     *
+     */
+    void removeTask();
+    
+    /*!
+     *
+     */
+    void addTime();
+    
+    /*!
+     *
+     */
+    void removeTime();
 
 private:
     /*!

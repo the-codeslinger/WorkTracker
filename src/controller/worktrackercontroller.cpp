@@ -343,11 +343,27 @@ WorkTrackerController::loadTranslations()
 void 
 WorkTrackerController::setActiveTask(WorkTask p_task)
 {
+    if (p_task.isNull() || p_task.task().name().isEmpty()) {
+        return; // Sorry pal, can't help ya.
+    }
     
+    closeCurrentTask();
+    if (p_task.start().isNull()) {
+        p_task.setStart(QDateTime::currentDateTimeUtc());
+    }
+    
+    m_recordingWorkTask = p_task;
+    emit workTaskStarted(p_task.start(), p_task.task().name());
 }
 
 void 
 WorkTrackerController::closeCurrentTask()
 {
+    if (m_recordingWorkTask.isNull()) {
+        return; // Nothing to do here
+    }
     
+    // Simply rely on what we already have. This also takes care about sending the 
+    // necessary signal to update the ui.
+    stopWorkTask(m_recordingWorkTask.task().name());
 }
