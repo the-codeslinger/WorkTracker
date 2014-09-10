@@ -25,32 +25,24 @@ WorkTask::WorkTask()
 {
 }
 
-WorkTask::WorkTask(QDomDocument* dataSource)
-    : XmlData(dataSource)
-    , m_task(dataSource)
+WorkTask::WorkTask(QDomDocument* p_dataSource)
+    : XmlData(p_dataSource)
+{
+    // This results in only XmlData::m_node being created without being attached to the
+    // DOM tree.
+    createNode(QDomNode(), Task(), QDateTime(), QDateTime());
+}
+
+WorkTask::WorkTask(QDomDocument* p_dataSource, QDomElement p_node)
+    : XmlData(p_dataSource, p_node)
 {
 }
 
-WorkTask::WorkTask(QDomDocument* dataSource, QDomElement node, Task task, QDateTime start,
-                   QDateTime stop)
-    : XmlData(dataSource, node)
-    , m_task(task)
-    , m_start(start)
-    , m_stop(stop)
+WorkTask::WorkTask(QDomDocument* p_dataSource, QDomNode p_parent, Task p_task, 
+                   QDateTime p_start, QDateTime p_stop)
+    : XmlData(p_dataSource)
 {
-    if (!node.isNull()) {
-        setStart(start);
-        setStop(stop);
-    }
-}
-
-void
-WorkTask::setNode(QDomNode node)
-{
-    XmlData::setNode(node);
-    // Write the current data to the node
-    setStart(m_start);
-    setStop(m_stop);
+    createNode(p_parent, p_task, p_start, p_stop);
 }
 
 Task
@@ -60,9 +52,9 @@ WorkTask::task() const
 }
 
 void
-WorkTask::setTask(Task task)
+WorkTask::setTask(Task p_task)
 {
-    m_task = task;
+    m_task = p_task;
 }
 
 QDateTime
@@ -162,7 +154,7 @@ WorkTask::fromDomNode(QDomNode* node, QDomDocument* dataSource)
         QDateTime stop  = timestampFromAttr(&attrNode);
 
         // Only start needs to be valid. Stop may be empty which makes this an ongoing
-        // task (maybe a sudden shutdown f the application).
+        // task (maybe a sudden shutdown of the application).
         if (start.isValid()) {
             workTasks.append(WorkTask(dataSource, timeNode.toElement(), task, start,
                                       stop));
@@ -200,8 +192,16 @@ WorkTask::idFromAttr(QDomNode* attr)
     return id;
 }
 
-bool
-WorkTask::operator==(const WorkTask& other) const
+void 
+WorkTask::createNode(QDomNode p_parent, Task p_task, QDateTime p_start, QDateTime p_stop)
 {
-    return m_node == other.m_node;
+    m_node = m_dataSource->createElement("time");
+    
+    if (!p_parent.isNull()) {
+        p_parent.appendChild(m_node);
+    }
+    
+    if (!p_task.isNull()) {
+        
+    }
 }

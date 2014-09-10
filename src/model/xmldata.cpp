@@ -20,28 +20,28 @@
 #include <QVariant>
 #include <QDomDocument>
 
-XmlData::XmlData(QDomDocument* dataSource)
-    : m_dataSource(dataSource)
+XmlData::XmlData(QDomDocument* p_dataSource)
+    : m_dataSource(p_dataSource)
 {
 }
 
-XmlData::XmlData(QDomDocument* dataSource, QDomElement node)
-    : m_dataSource(dataSource)
-    , m_node(node)
+XmlData::XmlData(QDomDocument* p_dataSource, QDomElement p_node)
+    : m_dataSource(p_dataSource)
+    , m_node(p_node)
 {
 }
 
-XmlData::XmlData(const XmlData& other)
-    : m_dataSource(other.m_dataSource)
-    , m_node(other.m_node)
+XmlData::XmlData(const XmlData& p_other)
+    : m_dataSource(p_other.m_dataSource)
+    , m_node(p_other.m_node)
 {
 }
 
-XmlData::XmlData(XmlData&& temp)
-    : m_dataSource(temp.m_dataSource)
-    , m_node(temp.m_node)
+XmlData::XmlData(XmlData&& p_temp)
+    : m_dataSource(p_temp.m_dataSource)
+    , m_node(p_temp.m_node)
 {
-    temp.m_dataSource = nullptr;
+    p_temp.m_dataSource = nullptr;
 }
 
 QDomDocument* 
@@ -51,9 +51,9 @@ XmlData::dataSource() const
 }
 
 void
-XmlData::setDataSource(QDomDocument* dataSource)
+XmlData::setDataSource(QDomDocument* p_dataSource)
 {
-    m_dataSource = dataSource;
+    m_dataSource = p_dataSource;
 }
 
 QDomNode
@@ -63,9 +63,9 @@ XmlData::node() const
 }
 
 void
-XmlData::setNode(QDomNode node)
+XmlData::setNode(QDomNode p_node)
 {
-    m_node = node.toElement();
+    m_node = p_node.toElement();
 }
 
 bool
@@ -80,46 +80,58 @@ XmlData::clear()
     m_node.clear();
 }
 
+bool 
+XmlData::operator==(const XmlData& p_other) const
+{
+    return m_node == p_other.m_node;
+}
+
+XmlData&
+XmlData::operator=(const XmlData& p_other)
+{
+    m_node = p_other.m_node;
+}
+
 void
-XmlData::addAttribute(QString name, QString value)
+XmlData::addAttribute(QString p_name, QString p_value)
 {
     if (m_node.isNull()) {
         qDebug() << "node is null";
     }
 
-    if (!value.isEmpty()) {
-        QDomAttr attr = findAttribute(name).toAttr();
+    if (!p_value.isEmpty()) {
+        QDomAttr attr = findAttribute(p_name).toAttr();
         if (attr.isNull()) {
-            attr = m_dataSource->createAttribute(name);
+            attr = m_dataSource->createAttribute(p_name);
             m_node.setAttributeNode(attr);
         }
-        attr.setValue(value);
+        attr.setValue(p_value);
     }
 }
 
 QDomNode
-XmlData::findAttribute(QString name) const
+XmlData::findAttribute(QString p_name) const
 {
-    return findAttributeFromNode(m_node, name);
+    return findAttributeFromNode(m_node, p_name);
 }
 
 QVariant
-XmlData::attributeValue(QString name) const
+XmlData::attributeValue(QString p_name) const
 {
-    return attributeValueFromNode(m_node, name);
+    return attributeValueFromNode(m_node, p_name);
 }
 
 QDomNode
-XmlData::findAttributeFromNode(QDomNode node, QString name) const
+XmlData::findAttributeFromNode(QDomNode p_node, QString p_name) const
 {
-    QDomNamedNodeMap attributes = node.attributes();
-    return attributes.namedItem(name);
+    QDomNamedNodeMap attributes = p_node.attributes();
+    return attributes.namedItem(p_name);
 }
 
 QVariant
-XmlData::attributeValueFromNode(QDomNode node, QString name) const
+XmlData::attributeValueFromNode(QDomNode p_node, QString p_name) const
 {
-    QDomNode attrNode = findAttributeFromNode(node, name);
+    QDomNode attrNode = findAttributeFromNode(p_node, p_name);
     if (attrNode.isNull() || !attrNode.isAttr()) {
         return QVariant();
     }

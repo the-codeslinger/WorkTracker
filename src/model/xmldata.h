@@ -49,10 +49,10 @@ public:
     /*!
      * Set the data source from which to read the data.
      *
-     * \param dataSource
+     * \param p_dataSource
      * A loaded XML file. Ownership of the data source stays with the calling code.
      */
-    void setDataSource(QDomDocument* dataSource);
+    void setDataSource(QDomDocument* p_dataSource);
 
     /*!
      * \return
@@ -63,10 +63,10 @@ public:
     /*!
      * Set a new node.
      *
-     * \param node
+     * \param p_node
      * The new XML node for the model.
      */
-    void setNode(QDomNode node);
+    void setNode(QDomNode p_node);
 
     /*!
      * \return
@@ -78,29 +78,51 @@ public:
      * Deletes the data and releases the connection to the DOM tree.
      */
     void clear();
+    
+    /**
+     * Two `XmlData` instances  are considered equal if they refer to the same DOM node.
+     *
+     * @param other
+     * The other `XmlData` to compare to.
+     *
+     * @return
+     * `true` if both refer to the same DOM node or `false` if not.
+     */
+    bool operator==(const XmlData& p_other) const;
 
 protected:
     /*!
      * Creates a new instance with a data source.
      */
-    XmlData(QDomDocument* dataSource);
+    XmlData(QDomDocument* p_dataSource);
 
     /*!
      * Creates a new instance with a data source and a DOM node.
      */
-    XmlData(QDomDocument* dataSource, QDomElement node);
+    XmlData(QDomDocument* p_dataSource, QDomElement p_node);
 
     /*!
      * Copy the values from another instance. This is not a deep copy. In the end both
      * instances reference the same data and changes in one will appear on the other as
      * well.
      */
-    XmlData(const XmlData& other);
+    XmlData(const XmlData& p_other);
 
     /*!
      * Move-constructor that takes the data from another, temporary instance.
      */
-    XmlData(XmlData&& temp);
+    XmlData(XmlData&& p_temp);
+    
+    /*!
+     * Assigns the DOM node of the other `XmlData` instance to the current one.
+     *
+     * \param other
+     * The other `XmlData` from which to copy the node.
+     *
+     * \return
+     * Returns the changed current instance.
+     */
+    XmlData& operator=(const XmlData& p_other);
 
     /*!
      * Add a new attribute to the node or assign a new value to an already existing
@@ -113,7 +135,7 @@ protected:
      * The attribute's (new) value. If this is empty then the attribute is not created /
      * updated.
      */
-    void addAttribute(QString name, QString value);
+    void addAttribute(QString p_name, QString p_value);
 
     /*!
      * Find an attribute on the node.
@@ -124,7 +146,7 @@ protected:
      * \return
      * Returns a valid attribute node if found or a null-node.
      */
-    QDomNode findAttribute(QString name) const;
+    QDomNode findAttribute(QString p_name) const;
 
     /*!
      * Get the value of an attribute.
@@ -135,7 +157,7 @@ protected:
      * \return
      * If the attribute exists its value is returned, otherwise a null-value.
      */
-    QVariant attributeValue(QString name) const;
+    QVariant attributeValue(QString p_name) const;
 
     /*!
      * This is similar to XmlData::findAttribute(QString) with the difference that this
@@ -150,7 +172,7 @@ protected:
      * \return
      * Returns a valid attribute node if found or a null-node.
      */
-    QDomNode findAttributeFromNode(QDomNode node, QString name) const;
+    QDomNode findAttributeFromNode(QDomNode p_node, QString p_name) const;
 
     /*!
      * This is similar to XmlData::attributeValue(QString) with the difference that this
@@ -162,7 +184,7 @@ protected:
      * \return
      * If the attribute exists its value is returned, otherwise a null-value.
      */
-    QVariant attributeValueFromNode(QDomNode node, QString name) const;
+    QVariant attributeValueFromNode(QDomNode p_node, QString p_name) const;
 
     /*!
      * The DOM document that represents the XML database file.
