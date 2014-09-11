@@ -48,77 +48,80 @@ WorkTask::WorkTask(QDomDocument* p_dataSource, QDomNode p_parent, Task p_task,
 Task
 WorkTask::task() const
 {
-    return m_task;
+    return Task();
 }
 
 void
 WorkTask::setTask(Task p_task)
 {
-    m_task = p_task;
+    
 }
 
 QDateTime
 WorkTask::start() const
 {
     if (m_node.isNull()) {
-        return m_start;
+        //return m_start;
     }
     else {
-        return attributeValue("start").toDateTime();
+        //return attributeValue("start").toDateTime();
     }
+    return QDateTime();
 }
 
 void
 WorkTask::setStart(QDateTime start)
 {
-    m_start = start;
+    /*m_start = start;
     if (!m_node.isNull()) {
         addAttribute("start", start.toString(Qt::ISODate));
-    }
+    }*/
 }
 
 QDateTime
 WorkTask::stop() const
 {
     if (m_node.isNull()) {
-        return m_stop;
+        //return m_stop;
     }
     else {
-        return attributeValue("stop").toDateTime();
+        //return attributeValue("stop").toDateTime();
     }
+    return QDateTime();
 }
 
 void
 WorkTask::setStop(QDateTime stop)
 {
-    m_stop = stop;
+    /*m_stop = stop;
     if (!m_node.isNull()) {
         addAttribute("stop", stop.toString(Qt::ISODate));
-    }
+    }*/
 }
 
 int
 WorkTask::totalTime() const
 {
-    QDateTime stopped = stop();
+    /*QDateTime stopped = stop();
     if (!stopped.isValid()) {
         stopped = QDateTime::currentDateTimeUtc();
     }
-    return start().secsTo(stopped);
+    return start().secsTo(stopped);*/
+    return 0;
 }
 
 bool
 WorkTask::isNull() const
 {
-    return m_task.isNull();
+    return true;
 }
 
 void
 WorkTask::clear()
 {
-    m_task.clear();
+    /*m_task.clear();
     addAttribute("start", "");
-    addAttribute("stop", "");
+    addAttribute("stop", "");*/
 }
 
 QList<WorkTask>

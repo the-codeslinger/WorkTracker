@@ -56,25 +56,25 @@ WorkDay::WorkDay(QDomDocument* dataSource, QDateTime start, QDateTime stop)
 QDateTime
 WorkDay::start() const
 {
-    return attributeValue("start").toDateTime();
+    return QDateTime();//attributeValue("start").toDateTime();
 }
 
 void
 WorkDay::setStart(QDateTime start)
 {
-    addAttribute("start", start.toString(Qt::ISODate));
+    //addAttribute("start", start.toString(Qt::ISODate));
 }
 
 QDateTime
 WorkDay::stop() const
 {
-    return attributeValue("stop").toDateTime();
+    return QDateTime();//attributeValue("stop").toDateTime();
 }
 
 void
 WorkDay::setStop(QDateTime stop)
 {
-    addAttribute("stop", stop.toString(Qt::ISODate));
+    //addAttribute("stop", stop.toString(Qt::ISODate));
 }
 
 WorkTask
@@ -122,7 +122,7 @@ WorkDay::addTask(WorkTask task)
             // Now set the node on the reference object retrieved from the list. Fetching
             // the task as reference from the list avoids removing it and then append it
             // again with the new values. This way we modify it in place.
-            wota.setNode(workTaskNode);
+            //wota.setNode(workTaskNode);
             wota.setTask(task.task());
         }
 
@@ -144,8 +144,8 @@ WorkDay::createNode(QDateTime start, QDateTime stop)
 {
     m_node = m_dataSource->createElement("workday");
 
-    addAttribute("start", start.toString(Qt::ISODate));
-    addAttribute("stop",  stop.toString(Qt::ISODate));
+    //addAttribute("start", start.toString(Qt::ISODate));
+    //addAttribute("stop",  stop.toString(Qt::ISODate));
 }
 
 QDomElement
@@ -160,7 +160,7 @@ WorkDay::findTask(int id) const
     for (int c = 0; c < count; c++) {
         QDomNode node = tasks.item(c);
         if (!node.isNull() && node.isElement()) {
-            QVariant idValue = attributeValueFromNode(node, "id");
+            QVariant idValue;// = attributeValueFromNode(node, "id");
 
             bool ok = false;
             int foundId = idValue.toInt(&ok);

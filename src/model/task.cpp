@@ -66,19 +66,19 @@ Task::id() const
 void
 Task::setId(int id)
 {
-    addAttribute("id", Task::invalidId != id ? QString::number(id) : "");
+    //addAttribute("id", Task::invalidId != id ? QString::number(id) : "");
 }
 
 QString
 Task::name() const
 {
-    return attributeValue("name").toString();
+    return "";//attributeValue("name").toString();
 }
 
 void
 Task::setName(const QString& name)
 {
-    addAttribute("name", name);
+    //addAttribute("name", name);
 }
 
 QDate
@@ -90,22 +90,22 @@ Task::lastUsed() const
 void
 Task::setLastUsed(const QDate& lastUsed)
 {
-    addAttribute("last_used", lastUsed.toString(Qt::ISODate));
+    //addAttribute("last_used", lastUsed.toString(Qt::ISODate));
 }
 
 void
 Task::createNode(int id, QString name, QDate lastUsed)
 {
     m_node = m_dataSource->createElement("item");
-    addAttribute("id",        Task::invalidId != id ? QString::number(id) : "");
-    addAttribute("last_used", lastUsed.toString(Qt::ISODate));
-    addAttribute("name",      name);
+    //addAttribute("id",        Task::invalidId != id ? QString::number(id) : "");
+    //addAttribute("last_used", lastUsed.toString(Qt::ISODate));
+    //addAttribute("name",      name);
 }
 
 QVariant
 Task::attributeValue(QString name) const
 {
-    QVariant value = XmlData::attributeValue(name);
+    QVariant value;// = XmlData::attributeValue(name);
 
     if ("id" == name) {
         bool ok = false;
