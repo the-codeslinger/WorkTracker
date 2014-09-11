@@ -40,7 +40,8 @@ SOURCES += src/main.cpp\
     src/model/ui/selectedworkdaymodel.cpp \
     src/model/ui/worktaskmodel.cpp \
     src/controller/preferencescontroller.cpp \
-    src/preferencesdialog.cpp
+    src/preferencesdialog.cpp \
+    src/model/worktime.cpp
 
 HEADERS  += src/worktracker.h \
     src/model/ui/tasklistmodel.h \
@@ -59,7 +60,8 @@ HEADERS  += src/worktracker.h \
     src/model/ui/selectedworkdaymodel.h \
     src/model/ui/worktaskmodel.h \
     src/controller/preferencescontroller.h \
-    src/preferencesdialog.h
+    src/preferencesdialog.h \
+    src/model/worktime.h
 
 FORMS    += ui/worktracker.ui \
     ui/aboutdialog.ui \

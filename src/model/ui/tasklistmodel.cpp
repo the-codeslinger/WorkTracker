@@ -32,7 +32,7 @@ int
 TaskListModel::rowCount(const QModelIndex&) const
 {
     // We don't have child-parent relationships, thus we can omit the parameter
-    return Task::count(m_dataSource);
+    return Task::count(*m_dataSource);
 }
 
 QVariant
@@ -44,7 +44,7 @@ TaskListModel::data(const QModelIndex& index, int role) const
 
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
 
-        Task item = Task::get(index.row(), m_dataSource);
+        Task item = Task::get(index.row(), *m_dataSource);
         if (item.isNull()) {
             return QVariant();
         }

@@ -34,8 +34,8 @@ static const int TIMER_TIMEOUT = 60 * 1000;
 WorkTrackerController::WorkTrackerController(QDomDocument* dataSource)
     : m_dataSource(dataSource)
     , m_taskListModel(nullptr)
-    , m_workday(dataSource)
-    , m_recordingWorkTask(dataSource)
+    , m_workday(*dataSource)
+    , m_recordingWorkTask(*dataSource)
     , m_isNewWorkDay(false)
     , m_isRecording(false)
     , m_preferencesController(nullptr)
@@ -56,7 +56,7 @@ WorkTrackerController::setUi(WorkTracker* ui)
 void
 WorkTrackerController::run()
 {
-    m_workday = WorkDay::findLastOpen(m_dataSource);
+    m_workday = WorkDay::findLastOpen(*m_dataSource);
 
     // The UI needs to be shown first or otherwise the displaying the status text for a
     // running task can end up very short. If there's no UI then the shortening algorithm
@@ -71,8 +71,8 @@ WorkTrackerController::run()
         m_isRecording = !m_recordingWorkTask.isNull();
         if (m_isRecording) {
             m_timer.start(TIMER_TIMEOUT);
-            emit workTaskStarted(m_recordingWorkTask.start(),
-                                 m_recordingWorkTask.task().name());
+            //emit workTaskStarted(m_recordingWorkTask.start(),
+            //                     m_recordingWorkTask.task().name());
         }
     }
 }
@@ -125,7 +125,7 @@ WorkTrackerController::generateSummary() const
 void
 WorkTrackerController::startWorkDay(QDateTime now)
 {
-    m_workday = WorkDay(m_dataSource, now);
+    //m_workday = WorkDay(m_dataSource, now);
 
     QDomElement root = m_dataSource->documentElement();
     QDomElement days = root.firstChildElement("workdays");
@@ -161,17 +161,17 @@ WorkTrackerController::startWorkTask(QString name)
     m_timer.start(TIMER_TIMEOUT);
 
     // Always reset before starting a new one
-    m_recordingWorkTask = WorkTask(m_dataSource);
+    //m_recordingWorkTask = WorkTask(m_dataSource);
 
     QDateTime now = QDateTime::currentDateTimeUtc();
-    m_recordingWorkTask.setStart(now);
+    //m_recordingWorkTask.setStart(now);
     if (!name.isEmpty()) {
         Task task = findOrCreateTaskItem(name);
         m_recordingWorkTask.setTask(task);
 
         // Add the task right now, to have in the database in case the application is
         // closed
-        m_recordingWorkTask = m_workday.addTask(m_recordingWorkTask);
+        m_workday.addTask(m_recordingWorkTask);
     }
 
     emit workTaskStarted(now, name);
@@ -196,12 +196,12 @@ WorkTrackerController::stopWorkTask(QString name)
 
     QDateTime now = QDateTime::currentDateTimeUtc();
 
-    m_recordingWorkTask.setStop(now);
+    //m_recordingWorkTask.setStop(now);
     // Add the worktask again, to have it written with the stop date. This also moves the
     // node to another task if it changed.
-    m_recordingWorkTask = m_workday.addTask(m_recordingWorkTask);
+    m_workday.addTask(m_recordingWorkTask);
     // Always reset after it is not needed any more
-    m_recordingWorkTask = WorkTask(m_dataSource);
+    //m_recordingWorkTask = WorkTask(m_dataSource);
 
     emit workTaskStopped(now, name);
 }
@@ -209,11 +209,11 @@ WorkTrackerController::stopWorkTask(QString name)
 Task
 WorkTrackerController::findOrCreateTaskItem(QString name)
 {
-    Task taskItem = Task::findByName(name, m_dataSource);
+    Task taskItem;// = Task::findByName(name, m_dataSource);
     if (taskItem.isNull()) {
         // Create a new one
-        taskItem = Task(m_dataSource, Task::count(m_dataSource), name,
-                        QDate::currentDate());
+        //taskItem = Task(m_dataSource, Task::count(m_dataSource), name,
+        //                QDate::currentDate());
         if (taskItem.node().isNull()) {
             emit error(tr("Could not create <item> XML element"));
             return Task();
@@ -348,12 +348,12 @@ WorkTrackerController::setActiveTask(WorkTask p_task)
     }
     
     closeCurrentTask();
-    if (p_task.start().isNull()) {
-        p_task.setStart(QDateTime::currentDateTimeUtc());
-    }
+    //if (p_task.start().isNull()) {
+    //    p_task.setStart(QDateTime::currentDateTimeUtc());
+    //}
     
     m_recordingWorkTask = p_task;
-    emit workTaskStarted(p_task.start(), p_task.task().name());
+    //emit workTaskStarted(p_task.start(), p_task.task().name());
 }
 
 void 

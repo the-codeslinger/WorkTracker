@@ -21,18 +21,23 @@
 #include <QDomDocument>
 #include <QDateTime>
 
-XmlData::XmlData(QDomDocument* p_dataSource)
+XmlData::XmlData()
+{
+}
+
+XmlData::XmlData(const QDomDocument& p_dataSource)
     : m_dataSource(p_dataSource)
 {
 }
 
-XmlData::XmlData(QDomDocument* p_dataSource, QDomElement p_node)
+XmlData::XmlData(const QDomDocument& p_dataSource, const QDomElement& p_node)
     : m_dataSource(p_dataSource)
     , m_node(p_node)
 {
 }
 
-XmlData::XmlData(QDomDocument* p_dataSource, QDomElement p_node, QDomNode p_parent)
+XmlData::XmlData(const QDomDocument& p_dataSource, const QDomElement& p_node, 
+                 const QDomNode& p_parent)
     : m_dataSource(p_dataSource)
     , m_node(p_node)
     , m_parent(p_parent)
@@ -46,14 +51,14 @@ XmlData::XmlData(const XmlData& p_other)
 {
 }
 
-QDomDocument* 
+QDomDocument
 XmlData::dataSource() const
 {
     return m_dataSource;
 }
 
 void
-XmlData::setDataSource(QDomDocument* p_dataSource)
+XmlData::setDataSource(const QDomDocument& p_dataSource)
 {
     m_dataSource = p_dataSource;
 }
@@ -65,9 +70,10 @@ XmlData::node() const
 }
 
 void
-XmlData::setNode(QDomElement p_node)
+XmlData::setNode(const QDomElement& p_node)
 {
     m_node = p_node;
+    setParent(m_parent);
 }
 
 QDomNode
@@ -77,9 +83,22 @@ XmlData::parent() const
 }
 
 void
-XmlData::setParent(QDomNode p_parent)
+XmlData::setParent(const QDomNode& p_parent)
 {
+    if (p_parent.isNull()) {
+        return;
+    }
+    
     m_parent = p_parent;
+    if (!m_node.isNull()) {
+        m_parent.appendChild(m_node);
+    }
+}
+
+void 
+XmlData::setParent(const XmlData& p_parent)
+{
+    setParent(p_parent.parent());
 }
 
 bool
@@ -92,6 +111,7 @@ void
 XmlData::clear()
 {
     m_node.clear();
+    m_parent.clear();
 }
 
 bool 
@@ -110,7 +130,7 @@ XmlData::operator=(const XmlData& p_other)
 }
 
 void
-XmlData::setAttribute(QString p_name, QString p_value)
+XmlData::setAttribute(const QString& p_name, const QString& p_value)
 {
     if (m_node.isNull()) {
         qDebug() << "node is null";
@@ -119,14 +139,14 @@ XmlData::setAttribute(QString p_name, QString p_value)
 
     QDomAttr attr = attribute(p_name);
     if (attr.isNull()) {
-        attr = m_dataSource->createAttribute(p_name);
+        attr = m_dataSource.createAttribute(p_name);
         m_node.setAttributeNode(attr);
     }
     attr.setValue(p_value);
 }
 
 void 
-XmlData::setAttribute(QString p_name, QDateTime p_value)
+XmlData::setAttribute(const QString& p_name, const QDateTime& p_value)
 {
     QString value;
     if (!p_value.isNull()) {
@@ -137,7 +157,18 @@ XmlData::setAttribute(QString p_name, QDateTime p_value)
 }
 
 void 
-XmlData::setAttribute(QString p_name, int p_value)
+XmlData::setAttribute(const QString& p_name, const QDate& p_value)
+{
+    QString value;
+    if (!p_value.isNull()) {
+        value = p_value.toString(Qt::ISODate);
+    }
+    
+    setAttribute(p_name, value);
+}
+
+void 
+XmlData::setAttribute(const QString& p_name, int p_value)
 {
     if (-1 == p_value) {
         return;
@@ -147,25 +178,25 @@ XmlData::setAttribute(QString p_name, int p_value)
 }
 
 QString 
-XmlData::attributeString(QString p_name) const
+XmlData::attributeString(const QString& p_name) const
 {
     return attributeString(p_name, m_node);
 }
 
 QString 
-XmlData::attributeString(QString p_name, QDomNode p_node) const
+XmlData::attributeString(const QString& p_name, const QDomNode& p_node) const
 {
     return attribute(p_name, p_node).value();
 }
 
 QDateTime 
-XmlData::attributeDateTime(QString p_name) const
+XmlData::attributeDateTime(const QString& p_name) const
 {
     return attributeDateTime(p_name, m_node);
 }
 
 QDateTime 
-XmlData::attributeDateTime(QString p_name, QDomNode p_node) const
+XmlData::attributeDateTime(const QString& p_name, const QDomNode& p_node) const
 {
     QString dt = attribute(p_name, p_node).value();
     if (dt.isNull()) {
@@ -175,14 +206,31 @@ XmlData::attributeDateTime(QString p_name, QDomNode p_node) const
     return QDateTime::fromString(dt, Qt::ISODate);
 }
 
+QDate
+XmlData::attributeDate(const QString& p_name) const
+{
+    return attributeDate(p_name, m_node);
+}
+
+QDate 
+XmlData::attributeDate(const QString& p_name, const QDomNode& p_node) const
+{
+    QString dt = attribute(p_name, p_node).value();
+    if (dt.isNull()) {
+        return QDate();
+    }
+    
+    return QDate::fromString(dt, Qt::ISODate);
+}
+
 int 
-XmlData::attributeInt(QString p_name) const
+XmlData::attributeInt(const QString& p_name) const
 {
     return attributeInt(p_name, m_node);
 }
 
 int 
-XmlData::attributeInt(QString p_name, QDomNode p_node) const
+XmlData::attributeInt(const QString& p_name, const QDomNode& p_node) const
 {
     QString dt = attribute(p_name, p_node).value();
     if (dt.isEmpty()) {
@@ -197,13 +245,13 @@ XmlData::attributeInt(QString p_name, QDomNode p_node) const
 }
 
 QDomAttr
-XmlData::attribute(QString p_name) const
+XmlData::attribute(const QString& p_name) const
 {
     return attribute(p_name, m_node);
 }
 
 QDomAttr
-XmlData::attribute(QString p_name, QDomNode p_node) const
+XmlData::attribute(const QString& p_name, const QDomNode& p_node) const
 {
     if (p_node.isNull()) {
         return QDomAttr();

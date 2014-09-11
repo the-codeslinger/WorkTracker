@@ -74,10 +74,10 @@ WorkTaskModel::data(const QModelIndex& p_index, int p_role) const
     if (Qt::DisplayRole == p_role || Qt::EditRole == p_role) {
         WorkTask wt = m_worktasks.at(p_index.row());
         if (0 == p_index.column()) {
-            return wt.start().toLocalTime();
+            //return wt.start().toLocalTime();
         }
         else {
-            return wt.stop().toLocalTime();
+            //return wt.stop().toLocalTime();
         }
     }
 
@@ -97,10 +97,10 @@ WorkTaskModel::setData(const QModelIndex& p_index, const QVariant& p_value, int 
         QDateTime dt = qvariant_cast<QDateTime>(p_value);
 
         if (0 == p_index.column()) {
-            wt.setStart(dt.toUTC());
+            //wt.setStart(dt.toUTC());
         }
         else {
-            wt.setStop(dt.toUTC());
+            //wt.setStop(dt.toUTC());
         }
 
         return true;

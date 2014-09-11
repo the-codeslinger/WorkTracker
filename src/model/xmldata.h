@@ -20,8 +20,8 @@
 #include <QString>
 #include <QDomElement>
 
+class QDate;
 class QDateTime;
-class QDomNode;
 class QDomDocument;
 
 /*!
@@ -44,7 +44,7 @@ public:
      * Returns the data source of this XML data object. Do not delete the `QDomDocument`
      * instance.
      */
-    QDomDocument* dataSource() const;
+    QDomDocument dataSource() const;
     
     /*!
      * Set the data source from which to read the data.
@@ -52,7 +52,7 @@ public:
      * \param p_dataSource
      * A loaded XML file. Ownership of the data source stays with the calling code.
      */
-    void setDataSource(QDomDocument* p_dataSource);
+    void setDataSource(const QDomDocument& p_dataSource);
 
     /*!
      * \return
@@ -66,7 +66,7 @@ public:
      * \param p_node
      * The new XML node for the model.
      */
-    void setNode(QDomElement p_node);
+    void setNode(const QDomElement& p_node);
     
     /*!
      * \return 
@@ -82,7 +82,15 @@ public:
      * The new parent node. If `QDomNode::isNull()` returns `true` then no action is 
      * performed.
      */
-    void setParent(QDomNode p_parent);
+    void setParent(const QDomNode& p_parent);
+    
+    /*!
+     * Convenience method that sets the parent by retrieving it from another `XmlData`
+     * instance.
+     * 
+     * \see XmlData::setParent(QDomNode)
+     */
+    void setParent(const XmlData& p_parent);
 
     /*!
      * \return
@@ -108,19 +116,25 @@ public:
 
 protected:
     /*!
+     * Default constructur. `XmlData::isNull()` will return `true`.
+     */
+    XmlData();
+    
+    /*!
      * Creates a new instance with a data source.
      */
-    XmlData(QDomDocument* p_dataSource);
+    XmlData(const QDomDocument& p_dataSource);
 
     /*!
      * Creates a new instance with a data source and a DOM node.
      */
-    XmlData(QDomDocument* p_dataSource, QDomElement p_node);
+    XmlData(const QDomDocument& p_dataSource, const QDomElement& p_node);
     
     /*!
      * Creates a new instance with a data source, the actual node element and a parent.
      */
-    XmlData(QDomDocument* p_dataSource, QDomElement p_node, QDomNode p_parent);
+    XmlData(const QDomDocument& p_dataSource, const QDomElement& p_node, 
+            const QDomNode& p_parent);
 
     /*!
      * Copy the values from another instance. This is not a deep copy. In the end both
@@ -143,32 +157,42 @@ protected:
     /*!
      * Gets a current node's attribute value as a string. 
      */
-    QString attributeString(QString p_name) const;
+    QString attributeString(const QString& p_name) const;
     
     /*!
      * Gets the given node's attribute value as a string. 
      */
-    QString attributeString(QString p_name, QDomNode p_node) const;
+    QString attributeString(const QString& p_name, const QDomNode& p_node) const;
     
     /*!
      * Gets a current node's attribute value as a date-time. 
      */
-    QDateTime attributeDateTime(QString p_name) const;
+    QDateTime attributeDateTime(const QString& p_name) const;
     
     /*!
      * Gets the given node's attribute value as a date-time. 
      */
-    QDateTime attributeDateTime(QString p_name, QDomNode p_node) const;
+    QDateTime attributeDateTime(const QString& p_name, const QDomNode& p_node) const;
+    
+    /*!
+     * Gets a current node's attribute value as a date. 
+     */
+    QDate attributeDate(const QString& p_name) const;
+    
+    /*!
+     * Gets the given node's attribute value as a date. 
+     */
+    QDate attributeDate(const QString& p_name, const QDomNode& p_node) const;
     
     /*!
      * Gets a current node's attribute value as an integer. 
      */
-    int attributeInt(QString p_name) const;
+    int attributeInt(const QString& p_name) const;
     
     /*!
      * Gets the given node's attribute value as an integer. 
      */
-    int attributeInt(QString p_name, QDomNode p_node) const;
+    int attributeInt(const QString& p_name, const QDomNode& p_node) const;
 
     /*!
      * Add a new attribute to the node or assign a new value to an already existing
@@ -180,7 +204,7 @@ protected:
      * \param p_value
      * The attribute's (new) value.
      */
-    void setAttribute(QString p_name, QString p_value);
+    void setAttribute(const QString& p_name, const QString& p_value);
     
     /*!
      * Add a new attribute to the node or assign a new value to an already existing
@@ -193,7 +217,20 @@ protected:
      * The attribute's (new) date-time value. If this is an invalid date then the 
      * attribute will be set to an empty value.
      */
-    void setAttribute(QString p_name, QDateTime p_value);
+    void setAttribute(const QString& p_name, const QDateTime& p_value);
+    
+    /*!
+     * Add a new attribute to the node or assign a new value to an already existing
+     * attribute.
+     *
+     * \param p_name
+     * The name of the attribute.
+     *
+     * \param p_value
+     * The attribute's (new) date value. If this is an invalid date then the attribute 
+     * will be set to an empty value.
+     */
+    void setAttribute(const QString& p_name, const QDate& p_value);
     
     /*!
      * Add a new attribute to the node or assign a new value to an already existing
@@ -206,7 +243,7 @@ protected:
      * The attribute's (new) integer value. If this is -1 then the attribute is not 
      * created / updated.
      */
-    void setAttribute(QString p_name, int p_value);
+    void setAttribute(const QString& p_name, int p_value);
 
     /*!
      * Find an attribute on the current node.
@@ -217,7 +254,7 @@ protected:
      * \return
      * Returns a valid attribute node if found or a null-node.
      */
-    QDomAttr attribute(QString p_name) const;
+    QDomAttr attribute(const QString& p_name) const;
 
     /*!
      * This is similar to XmlData::findAttribute(QString) with the difference that this
@@ -232,12 +269,12 @@ protected:
      * \return
      * Returns a valid attribute node if found or a null-node.
      */
-    QDomAttr attribute(QString p_name, QDomNode p_node) const;
+    QDomAttr attribute(const QString& p_name, const QDomNode& p_node) const;
 
     /*!
      * The DOM document that represents the XML database file.
      */
-    QDomDocument* m_dataSource;
+    QDomDocument m_dataSource;
     /*!
      * The link into the DOM tree that represents exactly one item of a specific (
      * arbitrarily complex) model class.

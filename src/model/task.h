@@ -57,29 +57,31 @@ public:
     /*!
      * Creates a new `Task` with a data source
      */
-    Task(QDomDocument* dataSource);
+    Task(const QDomDocument& p_p_dataSource);
 
     /*!
      * Creates a new `Task` with a data source and a DOM node.
      */
-    Task(QDomDocument* dataSource, QDomElement node);
+    Task(const QDomDocument& p_dataSource, const QDomElement& p_node);
 
     /*!
      * Creates a new instance with a data source, a name and the last-used date.
      */
-    Task(QDomDocument* dataSource, QString name, QDate lastUsed);
+    Task(const QDomDocument& p_dataSource, const QString& p_name, 
+         const QDate& p_lastUsed);
 
     /*!
      * Creates a new instance with a data source, an id, a name and the last-used date.
      */
-    Task(QDomDocument* dataSource, int id, QString name, QDate lastUsed);
+    Task(const QDomDocument& p_dataSource, int p_id, const QString& p_name, 
+         const QDate& p_lastUsed);
 
     /*!
      * Copies the values from another `Task` instance. This is not a deep copy. In the end
      * both instances reference the same data and changes in one will appear on the other
      * as well.
      */
-    Task(const Task& other);
+    Task(const Task& p_other);
 
     /*!
      * \return
@@ -91,7 +93,7 @@ public:
     /*!
      * Set a new database `id`.
      */
-    void setId(int id);
+    void setId(int p_id);
 
     /*!
      * \return
@@ -102,7 +104,7 @@ public:
     /*!
      * Set a new `name` for the task.
      */
-    void setName(const QString& name);
+    void setName(const QString& p_name);
 
     /*!
      * \return
@@ -113,21 +115,7 @@ public:
     /*!
      * Set a new `lastUsed` date.
      */
-    void setLastUsed(const QDate& lastUsed);
-
-    /*!
-     * Construct a `Task` instance from a DOM node.
-     *
-     * \param node
-     * The <item> DOM node that contains the values to read.
-     *
-     * \param dataSource
-     * The data source that is passed to the new `Task` instance.
-     *
-     * \return
-     * Always returns a new instance based on the values provided.
-     */
-    static Task fromDomNode(QDomElement node, QDomDocument* dataSource);
+    void setLastUsed(const QDate& p_lastUsed);
 
     /*!
      * Get a specific `Task` instance from the database based on its id.
@@ -135,7 +123,7 @@ public:
      * \param id
      * The database id of the task.
      *
-     * \param dataSource
+     * \param p_dataSource
      * The database that is searched for the `id`. This value is also passed to the new
      * `Task` instance.
      *
@@ -143,16 +131,16 @@ public:
      * If the `id` doesn't exist then a null-Task is returned, otherwise a valid new
      * instance is returned.
      */
-    static Task get(int id, QDomDocument* dataSource);
+    static Task get(int p_id, const QDomDocument& p_dataSource);
 
     /*!
-     * Works similar to `Task::get(int, QDomDocument*)` but searches by name rather than
+     * Works similar to `Task::get(int, const QDomDocument&)` but searches by name rather than
      * database id.
      *
      * \param name
      * The exact name of the task.
      *
-     * \param dataSource
+     * \param p_dataSource
      * The database that is searched for the `name`. This value is also passed to the new
      * `Task` instance.
      *
@@ -160,54 +148,49 @@ public:
      * If the `name` doesn't exist then a null-Task is returned, otherwise a valid new
      * instance is returned.
      */
-    static Task findByName(QString name, QDomDocument* dataSource);
+    static Task findByName(const QString& p_name, const QDomDocument& p_dataSource);
 
     /*!
      * Fetches a list of all available tasks from the database.
      *
-     * \param dataSource
+     * \param p_dataSource
      * The database that contains the list of tasks.
      *
      * \return
      * If no tasks exist in the database then an empty list is returned, otherwise the
      * list contains all tasks that could be found.
      */
-    static QList<Task> list(QDomDocument* dataSource);
+    static QList<Task> list(const QDomDocument& p_dataSource);
 
     /*!
      * Get the number of tasks in the database.
      *
-     * \param dataSource
+     * \param p_dataSource
      * The database that contains the list of tasks.
      *
      * \return
      * Returns the number of tasks in the database.
      */
-    static int count(QDomDocument* dataSource);
+    static int count(const QDomDocument& p_dataSource);
 
 private:
     /*!
      * Creates a new DOM node with the values provided and stores the result in
      * `XmlData::m_node`.
      */
-    void createNode(int id, QString name, QDate lastUsed);
-
-    /*!
-     * Extends the base class' implementation with some logic tailored to the own data
-     * types that are expected to be read from `XmlData::m_node`.
-     */
-    QVariant attributeValue(QString name) const;
+    void createNode(int p_id, const QString& p_name, const QDate& p_lastUsed);
 
     /*!
      * Generic helper that searches tasks based on the predicate function that actually
      * does the check for the correct task item.
      */
-    static Task findTask(QDomDocument* dataSource, std::function<bool(Task)> predicate);
+    static Task findTask(const QDomDocument&             p_dataSource, 
+                         std::function<bool(Task)> p_predicate);
 
     /*!
      * Convenience method that hides some of the ugly DOM API.
      */
-    static QDomNodeList getTaskNodes(QDomDocument* dataSource);
+    static QDomNodeList getTaskNodes(const QDomDocument& p_dataSource);
 };
 
 #endif // TASK_H

@@ -24,121 +24,89 @@
 int Task::invalidId = -1;
 
 Task::Task()
-    : XmlData(nullptr)
+    : XmlData()
 {
 }
 
-Task::Task(QDomDocument* dataSource)
-    : XmlData(dataSource)
+Task::Task(const QDomDocument& p_dataSource)
+    : XmlData(p_dataSource)
 {
     createNode(Task::invalidId, "", QDate());
 }
 
-Task::Task(QDomDocument* dataSource, QString name, QDate lastUsed)
-    : XmlData(dataSource)
+Task::Task(const QDomDocument& p_dataSource, const QString& p_name, 
+           const QDate& p_lastUsed)
+    : XmlData(p_dataSource)
 {
-    createNode(Task::invalidId, name, lastUsed);
+    createNode(Task::invalidId, p_name, p_lastUsed);
 }
 
-Task::Task(QDomDocument* dataSource, int id, QString name, QDate lastUsed)
-    : XmlData(dataSource)
+Task::Task(const QDomDocument& p_dataSource, int p_id, const QString& p_name, 
+           const QDate& p_lastUsed)
+    : XmlData(p_dataSource)
 {
-    createNode(id, name, lastUsed);
+    createNode(p_id, p_name, p_lastUsed);
 }
 
-Task::Task(QDomDocument* dataSource, QDomElement node)
-    : XmlData(dataSource, node)
+Task::Task(const QDomDocument& p_dataSource, const QDomElement& p_node)
+    : XmlData(p_dataSource, p_node)
 {
 }
 
-Task::Task(const Task& other)
-    : XmlData(other)
+Task::Task(const Task& p_other)
+    : XmlData(p_other)
 {
 }
 
 int
 Task::id() const
 {
-    // Safe to not check conversion result as this is done in attributeValue()
-    return attributeValue("id").toInt();
+    return attributeInt("id");
 }
 
 void
-Task::setId(int id)
+Task::setId(int p_id)
 {
-    //addAttribute("id", Task::invalidId != id ? QString::number(id) : "");
+    setAttribute("id", p_id);
 }
 
 QString
 Task::name() const
 {
-    return "";//attributeValue("name").toString();
+    return attributeString("name");
 }
 
 void
-Task::setName(const QString& name)
+Task::setName(const QString& p_name)
 {
-    //addAttribute("name", name);
+    setAttribute("name", p_name);
 }
 
 QDate
 Task::lastUsed() const
 {
-    return attributeValue("last_used").toDate();
+    return attributeDate("last_used");
 }
 
 void
-Task::setLastUsed(const QDate& lastUsed)
+Task::setLastUsed(const QDate& p_lastUsed)
 {
-    //addAttribute("last_used", lastUsed.toString(Qt::ISODate));
+    setAttribute("last_used", p_lastUsed);
 }
 
 void
-Task::createNode(int id, QString name, QDate lastUsed)
+Task::createNode(int p_id, const QString& p_name, const QDate& p_lastUsed)
 {
-    m_node = m_dataSource->createElement("item");
-    //addAttribute("id",        Task::invalidId != id ? QString::number(id) : "");
-    //addAttribute("last_used", lastUsed.toString(Qt::ISODate));
-    //addAttribute("name",      name);
-}
-
-QVariant
-Task::attributeValue(QString name) const
-{
-    QVariant value;// = XmlData::attributeValue(name);
-
-    if ("id" == name) {
-        bool ok = false;
-        int id = value.toInt(&ok);
-        if (!ok) {
-            id = Task::invalidId;
-        }
-        return QVariant(id);
-    }
-
-    if ("name" == name) {
-        return value;
-    }
-
-    if ("last_used" == name) {
-        QDate date = QDate::fromString(value.toString(), Qt::ISODate);
-        return QVariant(date);
-    }
-
-    // Impossible
-    return QVariant();
+    m_node = m_dataSource.createElement("item");
+    setAttribute("id",        p_id);
+    setAttribute("last_used", p_lastUsed);
+    setAttribute("name",      p_name);
 }
 
 /* * * * * * * * * * * * static methods * * * * * * * * * * * */
 
 Task
-Task::fromDomNode(QDomElement node, QDomDocument* dataSource)
-{
-    return Task(dataSource, node);
-}
-
-Task
-Task::get(int id, QDomDocument* dataSource)
+Task::get(int id, const QDomDocument& dataSource)
 {
     return findTask(dataSource, [id](Task task) {
         return task.id() == id;
@@ -147,19 +115,19 @@ Task::get(int id, QDomDocument* dataSource)
 
 
 Task
-Task::findByName(QString name, QDomDocument* dataSource)
+Task::findByName(const QString& p_name, const QDomDocument& p_dataSource)
 {
-    return findTask(dataSource, [name](Task task) {
-        return task.name() == name;
+    return findTask(p_dataSource, [p_name](Task task) {
+        return task.name() == p_name;
     });
 }
 
 QList<Task>
-Task::list(QDomDocument* dataSource)
+Task::list(const QDomDocument& p_dataSource)
 {
     QList<Task> tasks;
 
-    QDomNodeList children = getTaskNodes(dataSource);
+    QDomNodeList children = getTaskNodes(p_dataSource);
     int count = children.count();
     for (int c = 0; c < count; c++) {
         QDomNode node = children.item(c);
@@ -167,23 +135,23 @@ Task::list(QDomDocument* dataSource)
             continue;
         }
 
-        tasks.append(Task::fromDomNode(node.toElement(), dataSource));
+        tasks.append(Task(p_dataSource, node.toElement()));
     }
 
     return tasks;
 }
 
 int
-Task::count(QDomDocument* dataSource)
+Task::count(const QDomDocument& p_dataSource)
 {
-    QDomNodeList children = getTaskNodes(dataSource);
+    QDomNodeList children = getTaskNodes(p_dataSource);
     return children.count();
 }
 
 Task
-Task::findTask(QDomDocument* dataSource, std::function<bool(Task)> predicate)
+Task::findTask(const QDomDocument& p_dataSource, std::function<bool(Task)> p_predicate)
 {
-    QDomNodeList children = getTaskNodes(dataSource);
+    QDomNodeList children = getTaskNodes(p_dataSource);
     int count = children.count();
     for (int c = 0; c < count; c++) {
         QDomNode node = children.item(c);
@@ -191,8 +159,8 @@ Task::findTask(QDomDocument* dataSource, std::function<bool(Task)> predicate)
             continue;
         }
 
-        Task item = Task::fromDomNode(node.toElement(), dataSource);
-        if (predicate(item)) {
+        Task item = Task(p_dataSource, node.toElement());
+        if (p_predicate(item)) {
             return item;
         }
     }
@@ -201,9 +169,9 @@ Task::findTask(QDomDocument* dataSource, std::function<bool(Task)> predicate)
 }
 
 QDomNodeList
-Task::getTaskNodes(QDomDocument* dataSource)
+Task::getTaskNodes(const QDomDocument& p_dataSource)
 {
-    QDomElement root  = dataSource->documentElement();
+    QDomElement root  = p_dataSource.documentElement();
     if (root.isNull()) {
         return QDomNodeList();
     }
