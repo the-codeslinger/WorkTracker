@@ -29,13 +29,14 @@
 #include <QMapIterator>
 #include <QSettings>
 
-static const int TIMER_TIMEOUT = 60 * 1000;
+static const int TIMER_TIMEOUT = 30 * 1000;
 
 WorkTrackerController::WorkTrackerController(QDomDocument* dataSource)
     : m_dataSource(dataSource)
     , m_taskListModel(nullptr)
     , m_workday(*dataSource)
     , m_recordingWorkTask(*dataSource)
+    , m_recordingWorkTime(*dataSource)
     , m_isNewWorkDay(false)
     , m_isRecording(false)
     , m_preferencesController(nullptr)
@@ -68,11 +69,12 @@ WorkTrackerController::run()
         emit workDayStarted(m_workday.start());
 
         m_recordingWorkTask = m_workday.runningWorkTask();
-        m_isRecording = !m_recordingWorkTask.isNull();
+        m_recordingWorkTime = m_recordingWorkTask.runningWorkTime();
+        m_isRecording = !m_recordingWorkTime.isNull();
         if (m_isRecording) {
             m_timer.start(TIMER_TIMEOUT);
-            //emit workTaskStarted(m_recordingWorkTask.start(),
-            //                     m_recordingWorkTask.task().name());
+            emit workTaskStarted(m_recordingWorkTime.start(),
+                                 m_recordingWorkTask.task().name());
         }
     }
 }
@@ -123,9 +125,9 @@ WorkTrackerController::generateSummary() const
 }
 
 void
-WorkTrackerController::startWorkDay(QDateTime now)
+WorkTrackerController::startWorkDay(QDateTime p_now)
 {
-    //m_workday = WorkDay(m_dataSource, now);
+    m_workday = WorkDay(*m_dataSource, p_now);
 
     QDomElement root = m_dataSource->documentElement();
     QDomElement days = root.firstChildElement("workdays");
@@ -140,7 +142,7 @@ WorkTrackerController::startWorkDay(QDateTime now)
         emit error(tr("Could not add <workday> to <workdays> XML element"));
     }
 
-    emit workDayStarted(now);
+    emit workDayStarted(p_now);
 }
 
 void
@@ -158,20 +160,32 @@ WorkTrackerController::stopWorkDay(QDateTime now)
 void
 WorkTrackerController::startWorkTask(QString name)
 {
+    if (name.isEmpty()) {
+        emit error(tr("A task-name must be specified to start a new task"));
+        return;
+    }
+    
     m_timer.start(TIMER_TIMEOUT);
-
-    // Always reset before starting a new one
-    //m_recordingWorkTask = WorkTask(m_dataSource);
-
+    
     QDateTime now = QDateTime::currentDateTimeUtc();
-    //m_recordingWorkTask.setStart(now);
-    if (!name.isEmpty()) {
-        Task task = findOrCreateTaskItem(name);
+    Task task(*m_dataSource, name, now.date());
+    
+    // Always reset before starting a new one.
+    m_recordingWorkTime = WorkTime(*m_dataSource);
+    m_recordingWorkTask = m_workday.workTask(task);
+    if (m_recordingWorkTask.isNull()) {
+        m_recordingWorkTask = WorkTask(*m_dataSource);
         m_recordingWorkTask.setTask(task);
+    }
 
-        // Add the task right now, to have in the database in case the application is
-        // closed
-        m_workday.addTask(m_recordingWorkTask);
+    m_recordingWorkTime.setStart(now);
+    m_recordingWorkTask.addTime(m_recordingWorkTime);
+
+    // If the work-task has no parent it means it wasn't obtained from the workday and
+    // thus needs to be added right now, to have in the database in case the application 
+    // is closed. 
+    if (m_recordingWorkTask.parent().isNull()) {
+        m_workday.addWorkTask(m_recordingWorkTask);
     }
 
     emit workTaskStarted(now, name);
@@ -181,32 +195,33 @@ void
 WorkTrackerController::stopWorkTask(QString name)
 {
     m_timer.stop();
-
-    // First check if there's already a task attached and if it is a different one. Maybe
-    // we don't need to look for one
-    Task taskItem = m_recordingWorkTask.task();
-    if (!taskItem.isNull()) {
-        if (taskItem.name() != name) {
-            taskItem = findOrCreateTaskItem(name);
-
-            // Set the new task item
-            m_recordingWorkTask.setTask(taskItem);
+    
+    // If the currently recording task and the new task are the same then we can continue
+    // and add the stop timestamp to our current values and be done with it. If the tasks
+    // are different then we have to re-assign the work-time from the current work-task
+    // to the new one.
+    Task newTask(*m_dataSource, name, QDate::currentDate());
+    Task recTask = m_recordingWorkTask.task();
+    
+    if (newTask.id() != recTask.id()) {
+        WorkTask otherWorkTask = m_workday.workTask(newTask);
+        if (otherWorkTask.isNull()) {
+            otherWorkTask = WorkTask(*m_dataSource, m_workday.parent(), newTask);
         }
+        
+        otherWorkTask.addTime(m_recordingWorkTime);
     }
-
-    QDateTime now = QDateTime::currentDateTimeUtc();
-
-    //m_recordingWorkTask.setStop(now);
-    // Add the worktask again, to have it written with the stop date. This also moves the
-    // node to another task if it changed.
-    m_workday.addTask(m_recordingWorkTask);
+    
+    QDateTime now = QDateTime::currentDateTimeUtc();    
+    m_recordingWorkTime.setStop(now);
     // Always reset after it is not needed any more
-    //m_recordingWorkTask = WorkTask(m_dataSource);
+    m_recordingWorkTask = WorkTask(*m_dataSource);
+    m_recordingWorkTime = WorkTime(*m_dataSource);
 
     emit workTaskStopped(now, name);
 }
 
-Task
+/*Task
 WorkTrackerController::findOrCreateTaskItem(QString name)
 {
     Task taskItem;// = Task::findByName(name, m_dataSource);
@@ -231,7 +246,7 @@ WorkTrackerController::findOrCreateTaskItem(QString name)
     }
 
     return taskItem;
-}
+}*/
 
 void
 WorkTrackerController::timeout()

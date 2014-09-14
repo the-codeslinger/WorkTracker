@@ -91,7 +91,18 @@ public:
      * exists its values are overridden. If the work task has moved to a different task-id
      * then it will also be moved in the DOM document.
      */
-    void addTask(const WorkTask& p_task);
+    void addWorkTask(const WorkTask& p_task);
+    
+    /*!
+     * Get a specific work-task.
+     * 
+     * \param p_task
+     * Specifies the work-task's referencing task.
+     * 
+     * \return 
+     * If found the work-task is returned or a null-instance otherwise.
+     */
+    WorkTask workTask(const Task& p_task) const;
 
     /*!
      * Generates an HTML summary over all the added work task items.
@@ -131,8 +142,8 @@ public:
     /*!
      * \return
      * Returns all `WorkTask` items that match the given `Task`.
-     */
-    QList<WorkTask> workTasks(const Task& p_task) const;
+     
+    QList<WorkTask> workTasks(const Task& p_task) const;*/
 
     /*!
      * \return
@@ -181,9 +192,9 @@ public:
 
 private:
     /*!
-     * The list of work task items.
-     */
-    QList<WorkTask> m_tasks;
+     * Generates a list of `WorkTask` instances attached to this work-day.
+     */ 
+    QList<WorkTask> workTasks() const;
 
     /*!
      * Create a new DOM node and store it in `XmlData::m_node`.
@@ -194,8 +205,8 @@ private:
      * Searches the DOM tree for the specified worktask item. This is used by
      * `addTask(WorkTask)` to append a new set of timestamps to the correct part of the
      * DOM or determine if a new worktask item needs to be created.
-     */
-    QDomElement findTask(int id) const;
+     
+    QDomElement findTask(int id) const;*/
 
     /*!
      * Create a new `WorkDay` from the DOM node.

@@ -96,6 +96,20 @@ public:
      * Return the total amount of seconds from start to stop of all work-times combined.
      */
     qint64 timeInSeconds() const;
+    
+    /*!
+     * \return 
+     * Returns `true` if this work-task contains an work-time without a stop timestamp or
+     * `false` if all work-times have a stop timestamp.
+     */
+    bool isActiveTask() const;
+    
+    /*!
+     * \return 
+     * Returns the currently active work-time or a null-work-time if there is none without
+     * a stop timestamp.
+     */
+    WorkTime runningWorkTime() const;
 
 private:
     /*!

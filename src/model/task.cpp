@@ -80,6 +80,9 @@ void
 Task::setName(const QString& p_name)
 {
     setAttribute("name", p_name);
+    if (!p_name.isEmpty()) {
+        addToList();
+    }
 }
 
 QDate
@@ -97,10 +100,51 @@ Task::setLastUsed(const QDate& p_lastUsed)
 void
 Task::createNode(int p_id, const QString& p_name, const QDate& p_lastUsed)
 {
-    m_node = m_dataSource.createElement("item");
-    setAttribute("id",        p_id);
-    setAttribute("last_used", p_lastUsed);
-    setAttribute("name",      p_name);
+    // Check if a node already exists. If so, re-use it instead of creating a new one with
+    // the same name/id. If name and id don't match: programmer error.
+    if (0 <= p_id) {
+        *this = Task::get(p_id, m_dataSource);
+    }
+    else if (!p_name.isEmpty()) {
+        *this = Task::findByName(p_name, m_dataSource);
+    }
+    
+    // Only create a node if we didn't find (search) any before
+    if (m_node.isNull()) {
+        m_node = m_dataSource.createElement("item");
+        
+        // No need to set any values if there is no name. Also no need to attach it to the
+        // list of tasks.
+        if (!p_name.isEmpty()) {
+            if (0 >= p_id) {
+                // Generate an id if there is none
+                p_id = Task::count(m_dataSource);
+            }
+            setAttribute("id",        p_id);
+            setAttribute("name",      p_name);
+            setAttribute("last_used", p_lastUsed);
+            
+            addToList();
+        }
+    }
+}
+
+void 
+Task::addToList()
+{
+    // The parent in this case is the <tasks> DOM element that contains all the task
+    // items. This is not a parent as we define it for our relations, so it is not 
+    // explicitly saved in m_parent.
+    if (m_node.parentNode().isNull()) {
+        QDomElement root = m_dataSource.documentElement();
+        QDomNode tasks = root.namedItem("tasks");
+        if (tasks.isNull()) {
+            tasks = m_dataSource.createElement("tasks");
+            root.appendChild(tasks);
+        }
+        
+        tasks.appendChild(m_node);
+    }
 }
 
 /* * * * * * * * * * * * static methods * * * * * * * * * * * */

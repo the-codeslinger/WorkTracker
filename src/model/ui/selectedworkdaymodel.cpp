@@ -106,7 +106,7 @@ SelectedWorkDayModel::workTasks(const QModelIndex& p_index) const
         return QList<WorkTask>();
     }
 
-    return m_workday.workTasks(m_tasks.at(p_index.row()));
+    return {};//m_workday.workTasks(m_tasks.at(p_index.row()));
 }
 
 bool 

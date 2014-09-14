@@ -230,6 +230,10 @@ private:
      * The currently recorded task.
      */
     WorkTask m_recordingWorkTask;
+    /*!
+     * The current start and stop time of the work-task.
+     */
+    WorkTime m_recordingWorkTime;
 
     /*!
      * The current state of the workday.
@@ -283,8 +287,8 @@ private:
 
     /*!
      * Searches the database for a task by `name` or adds a new one if it can't be found.
-     */
-    Task findOrCreateTaskItem(QString name);
+     
+    Task findOrCreateTaskItem(QString name);*/
     
     /*!
      * Sets up the language and translation related objects. Loads the translation files

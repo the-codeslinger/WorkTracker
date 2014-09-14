@@ -179,6 +179,11 @@ private:
      * `XmlData::m_node`.
      */
     void createNode(int p_id, const QString& p_name, const QDate& p_lastUsed);
+    
+    /*!
+     * Adds the task to the <tasks> DOM node.
+     */
+    void addToList();
 
     /*!
      * Generic helper that searches tasks based on the predicate function that actually

@@ -119,7 +119,34 @@ WorkTask::createNode(const QDomNode& p_parent, const Task& p_task)
         m_parent.appendChild(m_node);
     }
     
-    if (!p_task.isNull()) {
+    if (!p_task.name().isEmpty()) {
+        if (0 < p_task.id()) {
+            
+        }
         setAttribute("id", p_task.id());
     }
+}
+
+bool
+WorkTask::isActiveTask() const
+{
+    QList<WorkTime> times = workTimes();
+    for (const WorkTime& time : times) {
+        if (time.stop().isNull()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+WorkTime 
+WorkTask::runningWorkTime() const
+{
+    QList<WorkTime> times = workTimes();
+    for (const WorkTime& time : times) {
+        if (time.stop().isNull()) {
+            return time;
+        }
+    }
+    return WorkTime();
 }
