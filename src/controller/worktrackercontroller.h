@@ -284,11 +284,6 @@ private:
      * `toggleTask(QString)`.
      */
     void stopWorkTask(QString name);
-
-    /*!
-     * Searches the database for a task by `name` or adds a new one if it can't be found.
-     
-    Task findOrCreateTaskItem(QString name);*/
     
     /*!
      * Sets up the language and translation related objects. Loads the translation files

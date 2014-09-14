@@ -102,15 +102,16 @@ Task::createNode(int p_id, const QString& p_name, const QDate& p_lastUsed)
 {
     // Check if a node already exists. If so, re-use it instead of creating a new one with
     // the same name/id. If name and id don't match: programmer error.
+    Task found;
     if (0 <= p_id) {
-        *this = Task::get(p_id, m_dataSource);
+        found = Task::get(p_id, m_dataSource);
     }
     else if (!p_name.isEmpty()) {
-        *this = Task::findByName(p_name, m_dataSource);
+        found = Task::findByName(p_name, m_dataSource);
     }
     
     // Only create a node if we didn't find (search) any before
-    if (m_node.isNull()) {
+    if (found.isNull()) {
         m_node = m_dataSource.createElement("item");
         
         // No need to set any values if there is no name. Also no need to attach it to the
@@ -126,6 +127,9 @@ Task::createNode(int p_id, const QString& p_name, const QDate& p_lastUsed)
             
             addToList();
         }
+    }
+    else {
+        *this = found;
     }
 }
 

@@ -85,51 +85,6 @@ WorkDay::addWorkTask(const WorkTask& p_task)
     if (!workTask.isNull() && !m_node.isNull()) {
         m_node.appendChild(workTask);
     }
-    /*// Find or create the current parent DOM node based on the associated task-id
-    QDomElement workTask = findTask(p_task.task().id());
-    if (workTask.isNull()) {
-        // Create a new work task
-        workTask = m_dataSource.createElement("task");
-        workTask.setAttribute("id", p_task.task().id());
-
-        m_node.appendChild(workTask);
-    }
-
-    // Find the original parent DOM node (= the real task) based on the currently known
-    // task's node
-    int index = m_tasks.indexOf(p_task);
-    if (-1 == index) {
-        // This work task has just been started. Create a new DOM node
-        QDomElement workTaskElem = m_dataSource.createElement("time");
-        workTask.appendChild(workTaskElem);
-
-        //p_task.setNode(workTaskElem);
-        m_tasks.append(p_task);
-    }
-    else {
-        // Here we can assume that the task found in the list has a DOM element associated
-        // with it (created when added to the list)
-        WorkTask& wota = m_tasks[index];
-
-        QDomNode    workTaskNode = wota.node();
-        QDomElement origWorkTask = workTaskNode.parentNode().toElement();
-
-        if (workTask != origWorkTask) {
-            // This automatically reparents the node from its old parent to the new
-            workTaskNode = workTask.appendChild(workTaskNode);
-            if (workTaskNode.isNull()) {
-                // Reparenting didn't work
-            }
-
-            // Now set the node on the reference object retrieved from the list. Fetching
-            // the task as reference from the list avoids removing it and then append it
-            // again with the new values. This way we modify it in place.
-            //wota.setNode(workTaskNode);
-            wota.setTask(p_task.task());
-        }
-
-        //wota.setStop(task.stop());
-    }*/
 }
 
 WorkTask 
@@ -152,31 +107,6 @@ WorkDay::createNode(const QDateTime& p_start, const QDateTime& p_stop)
     setAttribute("start", p_start);
     setAttribute("stop",  p_stop);
 }
-
-/*QDomElement
-WorkDay::findTask(int id) const
-{
-    QDomNodeList tasks = m_node.childNodes();
-    if (tasks.isEmpty()) {
-        return QDomElement();
-    }
-
-    int count = tasks.count();
-    for (int c = 0; c < count; c++) {
-        QDomNode node = tasks.item(c);
-        if (!node.isNull() && node.isElement()) {
-            QVariant idValue;// = attributeValueFromNode(node, "id");
-
-            bool ok = false;
-            int foundId = idValue.toInt(&ok);
-            if (ok && foundId == id) {
-                return node.toElement();
-            }
-        }
-    }
-
-    return QDomElement();
-}*/
 
 QString
 WorkDay::generateSummary() const
@@ -334,20 +264,6 @@ WorkDay::distinctTasks() const
     }
     return workTasks;
 }
-
-/*QList<WorkTask>
-WorkDay::workTasks(const Task& p_task) const
-{
-    QList<WorkTask> tasks = workTasks();
-            
-    QList<WorkTask> worktasks;
-    for (const WorkTask& worktask : tasks) {
-        if (worktask.task().id() == p_task.id()) {
-            worktasks << worktask;
-        }
-    }
-    return worktasks;
-}*/
 
 QList<WorkTask> 
 WorkDay::workTasks() const

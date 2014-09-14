@@ -141,12 +141,6 @@ public:
 
     /*!
      * \return
-     * Returns all `WorkTask` items that match the given `Task`.
-     
-    QList<WorkTask> workTasks(const Task& p_task) const;*/
-
-    /*!
-     * \return
      * Returns the total amount of seconds that has been spent on all finished tasks
      * combined.
      */
@@ -200,13 +194,6 @@ private:
      * Create a new DOM node and store it in `XmlData::m_node`.
      */
     void createNode(const QDateTime& p_start, const QDateTime& p_stop);
-
-    /*!
-     * Searches the DOM tree for the specified worktask item. This is used by
-     * `addTask(WorkTask)` to append a new set of timestamps to the correct part of the
-     * DOM or determine if a new worktask item needs to be created.
-     
-    QDomElement findTask(int id) const;*/
 
     /*!
      * Create a new `WorkDay` from the DOM node.

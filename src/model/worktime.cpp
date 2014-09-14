@@ -10,6 +10,7 @@ WorkTime::WorkTime()
 WorkTime::WorkTime(const QDomDocument& p_dataSource)
     : XmlData(p_dataSource)
 {
+    createNode(QDomNode(), QDateTime(), QDateTime());
 }
 
 WorkTime::WorkTime(const QDomDocument& p_dataSource, const QDomElement& p_node, 

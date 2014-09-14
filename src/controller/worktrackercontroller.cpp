@@ -207,6 +207,7 @@ WorkTrackerController::stopWorkTask(QString name)
         WorkTask otherWorkTask = m_workday.workTask(newTask);
         if (otherWorkTask.isNull()) {
             otherWorkTask = WorkTask(*m_dataSource, m_workday.parent(), newTask);
+            m_workday.addWorkTask(otherWorkTask);
         }
         
         otherWorkTask.addTime(m_recordingWorkTime);
@@ -220,33 +221,6 @@ WorkTrackerController::stopWorkTask(QString name)
 
     emit workTaskStopped(now, name);
 }
-
-/*Task
-WorkTrackerController::findOrCreateTaskItem(QString name)
-{
-    Task taskItem;// = Task::findByName(name, m_dataSource);
-    if (taskItem.isNull()) {
-        // Create a new one
-        //taskItem = Task(m_dataSource, Task::count(m_dataSource), name,
-        //                QDate::currentDate());
-        if (taskItem.node().isNull()) {
-            emit error(tr("Could not create <item> XML element"));
-            return Task();
-        }
-
-        QDomElement root   = m_dataSource->documentElement();
-        QDomElement tasks  = root.firstChildElement("tasks");
-        QDomNode    result = tasks.appendChild(taskItem.node());
-        if (result.isNull()) {
-            emit error(tr("Could not add <item> to <tasks> XML element"));
-            return Task();
-        }
-
-        m_taskListModel->itemAppended();
-    }
-
-    return taskItem;
-}*/
 
 void
 WorkTrackerController::timeout()
