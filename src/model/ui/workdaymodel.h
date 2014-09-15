@@ -18,8 +18,7 @@
 #define WORKDAYMODEL_H
 
 #include <QAbstractListModel>
-
-class QDomDocument;
+#include <QDomDocument>
 
 /*!
  * Returns a read-only list of all the workdays in the database.
@@ -43,7 +42,7 @@ public:
      * The new data source from which to read the values. This replaces the old one. The
      * data source is only used, ownership stays with the calling code.
      */
-    void setDataSource(QDomDocument* p_dataSource);
+    void setDataSource(const QDomDocument& p_dataSource);
 
     /*!
      * \return
@@ -58,7 +57,7 @@ public:
     QVariant data(const QModelIndex& p_index, int p_role = Qt::DisplayRole) const;
 
 private:
-    QDomDocument* m_dataSource;
+    QDomDocument m_dataSource;
 
 };
 

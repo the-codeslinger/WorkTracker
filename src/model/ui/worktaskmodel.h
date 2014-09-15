@@ -18,6 +18,7 @@
 #define WORKTASKMODEL_H
 
 #include "../worktask.h"
+#include "../worktime.h"
 
 #include <QAbstractItemModel>
 
@@ -39,7 +40,7 @@ public:
     /*!
      * Set the model's new work tasks. This replaces the previous work tasks.
      */
-    void setWorkTasks(const QList<WorkTask>& p_worktasks);
+    void setWorkTask(const WorkTask& p_workTask);
 
     /*!
      * \return
@@ -94,7 +95,8 @@ public:
     QModelIndex parent(const QModelIndex& p_child) const;
 
 private:
-    QList<WorkTask> m_worktasks;
+    WorkTask        m_workTask;
+    QList<WorkTime> m_workTimes;
 
 };
 

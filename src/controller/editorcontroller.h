@@ -18,8 +18,8 @@
 #define EDITORCONTROLLER_H
 
 #include <QObject>
+#include <QDomDocument>
 
-class QDomDocument;
 class WorkDayModel;
 class WorkTaskModel;
 class SelectedWorkDayModel;
@@ -44,7 +44,7 @@ public:
      * \param p_parent
      * Parent of the controller.
      */
-    EditorController(QDomDocument* p_dataSource, QObject* p_parent = nullptr);
+    EditorController(const QDomDocument& p_dataSource, QObject* p_parent = nullptr);
 
     /**
      * Show a modal wizard dialog and block until it is finished.
@@ -76,10 +76,16 @@ public:
      */
     void setModelData(const QModelIndex& p_index, SelectedWorkDayModel* p_source,
                       WorkTaskModel* p_destination);
+    
+    /*!
+     * \return 
+     * Returns the data-source to use for models.
+     */
+    QDomDocument dataSource() const;
 
 signals:
 
-protected slots:
+public slots:
     /*!
      *
      */
@@ -104,7 +110,7 @@ private:
     /*!
      * The loaded XML database.
      */
-    QDomDocument* m_dataSource;
+    QDomDocument m_dataSource;
 
     SelectWorkDayPage* m_selectWorkDayPage;
     EditWorkTaskPage*  m_editWorkTaskPage;

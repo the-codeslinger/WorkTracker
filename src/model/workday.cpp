@@ -90,13 +90,9 @@ WorkDay::addWorkTask(const WorkTask& p_task)
 WorkTask 
 WorkDay::workTask(const Task& p_task) const
 {
-    QList<WorkTask> tasks = workTasks();
-    for (const WorkTask& workTask : tasks) {
-        if (workTask.task().id() == p_task.id()) {
-            return workTask;
-        }
-    }
-    return WorkTask();
+    return findWorkTask([p_task](const WorkTask& p_workTask) {
+        return p_workTask.task().id() == p_task.id();
+    });
 }
 
 void
@@ -117,19 +113,19 @@ WorkDay::generateSummary() const
          << "<head><title>WorkTracker Summary</title></head>"
          << "<body><ul>";
 
-    QList<WorkTask> tasks = workTasks();
-    
     QMap<QString, int> durations;
-    for (WorkTask task : tasks) {
-        QMap<QString, int>::iterator found = durations.find(task.task().name());
+    iterateWorkTasks([&durations](const WorkTask& p_workTask) {
+        Task task = p_workTask.task();
+        
+        QMap<QString, int>::iterator found = durations.find(task.name());
         if (found == durations.end()) {
-            durations.insert(task.task().name(), task.timeInSeconds());
+            durations.insert(task.name(), p_workTask.timeInSeconds());
         }
         else {
             int& totalTime = found.value();
-            totalTime += task.timeInSeconds();
+            totalTime += p_workTask.timeInSeconds();
         }
-    }
+    });
 
     QMapIterator<QString, int> iter(durations);
     while (iter.hasNext()) {
@@ -190,28 +186,20 @@ WorkDay::fromDomNode(const QDomElement& p_node, const QDomDocument& p_dataSource
 }
 
 WorkTask
-WorkDay::runningWorkTask() const
+WorkDay::activeWorkTask() const
 {
-    QList<WorkTask> tasks = workTasks();
-    
-    for (WorkTask task : tasks) {
-        if (task.isActiveTask()) {
-            return task;
-        }
-    }
-
-    return WorkTask();
+    return findWorkTask([](const WorkTask& p_workTask) {
+        return p_workTask.isActiveTask();
+    });
 }
 
 int
 WorkDay::totalTime() const
 {
-    QList<WorkTask> tasks = workTasks();
-    
     int duration = 0;
-    for (WorkTask task : tasks) {
-        duration += task.timeInSeconds();
-    }
+    iterateWorkTasks([&duration](const WorkTask& p_workTask) {
+        duration += p_workTask.timeInSeconds();
+    });
     return duration;
 }
 
@@ -249,20 +237,20 @@ WorkDay::getWorkDayNodes(const QDomDocument& p_dataSource)
 QList<Task>
 WorkDay::distinctTasks() const
 {
-    QList<WorkTask> tasks = workTasks();
-    
-    QList<Task> workTasks;
-    for (const WorkTask& worktask : tasks) {
-        auto found = std::find_if(std::begin(workTasks), std::end(workTasks),
-                                  [worktask](const Task& p_task) {
-            return worktask.task().id() == p_task.id();
+    QList<Task> tasks;
+    iterateWorkTasks([&tasks](const WorkTask& p_workTask) {
+        Task task = p_workTask.task();
+        
+        auto found = std::find_if(std::begin(tasks), std::end(tasks),
+                                  [task](const Task& p_task) {
+            return task.id() == p_task.id();
         });
 
-        if (found == std::end(workTasks)) {
-            workTasks << worktask.task();
+        if (found == std::end(tasks)) {
+            tasks << task;
         }
-    }
-    return workTasks;
+    });
+    return tasks;
 }
 
 QList<WorkTask> 
@@ -280,4 +268,35 @@ WorkDay::workTasks() const
     }
     
     return tasks;
+}
+
+void 
+WorkDay::iterateWorkTasks(std::function<void(const WorkTask&)> p_predicate) const
+{
+    QDomNodeList children = m_node.childNodes();
+    int count = children.size();
+    for (int c = 0; c < count; c++) {
+        QDomNode node = children.at(c);
+        if ("task" == node.nodeName() && node.isElement()) {
+            p_predicate(WorkTask(m_dataSource, node.toElement(), m_node));
+        }
+    }
+}
+
+WorkTask 
+WorkDay::findWorkTask(std::function<bool(const WorkTask&)> p_predicate) const
+{
+    QDomNodeList children = m_node.childNodes();
+    int count = children.size();
+    for (int c = 0; c < count; c++) {
+        QDomNode node = children.at(c);
+        if ("task" == node.nodeName() && node.isElement()) {
+            WorkTask workTask(m_dataSource, node.toElement(), m_node);
+            if (p_predicate(workTask)) {
+                return workTask;
+            }
+        }
+    }
+    
+    return WorkTask();
 }

@@ -26,8 +26,8 @@
 #include <QTime>
 #include <QDateTime>
 #include <QTimer>
+#include <QDomDocument>
 
-class QDomDocument;
 class TaskListModel;
 class WorkTracker;
 class PreferencesController;
@@ -52,7 +52,7 @@ public:
      * Create a new controller with a data source. `dataSource` is owned by client code,
      * the controller only uses it as a reference.
      */
-    WorkTrackerController(QDomDocument* dataSource);
+    WorkTrackerController(const QDomDocument& dataSource);
 
     /*!
      * Sets the user interface implementation `ui`. This injects the `TaskListModel`
@@ -212,7 +212,7 @@ private:
     /*!
      * The loaded XML database.
      */
-    QDomDocument* m_dataSource;
+    QDomDocument m_dataSource;
     /*!
      * The user interface.
      */

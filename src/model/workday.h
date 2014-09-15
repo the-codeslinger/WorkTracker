@@ -103,6 +103,12 @@ public:
      * If found the work-task is returned or a null-instance otherwise.
      */
     WorkTask workTask(const Task& p_task) const;
+    
+    /*!
+     * \return
+     * Generates a list of `WorkTask` instances attached to this work-day.
+     */ 
+    QList<WorkTask> workTasks() const;
 
     /*!
      * Generates an HTML summary over all the added work task items.
@@ -131,7 +137,7 @@ public:
      * If there's a running task (one with an invalid stop-date) then this task is
      * returned, otherwise a null-task.
      */
-    WorkTask runningWorkTask() const;
+    WorkTask activeWorkTask() const;
 
     /*!
      * \return
@@ -185,15 +191,24 @@ public:
     static WorkDay at(int p_index, const QDomDocument& p_dataSource);
 
 private:
-    /*!
-     * Generates a list of `WorkTask` instances attached to this work-day.
-     */ 
-    QList<WorkTask> workTasks() const;
 
     /*!
      * Create a new DOM node and store it in `XmlData::m_node`.
      */
     void createNode(const QDateTime& p_start, const QDateTime& p_stop);
+    
+    /*!
+     * Iterate the existing work-tasks on the DOM level and call a function for every
+     * individual work-task. This shall reduce iterating several lists, first the DOM to
+     * create a list of work-tasks and then that list to accomplish a specific task.
+     */
+    void iterateWorkTasks(std::function<void(const WorkTask&)> p_predicate) const;
+    
+    /*!
+     * Iterate the exisiting work-tasks on the DOM level and return the one for which
+     * `p_predicate` returns true.
+     */
+    WorkTask findWorkTask(std::function<bool(const WorkTask&)> p_predicate) const;
 
     /*!
      * Create a new `WorkDay` from the DOM node.

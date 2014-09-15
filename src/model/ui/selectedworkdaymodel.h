@@ -90,7 +90,17 @@ public:
      * \return
      * Returns the list of work task items for the selected index.
      */
-    QList<WorkTask> workTasks(const QModelIndex& p_index) const;
+    WorkTask workTask(const QModelIndex& p_index) const;
+    
+signals:
+    /*!
+     * Emitted if `SelectedWorkDayModel::appendTask(const QString&)` is called with the
+     * name of a task for which a work-task already exists.
+     * 
+     * \param p_name
+     * The name of the task that caused the conflict.
+     */
+    void taskAlreadyExists(const QString& p_name);
     
 public slots:
     /*!
@@ -99,12 +109,12 @@ public slots:
      * \return 
      * `true` on success and `false` on error.
      */
-    bool appendTask();
+    bool appendTask(const QString& p_name);
     
 
 private:
-    WorkDay     m_workday;
-    QList<Task> m_tasks;
+    WorkDay         m_workday;
+    QList<WorkTask> m_workTasks;
 };
 
 #endif // SELECTEDWORKDAYMODEL_H

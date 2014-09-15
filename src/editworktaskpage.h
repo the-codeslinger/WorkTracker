@@ -25,6 +25,8 @@ namespace Ui {
 
 class EditorController;
 class QItemSelection;
+class QListView;
+class QTableView;
 
 /*!
  * UI page to be used with a `QWizard` that shows the list to edit worktask items.
@@ -59,6 +61,18 @@ public:
      * Returns the index of the selected task.
      */
     QModelIndex selectedTask() const;
+    
+    /*!
+     * \return 
+     * Returns the list-view of the work-tasks.
+     */
+    QListView* workTasksView() const;
+    
+    /*!
+     * \return 
+     * Returns the list-view of the work-times.
+     */
+    QTableView* workTimesView() const;
 
 signals:
 
@@ -68,6 +82,18 @@ public slots:
      * of the newly selected item.
      */
     void taskSelected(const QItemSelection& p_selection);
+    
+protected slots:
+    /*!
+     *
+     */
+    void taskAdded(const QModelIndex& p_parent, int p_first);
+    
+    /*!
+     * This slot is connected to `SelectedWorkDayModel::taskAlreadyExists(const QString&)`
+     * and shows a message box when triggered.
+     */
+    void taskAlreadyExists(const QString& p_name);
     
 protected:
     /*!

@@ -22,17 +22,18 @@ WorkTaskModel::WorkTaskModel(QObject* p_parent)
 }
 
 void
-WorkTaskModel::setWorkTasks(const QList<WorkTask>& p_worktasks)
+WorkTaskModel::setWorkTask(const WorkTask& p_workTask)
 {
     beginResetModel();
-    m_worktasks = p_worktasks;
+    m_workTask  = p_workTask;
+    m_workTimes = p_workTask.workTimes();
     endResetModel();
 }
 
 int
 WorkTaskModel::rowCount(const QModelIndex& /* ignored */) const
 {
-    return m_worktasks.size();
+    return m_workTimes.size();
 }
 
 int
@@ -66,18 +67,18 @@ WorkTaskModel::headerData(int p_section, Qt::Orientation p_orientation,
 QVariant
 WorkTaskModel::data(const QModelIndex& p_index, int p_role) const
 {
-    if (!p_index.isValid() || p_index.row() >= m_worktasks.count()
+    if (!p_index.isValid() || p_index.row() >= m_workTimes.count()
             || p_index.column() >= 2) {
         return QVariant();
     }
 
     if (Qt::DisplayRole == p_role || Qt::EditRole == p_role) {
-        WorkTask wt = m_worktasks.at(p_index.row());
+        WorkTime wt = m_workTimes.at(p_index.row());
         if (0 == p_index.column()) {
-            //return wt.start().toLocalTime();
+            return wt.start().toLocalTime();
         }
         else {
-            //return wt.stop().toLocalTime();
+            return wt.stop().toLocalTime();
         }
     }
 
@@ -87,20 +88,20 @@ WorkTaskModel::data(const QModelIndex& p_index, int p_role) const
 bool
 WorkTaskModel::setData(const QModelIndex& p_index, const QVariant& p_value, int p_role)
 {
-    if (!p_index.isValid() || p_index.row() >= m_worktasks.count()
+    if (!p_index.isValid() || p_index.row() >= m_workTimes.count()
             || p_index.column() >= 2) {
         return false;
     }
 
     if (Qt::EditRole == p_role && p_value.canConvert<QDateTime>()) {
-        WorkTask  wt = m_worktasks.at(p_index.row());
+        WorkTime  wt = m_workTimes.at(p_index.row());
         QDateTime dt = qvariant_cast<QDateTime>(p_value);
 
         if (0 == p_index.column()) {
-            //wt.setStart(dt.toUTC());
+            wt.setStart(dt.toUTC());
         }
         else {
-            //wt.setStop(dt.toUTC());
+            wt.setStop(dt.toUTC());
         }
 
         return true;
@@ -119,7 +120,7 @@ WorkTaskModel::flags(const QModelIndex& p_index) const
 QModelIndex
 WorkTaskModel::index(int p_row, int p_column, const QModelIndex& /* ignored */) const
 {
-    if (p_row >= m_worktasks.count() || p_column >= 2) {
+    if (p_row >= m_workTimes.count() || p_column >= 2) {
         return QModelIndex();
     }
 

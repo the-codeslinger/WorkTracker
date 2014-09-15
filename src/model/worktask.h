@@ -65,6 +65,14 @@ public:
      * Copy constructor.
      */
     WorkTask(const WorkTask& p_other);
+    
+    /*!
+     * Sets the data-source and creates a node if none exists.
+     * 
+     * \param p_dataSource
+     * The data-source of this work-task.
+     */
+    void setDataSource(const QDomDocument &p_dataSource);
 
     /*!
      * \return
@@ -109,7 +117,7 @@ public:
      * Returns the currently active work-time or a null-work-time if there is none without
      * a stop timestamp.
      */
-    WorkTime runningWorkTime() const;
+    WorkTime activeWorkTime() const;
 
 private:
     /*!

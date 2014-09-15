@@ -20,8 +20,7 @@
 #include <QAbstractListModel>
 #include <QModelIndex>
 #include <QVariant>
-
-class QDomDocument;
+#include <QDomDocument>
 
 /*!
  * Internally this uses the DOM document as data source and the `Task` class to conform
@@ -39,7 +38,7 @@ public:
      * \param parent
      * The parent of the `TaskListModel`.
      */
-    TaskListModel(QDomDocument* dataSource, QObject* parent = nullptr);
+    TaskListModel(const QDomDocument& dataSource, QObject* parent = nullptr);
 
     /*!
      * This method must be called if a new `Task` has been added to the database. Since
@@ -78,7 +77,7 @@ private:
     /*!
      * The data source that has been passed via the constructor.
      */
-    QDomDocument* m_dataSource;
+    QDomDocument m_dataSource;
 
 };
 

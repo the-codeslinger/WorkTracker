@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
     }
     xmlFile.close();
 
-    WorkTrackerController controller(&dataSource);
+    WorkTrackerController controller(dataSource);
     WorkTracker w(&controller);
     
     controller.setUi(&w);

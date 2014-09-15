@@ -48,6 +48,13 @@ WorkTask::WorkTask(const WorkTask& p_other)
 {
 }
 
+void 
+WorkTask::setDataSource(const QDomDocument &p_dataSource)
+{
+    XmlData::setDataSource(p_dataSource);
+    createNode(QDomNode(), Task());
+}
+
 Task
 WorkTask::task() const
 {
@@ -108,7 +115,7 @@ WorkTask::timeInSeconds() const
 void 
 WorkTask::createNode(const QDomNode& p_parent, const Task& p_task)
 {
-    if (m_dataSource.isNull()) {
+    if (m_dataSource.isNull() || !m_node.isNull()) {
         return;
     }
     
@@ -140,7 +147,7 @@ WorkTask::isActiveTask() const
 }
 
 WorkTime 
-WorkTask::runningWorkTime() const
+WorkTask::activeWorkTime() const
 {
     QList<WorkTime> times = workTimes();
     for (const WorkTime& time : times) {

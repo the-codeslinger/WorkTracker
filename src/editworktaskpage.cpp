@@ -19,10 +19,12 @@
 #include "controller/editorcontroller.h"
 #include "model/ui/selectedworkdaymodel.h"
 #include "model/ui/worktaskmodel.h"
+#include "model/delegate/taskdelegate.h"
 
 #include <QVBoxLayout>
 #include <QItemSelection>
 #include <QToolButton>
+#include <QMessageBox>
 
 EditWorkTaskPage::EditWorkTaskPage(EditorController* p_controller, QWidget* p_parent)
     : QWizardPage(p_parent)
@@ -36,8 +38,12 @@ EditWorkTaskPage::EditWorkTaskPage(EditorController* p_controller, QWidget* p_pa
             
     ui->tasksListView->setModel(tasks);
     ui->taskTimesTableView->setModel(times);
-    ui->splitter->setStretchFactor(0, 1);
-    ui->splitter->setStretchFactor(1, 2);
+    
+    ui->tasksListView->setItemDelegate(new TaskDelegate(p_controller->dataSource(),
+                                                        ui->tasksListView));
+    
+    //ui->splitter->setStretchFactor(0, 1);
+    //ui->splitter->setStretchFactor(1, 2);
 
     setTitle(tr("Edit Worktask"));
     setSubTitle(tr("Select the task you want to edit. Changes are immediately saved. You "
@@ -48,7 +54,9 @@ EditWorkTaskPage::EditWorkTaskPage(EditorController* p_controller, QWidget* p_pa
                   SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             this, SLOT(taskSelected(QItemSelection)));
     connect(ui->addTaskButton, &QToolButton::clicked, 
-            tasks,             &SelectedWorkDayModel::appendTask);
+            p_controller,      &EditorController::addTask);
+    connect(tasks,             &SelectedWorkDayModel::taskAlreadyExists, 
+            this,              &EditWorkTaskPage::taskAlreadyExists);
 }
 
 EditWorkTaskPage::~EditWorkTaskPage()
@@ -67,6 +75,18 @@ EditWorkTaskPage::initializePage()
         QModelIndex index = ui->tasksListView->model()->index(0, 0);
         ui->tasksListView->selectionModel()->select(index, QItemSelectionModel::Select);
     }
+}
+
+QListView* 
+EditWorkTaskPage::workTasksView() const
+{
+    return ui->tasksListView;
+}
+
+QTableView* 
+EditWorkTaskPage::workTimesView() const
+{
+    return ui->taskTimesTableView;
 }
 
 void
@@ -92,4 +112,24 @@ EditWorkTaskPage::changeEvent(QEvent* p_event)
     }
     
     QWizardPage::changeEvent(p_event);
+}
+
+void 
+EditWorkTaskPage::taskAdded(const QModelIndex& /* ignored */, int p_first)
+{
+    QAbstractItemModel*  model    = ui->tasksListView->model();
+    QItemSelectionModel* selector = ui->tasksListView->selectionModel();
+    
+    QModelIndex insertedIndex = model->index(p_first, 0);
+    selector->select(selector->selection(), QItemSelectionModel::Clear);
+    selector->select(insertedIndex, QItemSelectionModel::SelectCurrent);
+}
+
+void 
+EditWorkTaskPage::taskAlreadyExists(const QString& p_name)
+{
+    QMessageBox::information(
+                this, tr("Task already exists"), 
+                tr("There is already a task in use with the name \"%1\".").arg(p_name), 
+                QMessageBox::Ok);
 }

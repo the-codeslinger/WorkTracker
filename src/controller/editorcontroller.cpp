@@ -20,10 +20,13 @@
 #include "../model/ui/workdaymodel.h"
 #include "../model/ui/worktaskmodel.h"
 #include "../model/ui/selectedworkdaymodel.h"
+#include "../selecttaskdialog.h"
 
 #include <QWizard>
+#include <QListView>
+#include <QTableView>
 
-EditorController::EditorController(QDomDocument* p_dataSource, QObject* p_parent)
+EditorController::EditorController(const QDomDocument& p_dataSource, QObject* p_parent)
     : QObject(p_parent)
     , m_dataSource(p_dataSource)
 {
@@ -63,13 +66,21 @@ void
 EditorController::setModelData(const QModelIndex& p_index, SelectedWorkDayModel* p_source,
                                WorkTaskModel* p_destination)
 {
-    p_destination->setWorkTasks(p_source->workTasks(p_index));
+    p_destination->setWorkTask(p_source->workTask(p_index));
 }
 
 void 
 EditorController::addTask()
 {
-    
+    SelectTaskDialog dlg(m_dataSource);
+    if (QDialog::Accepted == dlg.exec()) {
+        QListView* view = m_editWorkTaskPage->workTasksView();
+        SelectedWorkDayModel* model = qobject_cast<SelectedWorkDayModel*>(view->model());
+        model->appendTask(dlg.taskName());
+        
+        // Don't care about the return value. The emitted signal concerning duplicates
+        // is handled in the page. That's the only realistic scenario of failure.
+    }
 }
 
 void 
@@ -88,4 +99,10 @@ void
 EditorController::removeTime()
 {
     
+}
+
+QDomDocument 
+EditorController::dataSource() const
+{
+    return m_dataSource;
 }
