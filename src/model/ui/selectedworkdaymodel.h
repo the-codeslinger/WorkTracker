@@ -73,7 +73,7 @@ public:
      * \return 
      * `true` on success and `false` on error.
      */
-    bool removeTask();
+    bool removeTask(const QModelIndex& p_index);
 
     /*!
      * \return 
@@ -104,12 +104,10 @@ signals:
     
 public slots:
     /*!
-     * Creates a task without a name and appends it to the list of existing tasks.
-     * 
-     * \return 
-     * `true` on success and `false` on error.
+     * Creates a task with a name and appends it to the list of existing tasks. If 
+     * `p_name` is null then no action is performed.
      */
-    bool appendTask(const QString& p_name);
+    void appendTask(const QString& p_name);
     
 
 private:

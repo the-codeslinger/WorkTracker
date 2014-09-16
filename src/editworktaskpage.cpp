@@ -42,8 +42,8 @@ EditWorkTaskPage::EditWorkTaskPage(EditorController* p_controller, QWidget* p_pa
     ui->tasksListView->setItemDelegate(new TaskDelegate(p_controller->dataSource(),
                                                         ui->tasksListView));
     
-    //ui->splitter->setStretchFactor(0, 1);
-    //ui->splitter->setStretchFactor(1, 2);
+    ui->splitter->setStretchFactor(0, 1);
+    ui->splitter->setStretchFactor(1, 1);
 
     setTitle(tr("Edit Worktask"));
     setSubTitle(tr("Select the task you want to edit. Changes are immediately saved. You "
@@ -53,10 +53,21 @@ EditWorkTaskPage::EditWorkTaskPage(EditorController* p_controller, QWidget* p_pa
     connect(ui->tasksListView->selectionModel(), 
                   SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             this, SLOT(taskSelected(QItemSelection)));
-    connect(ui->addTaskButton, &QToolButton::clicked, 
-            p_controller,      &EditorController::addTask);
-    connect(tasks,             &SelectedWorkDayModel::taskAlreadyExists, 
-            this,              &EditWorkTaskPage::taskAlreadyExists);
+    
+    connect(ui->taskTimesTableView->selectionModel(), 
+                  SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            this, SLOT(timeSelected(QItemSelection)));
+    
+    connect(ui->addTaskButton,    &QToolButton::clicked, 
+            p_controller,         &EditorController::addTask);
+    connect(ui->removeTaskButton, &QToolButton::clicked, 
+            p_controller,         &EditorController::removeTask);
+    connect(ui->addTimeButton,    &QToolButton::clicked, 
+            p_controller,         &EditorController::addTime);
+    connect(ui->removeTimeButton, &QToolButton::clicked, 
+            p_controller,         &EditorController::removeTime);
+    connect(tasks,                &SelectedWorkDayModel::taskAlreadyExists, 
+            this,                 &EditWorkTaskPage::taskAlreadyExists);
 }
 
 EditWorkTaskPage::~EditWorkTaskPage()
@@ -75,6 +86,18 @@ EditWorkTaskPage::initializePage()
         QModelIndex index = ui->tasksListView->model()->index(0, 0);
         ui->tasksListView->selectionModel()->select(index, QItemSelectionModel::Select);
     }
+}
+
+QModelIndex 
+EditWorkTaskPage::selectedTask() const
+{
+    return ui->tasksListView->currentIndex();
+}
+
+QModelIndexList 
+EditWorkTaskPage::selectedTimes() const
+{
+    return ui->taskTimesTableView->selectionModel()->selectedIndexes();
 }
 
 QListView* 
@@ -102,6 +125,15 @@ EditWorkTaskPage::taskSelected(const QItemSelection& p_selection)
             m_controller->setModelData(index, source, destin);
         }
     }
+    
+    ui->removeTaskButton->setDisabled(indexes.isEmpty());
+}
+
+void 
+EditWorkTaskPage::timeSelected(const QItemSelection& p_selection)
+{
+    QModelIndexList indexes = p_selection.indexes();
+    ui->removeTimeButton->setDisabled(indexes.isEmpty());
 }
 
 void 
@@ -112,17 +144,6 @@ EditWorkTaskPage::changeEvent(QEvent* p_event)
     }
     
     QWizardPage::changeEvent(p_event);
-}
-
-void 
-EditWorkTaskPage::taskAdded(const QModelIndex& /* ignored */, int p_first)
-{
-    QAbstractItemModel*  model    = ui->tasksListView->model();
-    QItemSelectionModel* selector = ui->tasksListView->selectionModel();
-    
-    QModelIndex insertedIndex = model->index(p_first, 0);
-    selector->select(selector->selection(), QItemSelectionModel::Clear);
-    selector->select(insertedIndex, QItemSelectionModel::SelectCurrent);
 }
 
 void 

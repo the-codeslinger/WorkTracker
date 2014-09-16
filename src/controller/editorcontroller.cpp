@@ -25,6 +25,7 @@
 #include <QWizard>
 #include <QListView>
 #include <QTableView>
+#include <QMessageBox>
 
 EditorController::EditorController(const QDomDocument& p_dataSource, QObject* p_parent)
     : QObject(p_parent)
@@ -44,6 +45,9 @@ EditorController::run()
 
     wizard.addPage(m_selectWorkDayPage);
     wizard.addPage(m_editWorkTaskPage);
+    //wizard.setModal(true);
+    QSize size = wizard.size();
+    wizard.resize(size.width() * 1.1, size.height() * 1.1);
     wizard.exec();
 }
 
@@ -86,19 +90,52 @@ EditorController::addTask()
 void 
 EditorController::removeTask()
 {
+    QModelIndex index = m_editWorkTaskPage->selectedTask();
+    QListView*  view  = m_editWorkTaskPage->workTasksView();
     
+    SelectedWorkDayModel* model = qobject_cast<SelectedWorkDayModel*>(view->model());
+    WorkTask workTask = model->workTask(index);
+    
+    if (workTask.isNull()) {
+        return;
+    }
+    
+    int result = QMessageBox::question(
+                m_editWorkTaskPage, tr("Delete Task"), 
+                tr("Are you sure you want to delete the work-task \"%1\" \n"
+                   "and all of its recorded times?").arg(workTask.task().name()), 
+                QMessageBox::Yes, QMessageBox::No);
+    
+    if (QMessageBox::Yes == result) {
+        model->removeTask(index);
+    }
 }
 
 void 
 EditorController::addTime()
 {
-    
+    QTableView* view = m_editWorkTaskPage->workTimesView();
+    WorkTaskModel* model = qobject_cast<WorkTaskModel*>(view->model());
+    model->appendTime();
 }
 
 void 
 EditorController::removeTime()
 {
-    
+    QModelIndexList indexes = m_editWorkTaskPage->selectedTimes();
+    if (!indexes.isEmpty()) {
+        int result = QMessageBox::question(
+                    m_editWorkTaskPage, tr("Delete Time"), 
+                    tr("Are you sure you want to delete %1 recorded times?")
+                      .arg(indexes.size()), 
+                    QMessageBox::Yes, QMessageBox::No);
+        
+        if (QMessageBox::Yes == result) {
+            QTableView* view = m_editWorkTaskPage->workTimesView();
+            WorkTaskModel* model = qobject_cast<WorkTaskModel*>(view->model());
+            model->removeTimes(indexes);
+        }
+    }
 }
 
 QDomDocument 

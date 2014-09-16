@@ -113,6 +113,12 @@ public:
      * `true` if both refer to the same DOM node or `false` if not.
      */
     bool operator==(const XmlData& p_other) const;
+    
+    /*!
+     * Remove the node from the parent, if one exists, and also from the DOM. If the node
+     * is null then no action is performed.
+     */
+    void remove();
 
 protected:
     /*!

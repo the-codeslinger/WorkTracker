@@ -132,3 +132,23 @@ WorkTaskModel::parent(const QModelIndex& /* ignored */) const
 {
     return QModelIndex();
 }
+
+void
+WorkTaskModel::appendTime()
+{
+    beginInsertRows(QModelIndex(), m_workTimes.size(), m_workTimes.size());
+    
+    WorkTime workTime(m_workTask.dataSource());
+    m_workTask.addTime(workTime);
+    m_workTimes.append(workTime);
+    
+    endInsertRows();
+}
+
+void 
+WorkTaskModel::removeTimes(const QModelIndexList& p_indexes)
+{
+    if (p_indexes.isEmpty()) {
+        return;
+    }
+}

@@ -18,6 +18,7 @@
 #define EDITWORKTASKPAGE_H
 
 #include <QWizardPage>
+#include <QModelIndexList>
 
 namespace Ui {
     class EditWorktaskWidget;
@@ -63,6 +64,12 @@ public:
     QModelIndex selectedTask() const;
     
     /*!
+     * \return
+     * Returns the index of the selected time-row.
+     */
+    QModelIndexList selectedTimes() const;
+    
+    /*!
      * \return 
      * Returns the list-view of the work-tasks.
      */
@@ -78,17 +85,18 @@ signals:
 
 public slots:
     /*!
-     * Handles a selected task item. This refreshes the table view to contain the values
-     * of the newly selected item.
+     * Handles a selected work-ttask item. This refreshes the table view to contain the 
+     * values of the newly selected item.
      */
     void taskSelected(const QItemSelection& p_selection);
     
-protected slots:
     /*!
-     *
+     * Handles a selected task-time item. This enables or disables the delete button for
+     * the time table.
      */
-    void taskAdded(const QModelIndex& p_parent, int p_first);
+    void timeSelected(const QItemSelection& p_selection);
     
+protected slots:
     /*!
      * This slot is connected to `SelectedWorkDayModel::taskAlreadyExists(const QString&)`
      * and shows a message box when triggered.

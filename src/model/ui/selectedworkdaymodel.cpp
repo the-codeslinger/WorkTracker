@@ -106,11 +106,11 @@ SelectedWorkDayModel::workTask(const QModelIndex& p_index) const
     return m_workTasks.at(p_index.row());
 }
 
-bool 
+void
 SelectedWorkDayModel::appendTask(const QString& p_name)
 {
     if (p_name.isEmpty()) {
-        return false;
+        return;
     }
     
     QDomDocument dataSource = m_workday.dataSource();
@@ -119,7 +119,7 @@ SelectedWorkDayModel::appendTask(const QString& p_name)
     WorkTask workTask = m_workday.workTask(task);
     if (!workTask.isNull()) {
         emit taskAlreadyExists(p_name);
-        return false;
+        return;
     }
     
     beginInsertRows(QModelIndex(), m_workTasks.size(), m_workTasks.size());
@@ -130,12 +130,22 @@ SelectedWorkDayModel::appendTask(const QString& p_name)
     m_workTasks.append(WorkTask(dataSource, m_workday.parent(), task));
     
     endInsertRows();
-    
-    return true;
 }
 
 bool 
-SelectedWorkDayModel::removeTask()
+SelectedWorkDayModel::removeTask(const QModelIndex& p_index)
 {
-    return false;
+    if (!p_index.isValid() || p_index.row() >= m_workTasks.count()) {
+        return false;
+    }
+    
+    beginRemoveRows(QModelIndex(), p_index.row(), p_index.row());
+    
+    WorkTask workTask = m_workTasks.at(p_index.row());
+    m_workTasks.removeAt(p_index.row());
+    workTask.remove();
+    
+    endRemoveRows();
+    
+    return true;
 }

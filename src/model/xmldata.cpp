@@ -120,6 +120,18 @@ XmlData::operator==(const XmlData& p_other) const
     return m_node == p_other.m_node;
 }
 
+void
+XmlData::remove()
+{
+    if (!m_node.isNull()) {
+        if (!m_parent.isNull()) {
+            m_parent.removeChild(m_node);
+        }
+        
+        m_node.clear();
+    }
+}
+
 XmlData&
 XmlData::operator=(const XmlData& p_other)
 {
