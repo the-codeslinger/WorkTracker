@@ -17,6 +17,8 @@
 #include "selectedworkdaymodel.h"
 #include "../task.h"
 
+#include <algorithm>
+
 SelectedWorkDayModel::SelectedWorkDayModel(QObject* p_parent)
     : QAbstractListModel(p_parent)
 {
@@ -63,8 +65,10 @@ SelectedWorkDayModel::setData(const QModelIndex& p_index, const QVariant& p_valu
             // If the to-be-changed work-task is different from another worktask that
             // already exists with that name then we'd have two different work-tasks with
             // the same task. We don't allow that.
-            if (existingWorkTask == workTask) {
+            if (existingWorkTask.isNull() || existingWorkTask == workTask) {
                 workTask.setTask(task);
+                
+                emit dataChanged(p_index, p_index, { p_role });
                 return true;
             }
             else {
@@ -132,20 +136,32 @@ SelectedWorkDayModel::appendTask(const QString& p_name)
     endInsertRows();
 }
 
-bool 
-SelectedWorkDayModel::removeTask(const QModelIndex& p_index)
+void
+SelectedWorkDayModel::removeTasks(QModelIndexList p_indexes)
 {
-    if (!p_index.isValid() || p_index.row() >= m_workTasks.count()) {
-        return false;
+    if (p_indexes.isEmpty()) {
+        return;
     }
     
-    beginRemoveRows(QModelIndex(), p_index.row(), p_index.row());
+    // first we need to sort the indexes to start with the highes row and end with the
+    // lowest row. We then remove from m_workTasks starting with the highest row number
+    // in order to not mess up the indexes of the lower row-numbers.
+    std::sort(std::begin(p_indexes), std::end(p_indexes), 
+              [](const QModelIndex& p_first, const QModelIndex& p_second) {
+        return p_second.row() < p_first.row();
+    });
     
-    WorkTask workTask = m_workTasks.at(p_index.row());
-    m_workTasks.removeAt(p_index.row());
-    workTask.remove();
-    
-    endRemoveRows();
-    
-    return true;
+    for (const QModelIndex& index : p_indexes) {
+        if (!index.isValid() || index.row() >= m_workTasks.count()) {
+            continue;
+        }
+        
+        beginRemoveRows(QModelIndex(), index.row(), index.row());
+        
+        WorkTask workTask = m_workTasks.at(index.row());
+        m_workTasks.removeAt(index.row());
+        workTask.remove();
+        
+        endRemoveRows();
+    }
 }

@@ -59,9 +59,9 @@ public:
 
     /*!
      * \return
-     * Returns the index of the selected task.
+     * Returns the indexes of the selected tasks.
      */
-    QModelIndex selectedTask() const;
+    QModelIndexList selectedTasks() const;
     
     /*!
      * \return
@@ -80,8 +80,14 @@ public:
      * Returns the list-view of the work-times.
      */
     QTableView* workTimesView() const;
-
-signals:
+    
+    /*!
+     * Evaluates the changes and shows a message-box that contains all the errors that
+     * prevent continuing.
+     * 
+     * \return 
+     */
+    bool validatePage();
 
 public slots:
     /*!
@@ -102,6 +108,8 @@ protected slots:
      * and shows a message box when triggered.
      */
     void taskAlreadyExists(const QString& p_name);
+    
+    void validationError(const QString& p_error);
     
 protected:
     /*!

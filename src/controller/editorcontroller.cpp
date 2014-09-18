@@ -47,7 +47,7 @@ EditorController::run()
     wizard.addPage(m_editWorkTaskPage);
     //wizard.setModal(true);
     QSize size = wizard.size();
-    wizard.resize(size.width() * 1.1, size.height() * 1.1);
+    wizard.resize(size.width() * 1.05, size.height() * 1.05);
     wizard.exec();
 }
 
@@ -90,24 +90,36 @@ EditorController::addTask()
 void 
 EditorController::removeTask()
 {
-    QModelIndex index = m_editWorkTaskPage->selectedTask();
-    QListView*  view  = m_editWorkTaskPage->workTasksView();
+    QModelIndexList indexes = m_editWorkTaskPage->selectedTasks();
+    QListView* view = m_editWorkTaskPage->workTasksView();
     
     SelectedWorkDayModel* model = qobject_cast<SelectedWorkDayModel*>(view->model());
-    WorkTask workTask = model->workTask(index);
     
-    if (workTask.isNull()) {
+    if (0 == indexes.size()) {
         return;
     }
     
-    int result = QMessageBox::question(
-                m_editWorkTaskPage, tr("Delete Task"), 
-                tr("Are you sure you want to delete the work-task \"%1\" \n"
-                   "and all of its recorded times?").arg(workTask.task().name()), 
-                QMessageBox::Yes, QMessageBox::No);
+    QString question;
+    if (1 == indexes.size()) {
+        WorkTask workTask = model->workTask(indexes.at(0));
+        
+        if (workTask.isNull()) {
+            return;
+        }
+        
+        question = tr("Are you sure you want to delete the work-task \"%1\" \n"
+                      "and all of its recorded times?").arg(workTask.task().name());
+    }
+    else {
+        question = tr("Are you sure you want to delete the selected %1 \n"
+                      "work-tasks and all of their recorded times?").arg(indexes.size());
+    }
+    
+    int result = QMessageBox::question(m_editWorkTaskPage, tr("Delete Task"), question, 
+                                       QMessageBox::Yes, QMessageBox::No);
     
     if (QMessageBox::Yes == result) {
-        model->removeTask(index);
+        model->removeTasks(indexes);
     }
 }
 
@@ -142,4 +154,10 @@ QDomDocument
 EditorController::dataSource() const
 {
     return m_dataSource;
+}
+
+void 
+EditorController::validateModel()
+{
+    emit validationError("m00");
 }

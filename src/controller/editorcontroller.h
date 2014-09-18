@@ -82,29 +82,50 @@ public:
      * Returns the data-source to use for models.
      */
     QDomDocument dataSource() const;
-
+    
 signals:
+    /*!
+     * Emitted by `EditorController::validateModel()` if an error has been found in the
+     * currently edited work-day's model.
+     * 
+     * \param p_error
+     * A description of the error.
+     */
+    void validationError(const QString& p_error);
+    
+    /*!
+     * Emitted by `EditorController::validateModel()` if the currently edited work-day's 
+     * model passed validation without an error.
+     */
+    void validationSuccess();
 
 public slots:
     /*!
-     *
+     * Displays an input dialog to select a task name and then adds this to the model.
      */
     void addTask();
     
     /*!
-     *
+     * Removes all the selected tasks from the model.
      */
     void removeTask();
     
     /*!
-     *
+     * Adds another row to the model of times. The start and stop values are null.
      */
     void addTime();
     
     /*!
-     *
+     * Removes all the selected times from the model.
      */
     void removeTime();
+    
+    /*!
+     * Tests the currently used workday's contents if they are valid. Emits 
+     * `EditorController::contentError(const QString&)` in case of an error or
+     * `EditorController::validationSuccess()` if no error was found.
+     */
+    void validateModel();
 
 private:
     /*!

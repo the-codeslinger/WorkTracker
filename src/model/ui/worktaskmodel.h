@@ -102,7 +102,7 @@ public:
      * \param p_indexes
      * The individual selected times. If this list is empty then no action is performed.
      */
-    void removeTimes(const QModelIndexList& p_indexes);
+    void removeTimes(QModelIndexList p_indexes);
     
 public slots:
     /*!

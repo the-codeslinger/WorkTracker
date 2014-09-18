@@ -104,8 +104,8 @@ WorkTaskModel::setData(const QModelIndex& p_index, const QVariant& p_value, int 
             wt.setStop(dt.toUTC());
         }
 
+        emit dataChanged(p_index, p_index, { p_role });
         return true;
-        emit dataChanged(p_index, p_index, { Qt::EditRole });
     }
 
     return false;
@@ -146,9 +146,68 @@ WorkTaskModel::appendTime()
 }
 
 void 
-WorkTaskModel::removeTimes(const QModelIndexList& p_indexes)
+WorkTaskModel::removeTimes(QModelIndexList p_indexes)
 {
     if (p_indexes.isEmpty()) {
         return;
+    }
+    
+    // first we need to sort the indexes to start with the highes row and end with the
+    // lowest row. We then remove from m_workTasks starting with the highest row number
+    // in order to not mess up the indexes of the lower row-numbers.
+    std::sort(std::begin(p_indexes), std::end(p_indexes), 
+              [](const QModelIndex& p_first, const QModelIndex& p_second) {
+        return p_second.row() < p_first.row();
+    });
+    
+    // The magic now lies in detecting whether one row can be completely removed from the
+    // model or if just one data value shall be set to nothing.
+    QMutableListIterator<QModelIndex> iter(p_indexes);
+    while (iter.hasNext()) {
+        QModelIndex curIndex  = iter.next();
+        QModelIndex nextIndex;
+        if (iter.hasNext()) {
+            nextIndex = iter.peekNext();
+        }
+        
+        if (!curIndex.isValid() || curIndex.row() >= m_workTimes.count()) {
+            continue;
+        }
+        
+        WorkTime workTime = m_workTimes.at(curIndex.row());
+        bool removeRow = false;
+        
+        if (nextIndex.isValid() && curIndex.row() == nextIndex.row()) {
+            // Remove the whole row (= work-time DOM node)
+            removeRow = true;
+            // Step to the next position in the iterator, we've just processed two
+            iter.next();
+        }
+        else {
+            // Column 0 is the start time and column 1 the stop time.
+            if (0 == curIndex.column()) {
+                workTime.setStart(QDateTime());
+            }
+            else {
+                workTime.setStop(QDateTime());
+            }
+            
+            // If both values are null then we might as well just remove the row.
+            if (workTime.start().isNull() && workTime.stop().isNull()) {
+                removeRow = true;
+            }
+            else {
+                emit dataChanged(curIndex, curIndex, { Qt::EditRole });
+            }
+        }
+        
+        if (removeRow) {
+            beginRemoveRows(QModelIndex(), curIndex.row(), curIndex.row());
+            
+            m_workTimes.removeAt(curIndex.row());
+            workTime.remove();
+            
+            endRemoveRows();
+        }
     }
 }

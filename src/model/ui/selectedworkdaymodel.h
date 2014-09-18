@@ -67,13 +67,10 @@ public:
                  int p_role = Qt::EditRole);
     
     /*!
-     * Removes a task and all of its recorded times from the list. This is permanent and
-     * cannot be undone.
-     * 
-     * \return 
-     * `true` on success and `false` on error.
+     * Removes the tasks and all of its recorded times from the list that are mentioned in
+     * the list of indexes. This is permanent and cannot be undone.
      */
-    bool removeTask(const QModelIndex& p_index);
+    void removeTasks(QModelIndexList p_indexes);
 
     /*!
      * \return 
