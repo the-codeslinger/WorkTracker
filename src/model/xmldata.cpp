@@ -120,6 +120,12 @@ XmlData::operator==(const XmlData& p_other) const
     return m_node == p_other.m_node;
 }
 
+bool 
+XmlData::operator!=(const XmlData& p_other) const
+{
+    return m_node != p_other.m_node;
+}
+
 void
 XmlData::remove()
 {

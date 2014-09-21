@@ -213,13 +213,19 @@ WorkTrackerController::stopWorkTask(QString name)
         otherWorkTask.addTime(m_recordingWorkTime);
     }
     
-    QDateTime now = QDateTime::currentDateTimeUtc();    
-    m_recordingWorkTime.setStop(now);
+    QDateTime timestamp = QDateTime::currentDateTimeUtc();
+    if (m_recordingWorkTime.stop().isNull()) {
+        m_recordingWorkTime.setStop(timestamp);
+    }
+    else {
+        timestamp = m_recordingWorkTime.stop();
+    }
+    
     // Always reset after it is not needed any more
     m_recordingWorkTask = WorkTask(m_dataSource);
     m_recordingWorkTime = WorkTime(m_dataSource);
 
-    emit workTaskStopped(now, name);
+    emit workTaskStopped(timestamp, name);
 }
 
 void
@@ -237,6 +243,12 @@ void
 WorkTrackerController::showEditor()
 {
     EditorController econ(m_dataSource, this);
+    
+    connect(&econ, &EditorController::closeCurrentTask,
+            this,  &WorkTrackerController::closeCurrentTask);
+    connect(&econ, &EditorController::setActiveTask,
+            this,  &WorkTrackerController::setActiveTask);
+    
     econ.run();
 }
 
@@ -330,22 +342,31 @@ WorkTrackerController::loadTranslations()
 }
 
 void 
-WorkTrackerController::setActiveTask(WorkTask p_task)
+WorkTrackerController::setActiveTask(const WorkTask& p_task)
 {
     if (p_task.isNull() || p_task.task().name().isEmpty()) {
         return; // Sorry pal, can't help ya.
     }
     
-    closeCurrentTask();
-    
-    m_recordingWorkTask = p_task;
-    m_recordingWorkTime = p_task.activeWorkTime();
-    
-    if (m_recordingWorkTime.start().isNull()) {
-        m_recordingWorkTime.setStart(QDateTime::currentDateTimeUtc());
+    if (m_recordingWorkTask != p_task) {
+        closeCurrentTask();
+        m_recordingWorkTask = p_task;
     }
     
-    emit workTaskStarted(m_recordingWorkTime.start(), m_recordingWorkTask.task().name());
+    QString name  = m_recordingWorkTask.task().name();
+    QDateTime now = QDateTime::currentDateTimeUtc();
+    
+    m_recordingWorkTime = p_task.activeWorkTime();
+    if (!m_recordingWorkTime.isNull()) {
+        if (m_recordingWorkTime.start().isNull()) {
+            m_recordingWorkTime.setStart(now);
+        }
+        
+        emit workTaskStarted(m_recordingWorkTime.start(), name);
+    }
+    else {
+        emit workTaskStopped(now, name);
+    }
 }
 
 void 

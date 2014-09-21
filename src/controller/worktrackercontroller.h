@@ -174,7 +174,7 @@ public slots:
      * returns a valid instance. If the start time is missing the current one will be 
      * used.
      */
-    void setActiveTask(WorkTask p_task);
+    void setActiveTask(const WorkTask& p_task);
     
     /*!
      * Stops recording time for the current task. This method can be used to "flush the

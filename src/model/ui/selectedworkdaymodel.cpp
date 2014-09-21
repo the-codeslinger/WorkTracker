@@ -131,7 +131,7 @@ SelectedWorkDayModel::appendTask(const QString& p_name)
     // We know nothing about this task right now, other than it exists. The setData() 
     // method has to do all the heavy lifting to figure out where it belongs once it
     // receives a name.
-    m_workTasks.append(WorkTask(dataSource, m_workday.parent(), task));
+    m_workTasks.append(WorkTask(dataSource, m_workday.node(), task));
     
     endInsertRows();
 }

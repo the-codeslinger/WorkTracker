@@ -219,8 +219,17 @@
    </item>
    <item>
     <widget class="QLabel" name="errorLabel">
+     <property name="styleSheet">
+      <string notr="true">color: red;</string>
+     </property>
      <property name="text">
       <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

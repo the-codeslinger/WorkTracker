@@ -86,6 +86,8 @@ EditWorkTaskPage::EditWorkTaskPage(EditorController* p_controller, QWidget* p_pa
             p_controller,         &EditorController::validateModel);
     connect(p_controller,         &EditorController::validationError,
             this,                 &EditWorkTaskPage::validationError);
+    connect(p_controller,         &EditorController::validationSuccess,
+            this,                 &EditWorkTaskPage::validationSuccess);
     
     connect(ui->tasksListView->selectionModel(), 
                   SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
@@ -181,14 +183,14 @@ EditWorkTaskPage::taskAlreadyExists(const QString& p_name)
                 QMessageBox::Ok);
 }
 
-bool 
-EditWorkTaskPage::validatePage()
-{
-    return true;
-}
-
 void 
 EditWorkTaskPage::validationError(const QString& p_error)
 {
-    ui->errorLabel = p_error;
+    ui->errorLabel->setText(p_error);
+}
+
+void 
+EditWorkTaskPage::validationSuccess()
+{
+    ui->errorLabel->setText("");
 }

@@ -80,14 +80,6 @@ public:
      * Returns the list-view of the work-times.
      */
     QTableView* workTimesView() const;
-    
-    /*!
-     * Evaluates the changes and shows a message-box that contains all the errors that
-     * prevent continuing.
-     * 
-     * \return 
-     */
-    bool validatePage();
 
 public slots:
     /*!
@@ -109,7 +101,15 @@ protected slots:
      */
     void taskAlreadyExists(const QString& p_name);
     
+    /*!
+     * Sets the error message label to `p_error`.
+     */
     void validationError(const QString& p_error);
+    
+    /*!
+     * Resets the error message to nothing
+     */
+    void validationSuccess();
     
 protected:
     /*!

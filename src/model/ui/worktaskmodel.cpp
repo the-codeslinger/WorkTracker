@@ -74,12 +74,20 @@ WorkTaskModel::data(const QModelIndex& p_index, int p_role) const
 
     if (Qt::DisplayRole == p_role || Qt::EditRole == p_role) {
         WorkTime wt = m_workTimes.at(p_index.row());
+        
+        QDateTime timestamp;
         if (0 == p_index.column()) {
-            return wt.start().toLocalTime();
+            timestamp = wt.start().toLocalTime();
         }
         else {
-            return wt.stop().toLocalTime();
+            timestamp = wt.stop().toLocalTime();
         }
+        
+        if (timestamp.isNull() && Qt::EditRole == p_role) {
+            timestamp = QDateTime::currentDateTime();
+        }
+        
+        return timestamp;
     }
 
     return QVariant();

@@ -43,7 +43,8 @@ SOURCES += src/main.cpp\
     src/preferencesdialog.cpp \
     src/model/worktime.cpp \
     src/selecttaskdialog.cpp \
-    src/model/delegate/taskdelegate.cpp
+    src/model/delegate/taskdelegate.cpp \
+    src/editorwizard.cpp
 
 HEADERS  += src/worktracker.h \
     src/model/ui/tasklistmodel.h \
@@ -65,7 +66,8 @@ HEADERS  += src/worktracker.h \
     src/preferencesdialog.h \
     src/model/worktime.h \
     src/selecttaskdialog.h \
-    src/model/delegate/taskdelegate.h
+    src/model/delegate/taskdelegate.h \
+    src/editorwizard.h
 
 FORMS    += ui/worktracker.ui \
     ui/aboutdialog.ui \

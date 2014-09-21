@@ -114,6 +114,18 @@ public:
      */
     bool operator==(const XmlData& p_other) const;
     
+    /**
+     * Two `XmlData` instances  are considered not equal if they don't refer to the same 
+     * DOM node.
+     *
+     * @param other
+     * The other `XmlData` to compare to.
+     *
+     * @return
+     * `true` if both refer to the same DOM node or `false` if not.
+     */
+    bool operator!=(const XmlData& p_other) const;
+    
     /*!
      * Remove the node from the parent, if one exists, and also from the DOM. If the node
      * is null then no action is performed.

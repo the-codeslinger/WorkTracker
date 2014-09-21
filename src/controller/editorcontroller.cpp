@@ -21,6 +21,7 @@
 #include "../model/ui/worktaskmodel.h"
 #include "../model/ui/selectedworkdaymodel.h"
 #include "../selecttaskdialog.h"
+#include "../editorwizard.h"
 
 #include <QWizard>
 #include <QListView>
@@ -36,16 +37,21 @@ EditorController::EditorController(const QDomDocument& p_dataSource, QObject* p_
 void
 EditorController::run()
 {
-    QWizard wizard(nullptr, Qt::WindowTitleHint | Qt::WindowSystemMenuHint
-                            | Qt::WindowCloseButtonHint);
-    wizard.setWindowTitle(tr("Edit Work Tasks"));
+    EditorWizard wizard(this);
 
     m_selectWorkDayPage = new SelectWorkDayPage(this, &wizard);
     m_editWorkTaskPage  = new EditWorkTaskPage(this, &wizard);
 
     wizard.addPage(m_selectWorkDayPage);
     wizard.addPage(m_editWorkTaskPage);
-    //wizard.setModal(true);
+    
+    connect(this,    &EditorController::validationSuccess,
+            &wizard, &EditorWizard::validationSuccess);
+    connect(this,    &EditorController::validationError,
+            &wizard, &EditorWizard::validationError);
+    connect(&wizard, &EditorWizard::finished,
+            this,    &EditorController::updateActiveWorkTasks);
+    
     QSize size = wizard.size();
     wizard.resize(size.width() * 1.05, size.height() * 1.05);
     wizard.exec();
@@ -159,5 +165,75 @@ EditorController::dataSource() const
 void 
 EditorController::validateModel()
 {
-    emit validationError("m00");
+    QVariant value = m_selectWorkDayPage->selectedItem();
+    if (value.canConvert<WorkDay>()) {
+        WorkDay workDay = qvariant_cast<WorkDay>(value);
+        
+        QStringList activeTasks;
+        
+        QList<WorkTask> workTasks = workDay.workTasks();
+        for (const WorkTask& workTask : workTasks) {
+            QString taskName = workTask.task().name();
+            
+            if (taskName.isEmpty()) {
+                emit validationError(tr("There is a work-task without a name"));
+                return;
+            }
+            
+            QList<WorkTime> workTimes = workTask.workTimes();
+            for (const WorkTime& workTime : workTimes) {
+                if (workTime.start().isNull()) {
+                    emit validationError(tr("Work-task \"%1\" has no start time")
+                                         .arg(workTask.task().name()));
+                    return;
+                }
+                
+                if (workTime.stop().isNull()) {
+                    if (!activeTasks.contains(taskName)) {
+                        activeTasks << taskName;
+                    }
+                }
+            }
+        }
+        
+        if (1 < activeTasks.size()) {
+            emit validationError(tr("The following tasks are active: %1")
+                                 .arg(activeTasks.join(",")));
+            return;
+        }
+    }
+    
+    emit validationSuccess();
+}
+
+void 
+EditorController::updateActiveWorkTasks()
+{
+    // Find the latest workday and see what's active and what is not. The latest work-day
+    // is number of work-days minus 1 (zero-based index).
+    int countDays = WorkDay::count(m_dataSource);
+    WorkDay workDay = WorkDay::at(countDays - 1, m_dataSource);
+    
+    if (!workDay.isNull()) {
+        WorkTask activeWorkTask;
+        
+        QList<WorkTask> workTasks = workDay.workTasks();
+        for (const WorkTask& workTask : workTasks) {
+            if (workTask.task().isNull()) {
+                continue;
+            }
+            
+            if (workTask.isActiveTask()) {
+                activeWorkTask = workTask;
+                break;
+            }
+        }
+        
+        if (activeWorkTask.isNull()) {
+            emit closeCurrentTask();
+        }
+        else {
+            emit setActiveTask(activeWorkTask);
+        }
+    }
 }

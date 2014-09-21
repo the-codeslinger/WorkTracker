@@ -25,6 +25,7 @@ class WorkTaskModel;
 class SelectedWorkDayModel;
 class SelectWorkDayPage;
 class EditWorkTaskPage;
+class WorkTask;
 
 /*!
  * Handles all the requests and necessary tasks that are part of editing workdays and
@@ -98,6 +99,16 @@ signals:
      * model passed validation without an error.
      */
     void validationSuccess();
+    
+    /*!
+     * Emitted when the wizard is closed (no matter how) and there's an active task.
+     */
+    void setActiveTask(const WorkTask& p_task);
+    
+    /*!
+     * Emitted when the wizard is closed (no matter how) and there's no more active task.
+     */
+    void closeCurrentTask();
 
 public slots:
     /*!
@@ -126,6 +137,12 @@ public slots:
      * `EditorController::validationSuccess()` if no error was found.
      */
     void validateModel();
+    
+    /*!
+     * Evaluate the current work-day and update the `WorkTrackerController` with the 
+     * currently active work-task and work-time based on the changes.
+     */
+    void updateActiveWorkTasks();
 
 private:
     /*!
