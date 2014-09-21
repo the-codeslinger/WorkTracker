@@ -67,13 +67,10 @@ public:
                  int p_role = Qt::EditRole);
     
     /*!
-     * Removes a task and all of its recorded times from the list. This is permanent and
-     * cannot be undone.
-     * 
-     * \return 
-     * `true` on success and `false` on error.
+     * Removes the tasks and all of its recorded times from the list that are mentioned in
+     * the list of indexes. This is permanent and cannot be undone.
      */
-    bool removeTask();
+    void removeTasks(QModelIndexList p_indexes);
 
     /*!
      * \return 
@@ -90,21 +87,29 @@ public:
      * \return
      * Returns the list of work task items for the selected index.
      */
-    QList<WorkTask> workTasks(const QModelIndex& p_index) const;
+    WorkTask workTask(const QModelIndex& p_index) const;
+    
+signals:
+    /*!
+     * Emitted if `SelectedWorkDayModel::appendTask(const QString&)` is called with the
+     * name of a task for which a work-task already exists.
+     * 
+     * \param p_name
+     * The name of the task that caused the conflict.
+     */
+    void taskAlreadyExists(const QString& p_name);
     
 public slots:
     /*!
-     * Creates a task without a name and appends it to the list of existing tasks.
-     * 
-     * \return 
-     * `true` on success and `false` on error.
+     * Creates a task with a name and appends it to the list of existing tasks. If 
+     * `p_name` is null then no action is performed.
      */
-    bool appendTask();
+    void appendTask(const QString& p_name);
     
 
 private:
-    WorkDay     m_workday;
-    QList<Task> m_tasks;
+    WorkDay         m_workday;
+    QList<WorkTask> m_workTasks;
 };
 
 #endif // SELECTEDWORKDAYMODEL_H

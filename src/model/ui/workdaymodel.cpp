@@ -19,12 +19,11 @@
 
 WorkDayModel::WorkDayModel(QObject* p_parent)
     : QAbstractListModel(p_parent)
-    , m_dataSource(nullptr)
 {
 }
 
 void
-WorkDayModel::setDataSource(QDomDocument* p_dataSource)
+WorkDayModel::setDataSource(const QDomDocument& p_dataSource)
 {
     beginResetModel();
     m_dataSource = p_dataSource;
@@ -34,7 +33,7 @@ WorkDayModel::setDataSource(QDomDocument* p_dataSource)
 int
 WorkDayModel::rowCount(const QModelIndex& /* ignored */) const
 {
-    if (nullptr != m_dataSource) {
+    if (!m_dataSource.isNull()) {
         return WorkDay::count(m_dataSource);
     }
 

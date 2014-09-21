@@ -20,8 +20,8 @@
 #include <QString>
 #include <QDomElement>
 
-class QVariant;
-class QDomNode;
+class QDate;
+class QDateTime;
 class QDomDocument;
 
 /*!
@@ -44,29 +44,53 @@ public:
      * Returns the data source of this XML data object. Do not delete the `QDomDocument`
      * instance.
      */
-    QDomDocument* dataSource() const;
+    QDomDocument dataSource() const;
     
     /*!
      * Set the data source from which to read the data.
      *
-     * \param dataSource
+     * \param p_dataSource
      * A loaded XML file. Ownership of the data source stays with the calling code.
      */
-    void setDataSource(QDomDocument* dataSource);
+    void setDataSource(const QDomDocument& p_dataSource);
 
     /*!
      * \return
      * Returns the DOM node that is the base of the model entity.
      */
-    QDomNode node() const;
+    QDomElement node() const;
 
     /*!
      * Set a new node.
      *
-     * \param node
+     * \param p_node
      * The new XML node for the model.
      */
-    void setNode(QDomNode node);
+    void setNode(const QDomElement& p_node);
+    
+    /*!
+     * \return 
+     * Returns the node's parent node. If the node doesn't have a parent then 
+     * `QDomNode::isNull()` will return `true`.
+     */
+    QDomNode parent() const;
+    
+    /*!
+     * Set a new parent for the node. If the node alread has a parent it is reparented.
+     * 
+     * \param p_parent
+     * The new parent node. If `QDomNode::isNull()` returns `true` then no action is 
+     * performed.
+     */
+    void setParent(const QDomNode& p_parent);
+    
+    /*!
+     * Convenience method that sets the parent by retrieving it from another `XmlData`
+     * instance.
+     * 
+     * \see XmlData::setParent(QDomNode)
+     */
+    void setParent(const XmlData& p_parent);
 
     /*!
      * \return
@@ -78,64 +102,177 @@ public:
      * Deletes the data and releases the connection to the DOM tree.
      */
     void clear();
+    
+    /**
+     * Two `XmlData` instances  are considered equal if they refer to the same DOM node.
+     *
+     * @param other
+     * The other `XmlData` to compare to.
+     *
+     * @return
+     * `true` if both refer to the same DOM node or `false` if not.
+     */
+    bool operator==(const XmlData& p_other) const;
+    
+    /**
+     * Two `XmlData` instances  are considered not equal if they don't refer to the same 
+     * DOM node.
+     *
+     * @param other
+     * The other `XmlData` to compare to.
+     *
+     * @return
+     * `true` if both refer to the same DOM node or `false` if not.
+     */
+    bool operator!=(const XmlData& p_other) const;
+    
+    /*!
+     * Remove the node from the parent, if one exists, and also from the DOM. If the node
+     * is null then no action is performed.
+     */
+    void remove();
 
 protected:
     /*!
+     * Default constructur. `XmlData::isNull()` will return `true`.
+     */
+    XmlData();
+    
+    /*!
      * Creates a new instance with a data source.
      */
-    XmlData(QDomDocument* dataSource);
+    XmlData(const QDomDocument& p_dataSource);
 
     /*!
      * Creates a new instance with a data source and a DOM node.
      */
-    XmlData(QDomDocument* dataSource, QDomElement node);
+    XmlData(const QDomDocument& p_dataSource, const QDomElement& p_node);
+    
+    /*!
+     * Creates a new instance with a data source, the actual node element and a parent.
+     */
+    XmlData(const QDomDocument& p_dataSource, const QDomElement& p_node, 
+            const QDomNode& p_parent);
 
     /*!
      * Copy the values from another instance. This is not a deep copy. In the end both
      * instances reference the same data and changes in one will appear on the other as
      * well.
      */
-    XmlData(const XmlData& other);
-
+    XmlData(const XmlData& p_other);
+    
     /*!
-     * Move-constructor that takes the data from another, temporary instance.
+     * Assigns the DOM node of the other `XmlData` instance to the current one.
+     *
+     * \param p_other
+     * The other `XmlData` from which to copy the node.
+     *
+     * \return
+     * Returns the changed current instance.
      */
-    XmlData(XmlData&& temp);
+    XmlData& operator=(const XmlData& p_other);
+    
+    /*!
+     * Gets a current node's attribute value as a string. 
+     */
+    QString attributeString(const QString& p_name) const;
+    
+    /*!
+     * Gets the given node's attribute value as a string. 
+     */
+    QString attributeString(const QString& p_name, const QDomNode& p_node) const;
+    
+    /*!
+     * Gets a current node's attribute value as a date-time. 
+     */
+    QDateTime attributeDateTime(const QString& p_name) const;
+    
+    /*!
+     * Gets the given node's attribute value as a date-time. 
+     */
+    QDateTime attributeDateTime(const QString& p_name, const QDomNode& p_node) const;
+    
+    /*!
+     * Gets a current node's attribute value as a date. 
+     */
+    QDate attributeDate(const QString& p_name) const;
+    
+    /*!
+     * Gets the given node's attribute value as a date. 
+     */
+    QDate attributeDate(const QString& p_name, const QDomNode& p_node) const;
+    
+    /*!
+     * Gets a current node's attribute value as an integer. 
+     */
+    int attributeInt(const QString& p_name) const;
+    
+    /*!
+     * Gets the given node's attribute value as an integer. 
+     */
+    int attributeInt(const QString& p_name, const QDomNode& p_node) const;
 
     /*!
      * Add a new attribute to the node or assign a new value to an already existing
      * attribute.
      *
-     * \param name
+     * \param p_name
      * The name of the attribute.
      *
-     * \param value
-     * The attribute's (new) value. If this is empty then the attribute is not created /
-     * updated.
+     * \param p_value
+     * The attribute's (new) value.
      */
-    void addAttribute(QString name, QString value);
+    void setAttribute(const QString& p_name, const QString& p_value);
+    
+    /*!
+     * Add a new attribute to the node or assign a new value to an already existing
+     * attribute.
+     *
+     * \param p_name
+     * The name of the attribute.
+     *
+     * \param p_value
+     * The attribute's (new) date-time value. If this is an invalid date then the 
+     * attribute will be set to an empty value.
+     */
+    void setAttribute(const QString& p_name, const QDateTime& p_value);
+    
+    /*!
+     * Add a new attribute to the node or assign a new value to an already existing
+     * attribute.
+     *
+     * \param p_name
+     * The name of the attribute.
+     *
+     * \param p_value
+     * The attribute's (new) date value. If this is an invalid date then the attribute 
+     * will be set to an empty value.
+     */
+    void setAttribute(const QString& p_name, const QDate& p_value);
+    
+    /*!
+     * Add a new attribute to the node or assign a new value to an already existing
+     * attribute.
+     *
+     * \param p_name
+     * The name of the attribute.
+     *
+     * \param p_value
+     * The attribute's (new) integer value. If this is -1 then the attribute is not 
+     * created / updated.
+     */
+    void setAttribute(const QString& p_name, int p_value);
 
     /*!
-     * Find an attribute on the node.
+     * Find an attribute on the current node.
      *
-     * \param name
+     * \param p_name
      * The name of the attribute to find.
      *
      * \return
      * Returns a valid attribute node if found or a null-node.
      */
-    QDomNode findAttribute(QString name) const;
-
-    /*!
-     * Get the value of an attribute.
-     *
-     * \param name
-     * The name of the attribute to get the value from.
-     *
-     * \return
-     * If the attribute exists its value is returned, otherwise a null-value.
-     */
-    QVariant attributeValue(QString name) const;
+    QDomAttr attribute(const QString& p_name) const;
 
     /*!
      * This is similar to XmlData::findAttribute(QString) with the difference that this
@@ -150,29 +287,21 @@ protected:
      * \return
      * Returns a valid attribute node if found or a null-node.
      */
-    QDomNode findAttributeFromNode(QDomNode node, QString name) const;
-
-    /*!
-     * This is similar to XmlData::attributeValue(QString) with the difference that this
-     * method works on the node that is being passed to it rather than XmlData::m_node.
-     *
-     * \param name
-     * The name of the attribute to get the value from.
-     *
-     * \return
-     * If the attribute exists its value is returned, otherwise a null-value.
-     */
-    QVariant attributeValueFromNode(QDomNode node, QString name) const;
+    QDomAttr attribute(const QString& p_name, const QDomNode& p_node) const;
 
     /*!
      * The DOM document that represents the XML database file.
      */
-    QDomDocument* m_dataSource;
+    QDomDocument m_dataSource;
     /*!
      * The link into the DOM tree that represents exactly one item of a specific (
      * arbitrarily complex) model class.
      */
     QDomElement m_node;
+    /*!
+     * The node's parent if there is any or a null-node.
+     */
+    QDomNode m_parent;
 };
 
 #endif // XMLDATA_H

@@ -20,10 +20,15 @@
 #include "../model/ui/workdaymodel.h"
 #include "../model/ui/worktaskmodel.h"
 #include "../model/ui/selectedworkdaymodel.h"
+#include "../selecttaskdialog.h"
+#include "../editorwizard.h"
 
 #include <QWizard>
+#include <QListView>
+#include <QTableView>
+#include <QMessageBox>
 
-EditorController::EditorController(QDomDocument* p_dataSource, QObject* p_parent)
+EditorController::EditorController(const QDomDocument& p_dataSource, QObject* p_parent)
     : QObject(p_parent)
     , m_dataSource(p_dataSource)
 {
@@ -32,15 +37,23 @@ EditorController::EditorController(QDomDocument* p_dataSource, QObject* p_parent
 void
 EditorController::run()
 {
-    QWizard wizard(nullptr, Qt::WindowTitleHint | Qt::WindowSystemMenuHint
-                            | Qt::WindowCloseButtonHint);
-    wizard.setWindowTitle(tr("Edit Work Tasks"));
+    EditorWizard wizard(this);
 
     m_selectWorkDayPage = new SelectWorkDayPage(this, &wizard);
     m_editWorkTaskPage  = new EditWorkTaskPage(this, &wizard);
 
     wizard.addPage(m_selectWorkDayPage);
     wizard.addPage(m_editWorkTaskPage);
+    
+    connect(this,    &EditorController::validationSuccess,
+            &wizard, &EditorWizard::validationSuccess);
+    connect(this,    &EditorController::validationError,
+            &wizard, &EditorWizard::validationError);
+    connect(&wizard, &EditorWizard::finished,
+            this,    &EditorController::updateActiveWorkTasks);
+    
+    QSize size = wizard.size();
+    wizard.resize(size.width() * 1.05, size.height() * 1.05);
     wizard.exec();
 }
 
@@ -63,29 +76,164 @@ void
 EditorController::setModelData(const QModelIndex& p_index, SelectedWorkDayModel* p_source,
                                WorkTaskModel* p_destination)
 {
-    p_destination->setWorkTasks(p_source->workTasks(p_index));
+    p_destination->setWorkTask(p_source->workTask(p_index));
 }
 
 void 
 EditorController::addTask()
 {
-    
+    SelectTaskDialog dlg(m_dataSource);
+    if (QDialog::Accepted == dlg.exec()) {
+        QListView* view = m_editWorkTaskPage->workTasksView();
+        SelectedWorkDayModel* model = qobject_cast<SelectedWorkDayModel*>(view->model());
+        model->appendTask(dlg.taskName());
+        
+        // Don't care about the return value. The emitted signal concerning duplicates
+        // is handled in the page. That's the only realistic scenario of failure.
+    }
 }
 
 void 
 EditorController::removeTask()
 {
+    QModelIndexList indexes = m_editWorkTaskPage->selectedTasks();
+    QListView* view = m_editWorkTaskPage->workTasksView();
     
+    SelectedWorkDayModel* model = qobject_cast<SelectedWorkDayModel*>(view->model());
+    
+    if (0 == indexes.size()) {
+        return;
+    }
+    
+    QString question;
+    if (1 == indexes.size()) {
+        WorkTask workTask = model->workTask(indexes.at(0));
+        
+        if (workTask.isNull()) {
+            return;
+        }
+        
+        question = tr("Are you sure you want to delete the work-task \"%1\" \n"
+                      "and all of its recorded times?").arg(workTask.task().name());
+    }
+    else {
+        question = tr("Are you sure you want to delete the selected %1 \n"
+                      "work-tasks and all of their recorded times?").arg(indexes.size());
+    }
+    
+    int result = QMessageBox::question(m_editWorkTaskPage, tr("Delete Task"), question, 
+                                       QMessageBox::Yes, QMessageBox::No);
+    
+    if (QMessageBox::Yes == result) {
+        model->removeTasks(indexes);
+    }
 }
 
 void 
 EditorController::addTime()
 {
-    
+    QTableView* view = m_editWorkTaskPage->workTimesView();
+    WorkTaskModel* model = qobject_cast<WorkTaskModel*>(view->model());
+    model->appendTime();
 }
 
 void 
 EditorController::removeTime()
 {
+    QModelIndexList indexes = m_editWorkTaskPage->selectedTimes();
+    if (!indexes.isEmpty()) {
+        int result = QMessageBox::question(
+                    m_editWorkTaskPage, tr("Delete Time"), 
+                    tr("Are you sure you want to delete %1 recorded times?")
+                      .arg(indexes.size()), 
+                    QMessageBox::Yes, QMessageBox::No);
+        
+        if (QMessageBox::Yes == result) {
+            QTableView* view = m_editWorkTaskPage->workTimesView();
+            WorkTaskModel* model = qobject_cast<WorkTaskModel*>(view->model());
+            model->removeTimes(indexes);
+        }
+    }
+}
+
+QDomDocument 
+EditorController::dataSource() const
+{
+    return m_dataSource;
+}
+
+void 
+EditorController::validateModel()
+{
+    QVariant value = m_selectWorkDayPage->selectedItem();
+    if (value.canConvert<WorkDay>()) {
+        WorkDay workDay = qvariant_cast<WorkDay>(value);
+        
+        QStringList activeTasks;
+        
+        QList<WorkTask> workTasks = workDay.workTasks();
+        for (const WorkTask& workTask : workTasks) {
+            QString taskName = workTask.task().name();
+            
+            if (taskName.isEmpty()) {
+                emit validationError(tr("There is a work-task without a name"));
+                return;
+            }
+            
+            QList<WorkTime> workTimes = workTask.workTimes();
+            for (const WorkTime& workTime : workTimes) {
+                if (workTime.start().isNull()) {
+                    emit validationError(tr("Work-task \"%1\" has no start time")
+                                         .arg(workTask.task().name()));
+                    return;
+                }
+                
+                if (workTime.stop().isNull()) {
+                    if (!activeTasks.contains(taskName)) {
+                        activeTasks << taskName;
+                    }
+                }
+            }
+        }
+        
+        if (1 < activeTasks.size()) {
+            emit validationError(tr("The following tasks are active: %1")
+                                 .arg(activeTasks.join(",")));
+            return;
+        }
+    }
     
+    emit validationSuccess();
+}
+
+void 
+EditorController::updateActiveWorkTasks()
+{
+    // Find the latest workday and see what's active and what is not. The latest work-day
+    // is number of work-days minus 1 (zero-based index).
+    int countDays = WorkDay::count(m_dataSource);
+    WorkDay workDay = WorkDay::at(countDays - 1, m_dataSource);
+    
+    if (!workDay.isNull()) {
+        WorkTask activeWorkTask;
+        
+        QList<WorkTask> workTasks = workDay.workTasks();
+        for (const WorkTask& workTask : workTasks) {
+            if (workTask.task().isNull()) {
+                continue;
+            }
+            
+            if (workTask.isActiveTask()) {
+                activeWorkTask = workTask;
+                break;
+            }
+        }
+        
+        if (activeWorkTask.isNull()) {
+            emit closeCurrentTask();
+        }
+        else {
+            emit setActiveTask(activeWorkTask);
+        }
+    }
 }

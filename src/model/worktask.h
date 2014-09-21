@@ -19,13 +19,7 @@
 
 #include "task.h"
 #include "xmldata.h"
-
-#include <QList>
-#include <QDateTime>
-#include <QPair>
-
-class QDomNode;
-class QDomDocument;
+#include "worktime.h"
 
 /*!
  * \brief Combines a `Task` with a start and a stop time, making it one unit of work.
@@ -49,21 +43,36 @@ public:
     WorkTask();
 
     /*!
-     * Creates a new `Task` with a data source.
+     * Creates a new `WorkTask` with a data source. An associated DOM node is also created
+     * but cannot be added to the DOM until a parent, the `WorkDay`, is set.
      */
-    WorkTask(QDomDocument* dataSource);
-
+    WorkTask(const QDomDocument& p_dataSource);
+    
     /*!
-     * Creates a new `Task` with a data source, the DOM node, a task and its start and
-     * stop timestamp.
+     * Creates a new `WorkTask` with a data source and the associated DOM node from which
+     * to read the data and write it to.
      */
-    WorkTask(QDomDocument* dataSource, QDomElement node, Task task, QDateTime start,
-             QDateTime stop);
-
+    WorkTask(const QDomDocument& p_dataSource, const QDomElement& p_node, 
+             const QDomNode& p_parent);
+    
     /*!
-     * Calls the base class' implementation and immediately adds start and stop as well.
+     * Creates a new instance with a task and the parent to assign the node to.
      */
-    void setNode(QDomNode node);
+    WorkTask(const QDomDocument& p_dataSource, const QDomNode& p_parent, 
+             const Task& p_task);
+    
+    /*!
+     * Copy constructor.
+     */
+    WorkTask(const WorkTask& p_other);
+    
+    /*!
+     * Sets the data-source and creates a node if none exists.
+     * 
+     * \param p_dataSource
+     * The data-source of this work-task.
+     */
+    void setDataSource(const QDomDocument &p_dataSource);
 
     /*!
      * \return
@@ -74,100 +83,59 @@ public:
     /*!
      * Set a new `task`.
      */
-    void setTask(Task task);
+    void setTask(const Task& p_task);
+    
+    /*!
+     * Add a time element to the work-task's list of times.
+     * 
+     * \param p_time
+     * The time element to add. This sets the parent of `p_time` to be the work-task.
+     */
+    void addTime(const WorkTime& p_time);
+    
+    /*!
+     * \return 
+     * Returns the list of work-times that are part of this work-task.
+     */
+    QList<WorkTime> workTimes() const;
 
     /*!
      * \return
-     * Returns the start timestamp.
+     * Return the total amount of seconds from start to stop of all work-times combined.
      */
-    QDateTime start() const;
-
+    qint64 timeInSeconds() const;
+    
     /*!
-     * Set a new `start` timestamp.
+     * \return 
+     * Returns `true` if this work-task contains an work-time without a stop timestamp or
+     * `false` if all work-times have a stop timestamp.
      */
-    void setStart(QDateTime start);
-
+    bool isActiveTask() const;
+    
     /*!
-     * \return
-     * Returns the start timestamp.
+     * \return 
+     * Returns the currently active work-time or a null-work-time if there is none without
+     * a stop timestamp.
      */
-    QDateTime stop() const;
-
-    /*!
-     * Set a new `stop` timestamp.
-     */
-    void setStop(QDateTime stop);
-
-    /*!
-     * \return
-     * Return the total amount of seconds from start to stop.
-     */
-    int totalTime() const;
-
-    /*!
-     * \return
-     * Returns `true` if `WorkTask::m_task` returns `true` or `false` otherwise.
-     *
-     * \see
-     * Task::isNull()
-     */
-    bool isNull() const;
-
-    /*!
-     * Resets the complete worktask by invalidating the timestamps task.
-     */
-    void clear();
-
-    /**
-     * Two tasks are considered equal if they refer to the same DOM node.
-     *
-     * @param other
-     * The other task to compare to.
-     *
-     * @return
-     * `true` if both refer to the same DOM node or `false` if not.
-     */
-    bool operator==(const WorkTask& other) const;
-
-    /*!
-     * Reads all the individual timestamps from the <task> XML node inside a <day> node.
-     *
-     * \param node
-     * The <task> XML node that contains all the <time> nodes.
-     *
-     * \param dataSource
-     * The database to read from.
-     *
-     * \return
-     * `WorkTask` instances are created for every <time> XML node and returned in a list.
-     * If no <time> nodes are present then the list returned is empty.
-     */
-    static QList<WorkTask> fromDomNode(QDomNode* node, QDomDocument* dataSource);
+    WorkTime activeWorkTime() const;
 
 private:
     /*!
-     * The task value of the worktask.
+     * Creates the work-task DOM node on the parent and sets the values.
+     * 
+     * \param p_parent
+     * The node of the work-day to which to attach this work-task.
+     * 
+     * \param p_task
+     * The actual `Task`.
+     * 
+     * \param p_start
+     * The starting timestamp of the work-task.
+     * 
+     * \param p_stop
+     * The stopped timestamp of the work-task.
      */
-    Task m_task;
-    /*!
-     * The start timestamp of the worktask.
-     */
-    QDateTime m_start;
-    /*!
-     * The stop timestamp of the worktask.
-     */
-    QDateTime m_stop;
-
-    /*!
-     * Helper method that extracts the value of the id attribute of the task from the
-     * node.
-     */
-    static int idFromAttr(QDomNode* attr);
-
-    /*!
-     * Helper method that extracts the timestamp value from the attribute from the node.
-     */
-    static QDateTime timestampFromAttr(QDomNode* attr);
+    void createNode(const QDomNode& p_parent, const Task& p_task);
 };
 
 #endif // WORKTASK_H

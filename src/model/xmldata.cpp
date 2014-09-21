@@ -19,53 +19,86 @@
 #include <QDebug>
 #include <QVariant>
 #include <QDomDocument>
+#include <QDateTime>
 
-XmlData::XmlData(QDomDocument* dataSource)
-    : m_dataSource(dataSource)
+XmlData::XmlData()
 {
 }
 
-XmlData::XmlData(QDomDocument* dataSource, QDomElement node)
-    : m_dataSource(dataSource)
-    , m_node(node)
+XmlData::XmlData(const QDomDocument& p_dataSource)
+    : m_dataSource(p_dataSource)
 {
 }
 
-XmlData::XmlData(const XmlData& other)
-    : m_dataSource(other.m_dataSource)
-    , m_node(other.m_node)
+XmlData::XmlData(const QDomDocument& p_dataSource, const QDomElement& p_node)
+    : m_dataSource(p_dataSource)
+    , m_node(p_node)
 {
 }
 
-XmlData::XmlData(XmlData&& temp)
-    : m_dataSource(temp.m_dataSource)
-    , m_node(temp.m_node)
+XmlData::XmlData(const QDomDocument& p_dataSource, const QDomElement& p_node, 
+                 const QDomNode& p_parent)
+    : m_dataSource(p_dataSource)
+    , m_node(p_node)
+    , m_parent(p_parent)
 {
-    temp.m_dataSource = nullptr;
 }
 
-QDomDocument* 
+XmlData::XmlData(const XmlData& p_other)
+    : m_dataSource(p_other.m_dataSource)
+    , m_node(p_other.m_node)
+    , m_parent(p_other.m_parent)
+{
+}
+
+QDomDocument
 XmlData::dataSource() const
 {
     return m_dataSource;
 }
 
 void
-XmlData::setDataSource(QDomDocument* dataSource)
+XmlData::setDataSource(const QDomDocument& p_dataSource)
 {
-    m_dataSource = dataSource;
+    m_dataSource = p_dataSource;
 }
 
-QDomNode
+QDomElement
 XmlData::node() const
 {
     return m_node;
 }
 
 void
-XmlData::setNode(QDomNode node)
+XmlData::setNode(const QDomElement& p_node)
 {
-    m_node = node.toElement();
+    m_node = p_node;
+    setParent(m_parent);
+}
+
+QDomNode
+XmlData::parent() const
+{
+    return m_parent;
+}
+
+void
+XmlData::setParent(const QDomNode& p_parent)
+{
+    if (p_parent.isNull()) {
+        return;
+    }
+    
+    m_parent = p_parent;
+    if (!m_node.isNull()) {
+        m_parent.appendChild(m_node);
+    }
+}
+
+void 
+XmlData::setParent(const XmlData& p_parent)
+{
+    setParent(p_parent.parent());
 }
 
 bool
@@ -78,52 +111,175 @@ void
 XmlData::clear()
 {
     m_node.clear();
+    m_parent.clear();
+}
+
+bool 
+XmlData::operator==(const XmlData& p_other) const
+{
+    return m_node == p_other.m_node;
+}
+
+bool 
+XmlData::operator!=(const XmlData& p_other) const
+{
+    return m_node != p_other.m_node;
 }
 
 void
-XmlData::addAttribute(QString name, QString value)
+XmlData::remove()
+{
+    if (!m_node.isNull()) {
+        if (!m_parent.isNull()) {
+            m_parent.removeChild(m_node);
+        }
+        
+        m_node.clear();
+    }
+}
+
+XmlData&
+XmlData::operator=(const XmlData& p_other)
+{
+    m_dataSource = p_other.m_dataSource;
+    m_node       = p_other.m_node;
+    m_parent     = p_other.m_parent;
+    return *this;
+}
+
+void
+XmlData::setAttribute(const QString& p_name, const QString& p_value)
 {
     if (m_node.isNull()) {
         qDebug() << "node is null";
+        return;
     }
 
-    if (!value.isEmpty()) {
-        QDomAttr attr = findAttribute(name).toAttr();
-        if (attr.isNull()) {
-            attr = m_dataSource->createAttribute(name);
-            m_node.setAttributeNode(attr);
-        }
-        attr.setValue(value);
+    QDomAttr attr = attribute(p_name);
+    if (attr.isNull()) {
+        attr = m_dataSource.createAttribute(p_name);
+        m_node.setAttributeNode(attr);
     }
+    attr.setValue(p_value);
 }
 
-QDomNode
-XmlData::findAttribute(QString name) const
+void 
+XmlData::setAttribute(const QString& p_name, const QDateTime& p_value)
 {
-    return findAttributeFromNode(m_node, name);
-}
-
-QVariant
-XmlData::attributeValue(QString name) const
-{
-    return attributeValueFromNode(m_node, name);
-}
-
-QDomNode
-XmlData::findAttributeFromNode(QDomNode node, QString name) const
-{
-    QDomNamedNodeMap attributes = node.attributes();
-    return attributes.namedItem(name);
-}
-
-QVariant
-XmlData::attributeValueFromNode(QDomNode node, QString name) const
-{
-    QDomNode attrNode = findAttributeFromNode(node, name);
-    if (attrNode.isNull() || !attrNode.isAttr()) {
-        return QVariant();
+    QString value;
+    if (!p_value.isNull()) {
+        value = p_value.toUTC().toString(Qt::ISODate);
     }
+    
+    setAttribute(p_name, value);
+}
 
-    QDomAttr attr = attrNode.toAttr();
-    return QVariant(attr.value());
+void 
+XmlData::setAttribute(const QString& p_name, const QDate& p_value)
+{
+    QString value;
+    if (!p_value.isNull()) {
+        value = p_value.toString(Qt::ISODate);
+    }
+    
+    setAttribute(p_name, value);
+}
+
+void 
+XmlData::setAttribute(const QString& p_name, int p_value)
+{
+    if (-1 == p_value) {
+        return;
+    }
+    
+    setAttribute(p_name, QString::number(p_value));
+}
+
+QString 
+XmlData::attributeString(const QString& p_name) const
+{
+    return attributeString(p_name, m_node);
+}
+
+QString 
+XmlData::attributeString(const QString& p_name, const QDomNode& p_node) const
+{
+    return attribute(p_name, p_node).value();
+}
+
+QDateTime 
+XmlData::attributeDateTime(const QString& p_name) const
+{
+    return attributeDateTime(p_name, m_node);
+}
+
+QDateTime 
+XmlData::attributeDateTime(const QString& p_name, const QDomNode& p_node) const
+{
+    QString dt = attribute(p_name, p_node).value();
+    if (dt.isNull()) {
+        return QDateTime();
+    }
+    
+    return QDateTime::fromString(dt, Qt::ISODate);
+}
+
+QDate
+XmlData::attributeDate(const QString& p_name) const
+{
+    return attributeDate(p_name, m_node);
+}
+
+QDate 
+XmlData::attributeDate(const QString& p_name, const QDomNode& p_node) const
+{
+    QString dt = attribute(p_name, p_node).value();
+    if (dt.isNull()) {
+        return QDate();
+    }
+    
+    return QDate::fromString(dt, Qt::ISODate);
+}
+
+int 
+XmlData::attributeInt(const QString& p_name) const
+{
+    return attributeInt(p_name, m_node);
+}
+
+int 
+XmlData::attributeInt(const QString& p_name, const QDomNode& p_node) const
+{
+    QString dt = attribute(p_name, p_node).value();
+    if (dt.isEmpty()) {
+        // Only positive numbers are needed by the application. Therefore -1 can be used
+        // as an invalid number.
+        return -1;
+    }
+    
+    bool ok = false;
+    int number = dt.toInt(&ok);
+    return ok ? number : -1;
+}
+
+QDomAttr
+XmlData::attribute(const QString& p_name) const
+{
+    return attribute(p_name, m_node);
+}
+
+QDomAttr
+XmlData::attribute(const QString& p_name, const QDomNode& p_node) const
+{
+    if (p_node.isNull()) {
+        return QDomAttr();
+    }
+    
+    QDomNamedNodeMap attributes = p_node.attributes();
+    QDomNode attrNode = attributes.namedItem(p_name);
+    if (!attrNode.isNull() && attrNode.isAttr()) {
+        return attrNode.toAttr();
+    }
+    
+    return QDomAttr();
 }

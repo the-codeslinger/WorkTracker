@@ -16,6 +16,7 @@
 
 #include "worktracker.h"
 #include "controller/worktrackercontroller.h"
+#include "model/worktask.h"
 
 #include <QApplication>
 #include <QStandardPaths>
@@ -34,6 +35,8 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     a.setOrganizationName("Typical Nerd");
     a.setApplicationName("WorkTracker");
+    
+    qRegisterMetaType<WorkTask>("WorkTask");
 
     QString filePath;
 
@@ -79,7 +82,7 @@ int main(int argc, char *argv[])
     }
     xmlFile.close();
 
-    WorkTrackerController controller(&dataSource);
+    WorkTrackerController controller(dataSource);
     WorkTracker w(&controller);
     
     controller.setUi(&w);

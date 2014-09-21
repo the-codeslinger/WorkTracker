@@ -17,191 +17,143 @@
 #include "worktask.h"
 #include "task.h"
 
-#include <QDomNode>
 #include <QDomNodeList>
 
 WorkTask::WorkTask()
-    : XmlData(nullptr)
+    : XmlData()
 {
 }
 
-WorkTask::WorkTask(QDomDocument* dataSource)
-    : XmlData(dataSource)
-    , m_task(dataSource)
+WorkTask::WorkTask(const QDomDocument& p_dataSource)
+    : XmlData(p_dataSource)
+{
+    createNode(QDomNode(), Task());
+}
+
+WorkTask::WorkTask(const QDomDocument& p_dataSource, const QDomElement& p_node, 
+                   const QDomNode& p_parent)
+    : XmlData(p_dataSource, p_node, p_parent)
 {
 }
 
-WorkTask::WorkTask(QDomDocument* dataSource, QDomElement node, Task task, QDateTime start,
-                   QDateTime stop)
-    : XmlData(dataSource, node)
-    , m_task(task)
-    , m_start(start)
-    , m_stop(stop)
+WorkTask::WorkTask(const QDomDocument& p_dataSource, const QDomNode& p_parent, 
+                   const Task& p_task)
+    : XmlData(p_dataSource)
 {
-    if (!node.isNull()) {
-        setStart(start);
-        setStop(stop);
-    }
+    createNode(p_parent, p_task);
 }
 
-void
-WorkTask::setNode(QDomNode node)
+WorkTask::WorkTask(const WorkTask& p_other)
+    : XmlData(p_other)
 {
-    XmlData::setNode(node);
-    // Write the current data to the node
-    setStart(m_start);
-    setStop(m_stop);
+}
+
+void 
+WorkTask::setDataSource(const QDomDocument &p_dataSource)
+{
+    XmlData::setDataSource(p_dataSource);
+    createNode(QDomNode(), Task());
 }
 
 Task
 WorkTask::task() const
 {
-    return m_task;
+    int id = attributeInt("id");
+    Task task;
+    if (-1 != id) {
+        task = Task::get(id, m_dataSource);
+    }
+    return task;
 }
 
 void
-WorkTask::setTask(Task task)
+WorkTask::setTask(const Task& p_task)
 {
-    m_task = task;
-}
-
-QDateTime
-WorkTask::start() const
-{
-    if (m_node.isNull()) {
-        return m_start;
-    }
-    else {
-        return attributeValue("start").toDateTime();
+    if (!p_task.isNull()) {
+        setAttribute("id", p_task.id());
     }
 }
 
-void
-WorkTask::setStart(QDateTime start)
+void 
+WorkTask::addTime(const WorkTime& p_time)
 {
-    m_start = start;
-    if (!m_node.isNull()) {
-        addAttribute("start", start.toString(Qt::ISODate));
+    if (!p_time.isNull() && !m_node.isNull()) {
+        m_node.appendChild(p_time.node());
     }
 }
 
-QDateTime
-WorkTask::stop() const
+QList<WorkTime> 
+WorkTask::workTimes() const
 {
-    if (m_node.isNull()) {
-        return m_stop;
-    }
-    else {
-        return attributeValue("stop").toDateTime();
-    }
-}
-
-void
-WorkTask::setStop(QDateTime stop)
-{
-    m_stop = stop;
-    if (!m_node.isNull()) {
-        addAttribute("stop", stop.toString(Qt::ISODate));
-    }
-}
-
-int
-WorkTask::totalTime() const
-{
-    QDateTime stopped = stop();
-    if (!stopped.isValid()) {
-        stopped = QDateTime::currentDateTimeUtc();
-    }
-    return start().secsTo(stopped);
-}
-
-bool
-WorkTask::isNull() const
-{
-    return m_task.isNull();
-}
-
-void
-WorkTask::clear()
-{
-    m_task.clear();
-    addAttribute("start", "");
-    addAttribute("stop", "");
-}
-
-QList<WorkTask>
-WorkTask::fromDomNode(QDomNode* node, QDomDocument* dataSource)
-{
-    QDomNamedNodeMap attributes = node->attributes();
-
-    QDomNode attrNode = attributes.namedItem("id");
-    int id = idFromAttr(&attrNode);
-    if (Task::invalidId == id) {
-        return QList<WorkTask>();
-    }
-
-    Task task = Task::get(id, dataSource);
-    if (task.isNull()) {
-        return QList<WorkTask>();
-    }
-
-    // Fetch and add the time objects
-    QDomNodeList children = node->childNodes();
-
-    QList<WorkTask> workTasks;
-
-    int count = children.count();
+    QList<WorkTime> goodTimes;
+    
+    QDomNodeList children = m_node.childNodes();
+    int count = children.size();
     for (int c = 0; c < count; c++) {
-        QDomNode timeNode = children.item(c);
-        attributes = timeNode.attributes();
-
-        attrNode = attributes.namedItem("start");
-        QDateTime start = timestampFromAttr(&attrNode);
-
-        attrNode = attributes.namedItem("stop");
-        QDateTime stop  = timestampFromAttr(&attrNode);
-
-        // Only start needs to be valid. Stop may be empty which makes this an ongoing
-        // task (maybe a sudden shutdown f the application).
-        if (start.isValid()) {
-            workTasks.append(WorkTask(dataSource, timeNode.toElement(), task, start,
-                                      stop));
+        QDomNode child = children.at(c);
+        if (child.isElement()) {
+            goodTimes << WorkTime(m_dataSource, child.toElement(), m_node);
         }
     }
-
-    return workTasks;
+    
+    return goodTimes;
 }
 
-QDateTime
-WorkTask::timestampFromAttr(QDomNode* attr)
+qint64
+WorkTask::timeInSeconds() const
 {
-    QDomAttr a = attr->toAttr();
-    if (a.isNull()) {
-        return QDateTime();
+    qint64 totalTime = 0;
+    
+    QList<WorkTime> times = workTimes();
+    for (const WorkTime& time : times) {
+        totalTime += time.timeInSeconds();
     }
-
-    return QDateTime::fromString(a.value(), Qt::ISODate);
+            
+    return totalTime;
 }
 
-int
-WorkTask::idFromAttr(QDomNode* attr)
+void 
+WorkTask::createNode(const QDomNode& p_parent, const Task& p_task)
 {
-    QDomAttr a = attr->toAttr();
-    if (a.isNull()) {
-        return Task::invalidId;
+    if (m_dataSource.isNull() || !m_node.isNull()) {
+        return;
     }
-
-    bool ok = false;
-    int id = a.value().toInt(&ok);
-    if (!ok) {
-        return Task::invalidId;
+    
+    m_parent = p_parent;
+    m_node   = m_dataSource.createElement("task");
+    
+    if (!m_parent.isNull()) {
+        m_parent.appendChild(m_node);
     }
-
-    return id;
+    
+    if (!p_task.name().isEmpty()) {
+        if (0 < p_task.id()) {
+            
+        }
+        setAttribute("id", p_task.id());
+    }
 }
 
 bool
-WorkTask::operator==(const WorkTask& other) const
+WorkTask::isActiveTask() const
 {
-    return m_node == other.m_node;
+    QList<WorkTime> times = workTimes();
+    for (const WorkTime& time : times) {
+        if (time.stop().isNull()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+WorkTime 
+WorkTask::activeWorkTime() const
+{
+    QList<WorkTime> times = workTimes();
+    for (const WorkTime& time : times) {
+        if (time.stop().isNull()) {
+            return time;
+        }
+    }
+    return WorkTime();
 }

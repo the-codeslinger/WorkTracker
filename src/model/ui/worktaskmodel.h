@@ -18,6 +18,7 @@
 #define WORKTASKMODEL_H
 
 #include "../worktask.h"
+#include "../worktime.h"
 
 #include <QAbstractItemModel>
 
@@ -39,7 +40,7 @@ public:
     /*!
      * Set the model's new work tasks. This replaces the previous work tasks.
      */
-    void setWorkTasks(const QList<WorkTask>& p_worktasks);
+    void setWorkTask(const WorkTask& p_workTask);
 
     /*!
      * \return
@@ -92,9 +93,26 @@ public:
      * Always returns an invalid index. None of the items have a parent.
      */
     QModelIndex parent(const QModelIndex& p_child) const;
+    
+    /*!
+     * Removes all the times that are specified in the list of indexes. If both times, 
+     * start and stop, of one work-time are to be removed then the whole work-time item is 
+     * removed.
+     * 
+     * \param p_indexes
+     * The individual selected times. If this list is empty then no action is performed.
+     */
+    void removeTimes(QModelIndexList p_indexes);
+    
+public slots:
+    /*!
+     * Creates a work-time instance and appends it to the work-task.
+     */
+    void appendTime();
 
 private:
-    QList<WorkTask> m_worktasks;
+    WorkTask        m_workTask;
+    QList<WorkTime> m_workTimes;
 
 };
 

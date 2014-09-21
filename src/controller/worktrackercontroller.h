@@ -26,8 +26,8 @@
 #include <QTime>
 #include <QDateTime>
 #include <QTimer>
+#include <QDomDocument>
 
-class QDomDocument;
 class TaskListModel;
 class WorkTracker;
 class PreferencesController;
@@ -52,7 +52,7 @@ public:
      * Create a new controller with a data source. `dataSource` is owned by client code,
      * the controller only uses it as a reference.
      */
-    WorkTrackerController(QDomDocument* dataSource);
+    WorkTrackerController(const QDomDocument& dataSource);
 
     /*!
      * Sets the user interface implementation `ui`. This injects the `TaskListModel`
@@ -174,7 +174,7 @@ public slots:
      * returns a valid instance. If the start time is missing the current one will be 
      * used.
      */
-    void setActiveTask(WorkTask p_task);
+    void setActiveTask(const WorkTask& p_task);
     
     /*!
      * Stops recording time for the current task. This method can be used to "flush the
@@ -212,7 +212,7 @@ private:
     /*!
      * The loaded XML database.
      */
-    QDomDocument* m_dataSource;
+    QDomDocument m_dataSource;
     /*!
      * The user interface.
      */
@@ -230,6 +230,10 @@ private:
      * The currently recorded task.
      */
     WorkTask m_recordingWorkTask;
+    /*!
+     * The current start and stop time of the work-task.
+     */
+    WorkTime m_recordingWorkTime;
 
     /*!
      * The current state of the workday.
@@ -280,11 +284,6 @@ private:
      * `toggleTask(QString)`.
      */
     void stopWorkTask(QString name);
-
-    /*!
-     * Searches the database for a task by `name` or adds a new one if it can't be found.
-     */
-    Task findOrCreateTaskItem(QString name);
     
     /*!
      * Sets up the language and translation related objects. Loads the translation files

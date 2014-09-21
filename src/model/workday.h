@@ -46,22 +46,23 @@ public:
     /*!
      * Creates a new `WorkDay` with a data source
      */
-    WorkDay(QDomDocument* dataSource);
+    WorkDay(const QDomDocument& p_dataSource);
 
     /*!
      * Creates a new `WorkDay` with a data source and a DOM node.
      */
-    WorkDay(QDomDocument* dataSource, QDomElement node);
+    WorkDay(const QDomDocument& p_dataSource, const QDomElement& p_node);
 
     /*!
      * Creates a new instance with a data source and a start timestamp.
      */
-    WorkDay(QDomDocument* dataSource, QDateTime start);
+    WorkDay(const QDomDocument& dataSource, const QDateTime& p_start);
 
     /*!
      * Creates a new instance with a data source, a start and a stop timestamp.
      */
-    WorkDay(QDomDocument* dataSource, QDateTime start, QDateTime stop);
+    WorkDay(const QDomDocument& dataSource, const QDateTime& p_start, 
+            const QDateTime& p_stop);
 
     /*!
      * \return
@@ -72,7 +73,7 @@ public:
     /*!
      * Set a new `start` timestamp.
      */
-    void setStart(QDateTime start);
+    void setStart(const QDateTime& p_start);
 
     /*!
      * \return
@@ -83,24 +84,31 @@ public:
     /*!
      * Set a new `stop` timestamp.
      */
-    void setStop(QDateTime stop);
+    void setStop(const QDateTime& p_stop);
 
     /*!
      * Add a completed `task` to the list of already completed tasks. If the task already
      * exists its values are overridden. If the work task has moved to a different task-id
      * then it will also be moved in the DOM document.
-     *
-     * \return
-     * Returns the task instance that was passed in as a parameter associated with an
-     * XML node.
      */
-    WorkTask addTask(WorkTask task);
-
+    void addWorkTask(const WorkTask& p_task);
+    
     /*!
-     * Resets the complete workday by invalidating the timestamps and removing all work
-     * tasks.
+     * Get a specific work-task.
+     * 
+     * \param p_task
+     * Specifies the work-task's referencing task.
+     * 
+     * \return 
+     * If found the work-task is returned or a null-instance otherwise.
      */
-    void clear();
+    WorkTask workTask(const Task& p_task) const;
+    
+    /*!
+     * \return
+     * Generates a list of `WorkTask` instances attached to this work-day.
+     */ 
+    QList<WorkTask> workTasks() const;
 
     /*!
      * Generates an HTML summary over all the added work task items.
@@ -129,19 +137,13 @@ public:
      * If there's a running task (one with an invalid stop-date) then this task is
      * returned, otherwise a null-task.
      */
-    WorkTask runningWorkTask() const;
+    WorkTask activeWorkTask() const;
 
     /*!
      * \return
      * Returns a list of distinct tasks this workday is comprised of.
      */
     QList<Task> distinctTasks() const;
-
-    /*!
-     * \return
-     * Returns all `WorkTask` items that match the given `Task`.
-     */
-    QList<WorkTask> workTasks(Task p_task) const;
 
     /*!
      * \return
@@ -160,7 +162,7 @@ public:
      * If the last workday is not unfinished then a null-workday is returned, otherwise
      * the workday and all its task items is loaded.
      */
-    static WorkDay findLastOpen(QDomDocument* dataSource);
+    static WorkDay findLastOpen(const QDomDocument& p_dataSource);
 
     /*!
      * Get the number of workdays in the database.
@@ -171,7 +173,7 @@ public:
      * \return
      * Returns the number of workdays in the database.
      */
-    static int count(QDomDocument* p_dataSource);
+    static int count(const QDomDocument& p_dataSource);
 
     /*!
      * Returns the workday that can be found at the specified position in the DOM tree.
@@ -186,35 +188,38 @@ public:
      * If the `p_index` is valid then a valid workday is returned. Otherwise the workday
      * instance returned is null.
      */
-    static WorkDay at(int p_index, QDomDocument* p_dataSource);
+    static WorkDay at(int p_index, const QDomDocument& p_dataSource);
 
 private:
-    /*!
-     * The list of work task items.
-     */
-    QList<WorkTask> m_tasks;
 
     /*!
      * Create a new DOM node and store it in `XmlData::m_node`.
      */
-    void createNode(QDateTime start, QDateTime stop);
-
+    void createNode(const QDateTime& p_start, const QDateTime& p_stop);
+    
     /*!
-     * Searches the DOM tree for the specified worktask item. This is used by
-     * `addTask(WorkTask)` to append a new set of timestamps to the correct part of the
-     * DOM or determine if a new worktask item needs to be created.
+     * Iterate the existing work-tasks on the DOM level and call a function for every
+     * individual work-task. This shall reduce iterating several lists, first the DOM to
+     * create a list of work-tasks and then that list to accomplish a specific task.
      */
-    QDomElement findTask(int id) const;
+    void iterateWorkTasks(std::function<void(const WorkTask&)> p_predicate) const;
+    
+    /*!
+     * Iterate the exisiting work-tasks on the DOM level and return the one for which
+     * `p_predicate` returns true.
+     */
+    WorkTask findWorkTask(std::function<bool(const WorkTask&)> p_predicate) const;
 
     /*!
      * Create a new `WorkDay` from the DOM node.
      */
-    static WorkDay fromDomNode(QDomElement node, QDomDocument* dataSource);
+    static WorkDay fromDomNode(const QDomElement&  p_node, 
+                               const QDomDocument& p_dataSource);
 
     /*!
      * Convenience method that hides some of the ugly DOM API.
      */
-    static QDomNodeList getWorkDayNodes(QDomDocument* p_dataSource);
+    static QDomNodeList getWorkDayNodes(const QDomDocument& p_dataSource);
 };
 
 Q_DECLARE_METATYPE(WorkDay)
