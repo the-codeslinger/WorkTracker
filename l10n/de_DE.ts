@@ -37,14 +37,24 @@
 <context>
     <name>EditWorkTaskPage</name>
     <message>
-        <location filename="../src/editworktaskpage.cpp" line="36"/>
+        <location filename="../src/editworktaskpage.cpp" line="49"/>
         <source>Edit Worktask</source>
         <translation>Arbeitsschritt bearbeiten</translation>
     </message>
     <message>
-        <location filename="../src/editworktaskpage.cpp" line="37"/>
+        <location filename="../src/editworktaskpage.cpp" line="50"/>
         <source>Select the task you want to edit. Changes are immediately saved. You can also go back to the previous page and select a different day to edit.</source>
         <translation>Wähle die zu bearbeitende Aufgabe. Änderungen werden sofort übernommen. Es kann jederzeit zur vorigen Seite zurückgekehrt werden, um einen anderen Tag zum Bearbeiten auszuwählen.</translation>
+    </message>
+    <message>
+        <location filename="../src/editworktaskpage.cpp" line="181"/>
+        <source>Task already exists</source>
+        <translation>Aufgabe existiert bereits</translation>
+    </message>
+    <message>
+        <location filename="../src/editworktaskpage.cpp" line="182"/>
+        <source>There is already a task in use with the name &quot;%1&quot;.</source>
+        <translation>Es gibt schon eine Aufgabe mit dem Namen: &quot;%1&quot;.</translation>
     </message>
 </context>
 <context>
@@ -58,22 +68,54 @@
 <context>
     <name>EditorController</name>
     <message>
-        <location filename="../src/controller/editorcontroller.cpp" line="37"/>
-        <source>Edit Work Tasks</source>
-        <translation>Arbeitsschritte bearbeiten</translation>
+        <location filename="../src/controller/editorcontroller.cpp" line="116"/>
+        <source>Are you sure you want to delete the work-task &quot;%1&quot; 
+and all of its recorded times?</source>
+        <translation>Soll die Aufgabe &quot;%1&quot; und alle ihre Einzelschritte wirklich gelöscht werden?</translation>
+    </message>
+    <message>
+        <location filename="../src/controller/editorcontroller.cpp" line="120"/>
+        <source>Are you sure you want to delete the selected %1 
+work-tasks and all of their recorded times?</source>
+        <translation type="unfinished">Sollen alle %1 Aufgaben und alle ihre Einzelschritte wirklich gelöscht werden?</translation>
+    </message>
+    <message>
+        <location filename="../src/controller/editorcontroller.cpp" line="124"/>
+        <source>Delete Task</source>
+        <translation>Aufgabe löschen</translation>
+    </message>
+    <message>
+        <location filename="../src/controller/editorcontroller.cpp" line="146"/>
+        <source>Delete Time</source>
+        <translation>Arbeitschritt löschen</translation>
+    </message>
+    <message>
+        <location filename="../src/controller/editorcontroller.cpp" line="147"/>
+        <source>Are you sure you want to delete %1 recorded times?</source>
+        <translation>Soll(en) wirklich %1 Zeitstempel gelöscht werden?</translation>
+    </message>
+    <message>
+        <location filename="../src/controller/editorcontroller.cpp" line="179"/>
+        <source>There is a work-task without a name</source>
+        <translation>Es gibt eine Aufgabe ohne Namen</translation>
+    </message>
+    <message>
+        <location filename="../src/controller/editorcontroller.cpp" line="186"/>
+        <source>Work-task &quot;%1&quot; has no start time</source>
+        <translation>Aufgabe &quot;%1&quot; hat keinen Startzeitpunkt</translation>
+    </message>
+    <message>
+        <location filename="../src/controller/editorcontroller.cpp" line="200"/>
+        <source>The following tasks are active: %1</source>
+        <translation>Folgende Aufgaben sind aktiv: %1</translation>
     </message>
 </context>
 <context>
-    <name>Language</name>
+    <name>EditorWizard</name>
     <message>
-        <location filename="../src/controller/worktrackercontroller.cpp" line="292"/>
-        <source>English (United States)</source>
-        <translation>English (United States)</translation>
-    </message>
-    <message>
-        <location filename="../src/controller/worktrackercontroller.cpp" line="293"/>
-        <source>German (Germany)</source>
-        <translation>Deutsch (Deutschland)</translation>
+        <location filename="../src/editorwizard.cpp" line="10"/>
+        <source>Edit Work Tasks</source>
+        <translation>Arbeitsschritte bearbeiten</translation>
     </message>
 </context>
 <context>
@@ -83,10 +125,13 @@
         <source>Preferences</source>
         <translation>Einstellungen</translation>
     </message>
+</context>
+<context>
+    <name>SelectTaskDialog</name>
     <message>
-        <location filename="../ui/preferencesdialog.ui" line="23"/>
-        <source>Language</source>
-        <translation>Sprache</translation>
+        <location filename="../ui/selecttaskdialog.ui" line="14"/>
+        <source>Select Task</source>
+        <translation>Aufgabe wählen</translation>
     </message>
 </context>
 <context>
@@ -113,17 +158,17 @@
 <context>
     <name>WorkDayDelegate</name>
     <message>
-        <location filename="../src/model/delegate/workdaydelegate.cpp" line="82"/>
+        <location filename="../src/model/delegate/workdaydelegate.cpp" line="85"/>
         <source>%1 (%2h %3m)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/model/delegate/workdaydelegate.cpp" line="83"/>
+        <location filename="../src/model/delegate/workdaydelegate.cpp" line="86"/>
         <source>Start: %1</source>
         <translation>Beginn: %1</translation>
     </message>
     <message>
-        <location filename="../src/model/delegate/workdaydelegate.cpp" line="84"/>
+        <location filename="../src/model/delegate/workdaydelegate.cpp" line="87"/>
         <source>End: %1</source>
         <translation>Beendet: %1</translation>
     </message>
@@ -131,12 +176,12 @@
 <context>
     <name>WorkTaskModel</name>
     <message>
-        <location filename="../src/model/ui/worktaskmodel.cpp" line="55"/>
+        <location filename="../src/model/ui/worktaskmodel.cpp" line="56"/>
         <source>Start</source>
         <translation>Start</translation>
     </message>
     <message>
-        <location filename="../src/model/ui/worktaskmodel.cpp" line="59"/>
+        <location filename="../src/model/ui/worktaskmodel.cpp" line="60"/>
         <source>Stop</source>
         <translation>Ende</translation>
     </message>
@@ -225,12 +270,12 @@
         <translation>Ctrl+,</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="283"/>
+        <location filename="../ui/worktracker.ui" line="286"/>
         <source>&amp;English (US)</source>
         <translation>&amp;English (US)</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="292"/>
+        <location filename="../ui/worktracker.ui" line="301"/>
         <source>&amp;German</source>
         <translation>&amp;Deutsch</translation>
     </message>
@@ -279,29 +324,24 @@
 <context>
     <name>WorkTrackerController</name>
     <message>
-        <location filename="../src/controller/worktrackercontroller.cpp" line="134"/>
+        <location filename="../src/controller/worktrackercontroller.cpp" line="137"/>
         <source>Could not create &lt;workday&gt; XML element</source>
         <translation>Konnte &lt;workday&gt; XML Element nicht erstellen</translation>
     </message>
     <message>
-        <location filename="../src/controller/worktrackercontroller.cpp" line="139"/>
+        <location filename="../src/controller/worktrackercontroller.cpp" line="142"/>
         <source>Could not add &lt;workday&gt; to &lt;workdays&gt; XML element</source>
         <translation>Konnte &lt;workday&gt; nicht in das &lt;workdays&gt; XML Element einfügen</translation>
     </message>
     <message>
-        <location filename="../src/controller/worktrackercontroller.cpp" line="149"/>
+        <location filename="../src/controller/worktrackercontroller.cpp" line="152"/>
         <source>No active work-day</source>
         <translation>Kein aktiver Arbeitstag</translation>
     </message>
     <message>
-        <location filename="../src/controller/worktrackercontroller.cpp" line="217"/>
-        <source>Could not create &lt;item&gt; XML element</source>
-        <translation>Konnte &lt;item&gt; XML Element nicht erstellen</translation>
-    </message>
-    <message>
-        <location filename="../src/controller/worktrackercontroller.cpp" line="225"/>
-        <source>Could not add &lt;item&gt; to &lt;tasks&gt; XML element</source>
-        <translation>Konnte &lt;item&gt; nicht in das &lt;tasks&gt; XML Element einfügen</translation>
+        <location filename="../src/controller/worktrackercontroller.cpp" line="164"/>
+        <source>A task-name must be specified to start a new task</source>
+        <translation>Es muss ein Aufgabenname angegeben werden, um eine neue Aufgabe anzufangen</translation>
     </message>
 </context>
 </TS>
