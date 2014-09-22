@@ -303,12 +303,16 @@ WorkTracker::translate()
     if (m_controller->isRecording()) {
         ui->taskButton->setText(tr("Stop &Task"));
         
-        setShortenedTaskStatusText(tr("%1 started at %2").arg(m_name).arg(dateString));
+        if (!m_name.isEmpty()) {
+            setShortenedTaskStatusText(tr("%1 started at %2").arg(m_name).arg(dateString));
+        }
     }
     else {
         ui->taskButton->setText(tr("Start &Task"));
         
-        setShortenedTaskStatusText(tr("%1 stopped at %2").arg(m_name).arg(dateString));
+        if (!m_name.isEmpty()) {
+            setShortenedTaskStatusText(tr("%1 stopped at %2").arg(m_name).arg(dateString));
+        }
     }
     
     if (m_controller->isActiveDay()) {
