@@ -362,9 +362,11 @@ WorkTrackerController::setActiveTask(const WorkTask& p_task)
             m_recordingWorkTime.setStart(now);
         }
         
+        m_isRecording = true;
         emit workTaskStarted(m_recordingWorkTime.start(), name);
     }
     else {
+        m_isRecording = false;
         emit workTaskStopped(now, name);
     }
 }
@@ -376,7 +378,9 @@ WorkTrackerController::closeCurrentTask()
         return; // Nothing to do here
     }
     
-    // Simply rely on what we already have. This also takes care about sending the 
-    // necessary signal to update the ui.
-    stopWorkTask(m_recordingWorkTask.task().name());
+    if (m_isRecording) {
+        // Simply rely on what we already have. This also takes care about sending the 
+        // necessary signal to update the ui.
+        stopWorkTask(m_recordingWorkTask.task().name());
+    }
 }

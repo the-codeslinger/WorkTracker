@@ -165,7 +165,7 @@ WorkDay::findLastOpen(const QDomDocument& p_dataSource)
 
     QDomNamedNodeMap attributes = day.attributes();
     QDomAttr stopAttr = attributes.namedItem("stop").toAttr();
-    if (stopAttr.isNull()) {
+    if (stopAttr.isNull() || stopAttr.value().isEmpty()) {
         // No "stop" attribute means that this day is still ongoing
         return fromDomNode(day.toElement(), p_dataSource);
     }

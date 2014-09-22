@@ -61,7 +61,16 @@ WorkTime::timeInSeconds() const
     QDateTime startTime = start();
     QDateTime stopTime  = stop();
     
-    return startTime.secsTo(stopTime);
+    qint64 totalTime = 0;
+    if (startTime.isValid()) {
+        if (stopTime.isNull()) {
+            stopTime = QDateTime::currentDateTimeUtc();
+        }
+        
+        totalTime = startTime.secsTo(stopTime);
+    }
+    
+    return totalTime;
 }
 
 void 

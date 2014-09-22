@@ -137,6 +137,7 @@ WorkTracker::workTaskStarted(QDateTime now, QString name)
 
     hideSummary();
     ui->workdayButton->setEnabled(false);
+    ui->taskButton->setEnabled(true);
     ui->taskButton->setText(tr("Stop &Task"));
     ui->taskButton->setIcon(QIcon(":/icon/Stop-Task.svg"));
     ui->tasksEdit->setText(name); // After restart this would be empty
