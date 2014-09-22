@@ -27,6 +27,26 @@ To stop working you simply click "Stop Workday" and thus close the "container". 
 
 In fact, the summary can be displayed at any time which then shows the status up until that point in the day.
 
+## Edit After the Fact
+
+WorkTracker features a simple editor with which you can edit previous entries or even create a whole day from scratch in case you haven't been able to click "Start" and "Stop" throughout the day.
+
+First you have to select the day for which you want to edit task items. This page can be revisited as much as you want. Select a day, edit its items, go back to the first page and pick another day.
+
+![Edit-Day](https://raw.githubusercontent.com/drunk-on-pain/WorkTracker/master/img/Editor%20Page%201.png)
+
+The second page presents you with the actual editor. On the left side there are the tasks and on the right side all the start and stop timestamps that have been recorded. Tasks can be renamed, removed or added however you like. Removing a task removes all the time spent as well. Modifying the timestamps is governed by the rule that there can only be one active task, i.e. a task with a set of timestamps where the "stop" part is missing.
+
+![Edit-Tasks](https://raw.githubusercontent.com/drunk-on-pain/WorkTracker/master/img/Editor%20Page%202.png)
+
+Changes take immediate effect, no matter how the editor is closed. This allows the continuous back and forth between the selection of the day and editing the items of a day.
+
+## Language
+
+The application supports two languages, German and English (U.S. based, if any distinction is necessary). Changing the language immediately updates user-visible texts.
+
+![Language](https://raw.githubusercontent.com/drunk-on-pain/WorkTracker/master/img/Language.png)
+
 ## License
 
 The source code and binary files are distributed under the [Apache 2.0 license](http://www.apache.org/licenses/LICENSE-2.0).
