@@ -77,7 +77,7 @@ and all of its recorded times?</source>
         <location filename="../src/controller/editorcontroller.cpp" line="120"/>
         <source>Are you sure you want to delete the selected %1 
 work-tasks and all of their recorded times?</source>
-        <translation type="unfinished">Sollen alle %1 Aufgaben und alle ihre Einzelschritte wirklich gelöscht werden?</translation>
+        <translation>Sollen alle %1 Aufgaben und alle ihre Einzelschritte wirklich gelöscht werden?</translation>
     </message>
     <message>
         <location filename="../src/controller/editorcontroller.cpp" line="124"/>
@@ -195,12 +195,15 @@ work-tasks and all of their recorded times?</source>
     </message>
     <message>
         <location filename="../ui/worktracker.ui" line="47"/>
+        <location filename="../src/worktracker.cpp" line="217"/>
+        <location filename="../src/worktracker.cpp" line="306"/>
         <source>Start &amp;New Workday</source>
         <translation>&amp;Neuer Arbeitstag</translation>
     </message>
     <message>
         <location filename="../ui/worktracker.ui" line="67"/>
-        <location filename="../src/worktracker.cpp" line="153"/>
+        <location filename="../src/worktracker.cpp" line="160"/>
+        <location filename="../src/worktracker.cpp" line="307"/>
         <source>Start &amp;Task</source>
         <translation>Beginne &amp;Aufgabe</translation>
     </message>
@@ -280,13 +283,8 @@ work-tasks and all of their recorded times?</source>
         <translation>&amp;Deutsch</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="290"/>
-        <source>Not recording anything yet</source>
-        <translation>Bisher keine Aufgabe gestartet</translation>
-    </message>
-    <message>
-        <location filename="../src/worktracker.cpp" line="273"/>
-        <location filename="../src/worktracker.cpp" line="291"/>
+        <location filename="../src/worktracker.cpp" line="280"/>
+        <location filename="../src/worktracker.cpp" line="312"/>
         <source>Total time %1h %2m</source>
         <translation>Gesamt %1h %2m</translation>
     </message>
@@ -296,29 +294,28 @@ work-tasks and all of their recorded times?</source>
         <translation>Es muss eine Aufgabenbeschreibung angegeben werden</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="140"/>
+        <location filename="../src/worktracker.cpp" line="144"/>
+        <location filename="../src/worktracker.cpp" line="301"/>
         <source>Stop &amp;Task</source>
         <translation>Beende &amp;Aufgabe</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="143"/>
+        <location filename="../src/worktracker.cpp" line="147"/>
+        <location filename="../src/worktracker.cpp" line="303"/>
         <source>%1 started at %2</source>
         <translation>%1 begonnen am %2</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="156"/>
+        <location filename="../src/worktracker.cpp" line="163"/>
+        <location filename="../src/worktracker.cpp" line="309"/>
         <source>%1 stopped at %2</source>
         <translation>%1 beendet am %2</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="202"/>
-        <source>Stop Workday</source>
-        <translation>Beende Arbeitstag</translation>
-    </message>
-    <message>
-        <location filename="../src/worktracker.cpp" line="210"/>
-        <source>Start New Workday</source>
-        <translation>Starte Arbeitstag</translation>
+        <location filename="../src/worktracker.cpp" line="209"/>
+        <location filename="../src/worktracker.cpp" line="300"/>
+        <source>Stop &amp;Workday</source>
+        <translation>Arbeitstag &amp;Beenden</translation>
     </message>
 </context>
 <context>

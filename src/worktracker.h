@@ -207,6 +207,15 @@ private:
      * is always used to shrink back to the small size.
      */
     int m_collapsedHeight;
+    
+    /*
+     * Following values are needed for setting the correct status message text after the
+     * language changes.
+     */
+    QString m_name;
+    QDateTime m_timestamp;
+    int m_hours;
+    int m_minutes;
 
     /**
      * Uses the task status label's font metrics to calculate a shortened version of the

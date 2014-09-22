@@ -40,6 +40,8 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     , ui(new Ui::WorkTracker)
     , m_controller(controller)
     , m_collapsedHeight(0)
+    , m_hours(0)
+    , m_minutes(0)
 {
     ui->setupUi(this);
     setupLanguageMenu();
@@ -134,6 +136,9 @@ void
 WorkTracker::workTaskStarted(QDateTime now, QString name)
 {
     QString dateString = now.toLocalTime().toString(Qt::TextDate);
+    
+    m_name = name;
+    m_timestamp = now;
 
     hideSummary();
     ui->workdayButton->setEnabled(false);
@@ -148,6 +153,9 @@ void
 WorkTracker::workTaskStopped(QDateTime now, QString name)
 {
     QString dateString = now.toLocalTime().toString(Qt::TextDate);
+    
+    m_name = name;
+    m_timestamp = now;
 
     hideSummary();
     ui->workdayButton->setEnabled(true);
@@ -200,7 +208,7 @@ WorkTracker::workDayStarted(QDateTime now)
 {
     hideSummary();
 
-    ui->workdayButton->setText(tr("Stop Workday"));
+    ui->workdayButton->setText(tr("Stop &Workday"));
     ui->workdayButton->setIcon(QIcon(":/icon/Stop-Day.svg"));
     ui->taskButton->setEnabled(true);
 }
@@ -208,7 +216,7 @@ WorkTracker::workDayStarted(QDateTime now)
 void
 WorkTracker::workDayStopped(QDateTime now)
 {
-    ui->workdayButton->setText(tr("Start New Workday"));
+    ui->workdayButton->setText(tr("Start &New Workday"));
     ui->workdayButton->setIcon(QIcon(":/icon/Start-Day.svg"));
     ui->taskButton->setEnabled(false);
     ui->summaryButton->setEnabled(!ui->textEdit->isVisible());
@@ -272,6 +280,8 @@ void
 WorkTracker::totalTimeChanged(int hours, int minutes)
 {
     m_statusDuration->setText(tr("Total time %1h %2m").arg(hours).arg(minutes));
+    m_hours   = hours;
+    m_minutes = minutes;
 }
 
 void 
@@ -288,8 +298,28 @@ WorkTracker::changeEvent(QEvent* p_event)
 void 
 WorkTracker::translate()
 {
-    m_statusRecording->setText(tr("Not recording anything yet"));
-    m_statusDuration->setText(tr("Total time %1h %2m").arg(0).arg(0));
+    QString dateString = m_timestamp.toLocalTime().toString(Qt::TextDate);
+    
+    if (m_controller->isRecording()) {
+        ui->taskButton->setText(tr("Stop &Task"));
+        
+        setShortenedTaskStatusText(tr("%1 started at %2").arg(m_name).arg(dateString));
+    }
+    else {
+        ui->taskButton->setText(tr("Start &Task"));
+        
+        setShortenedTaskStatusText(tr("%1 stopped at %2").arg(m_name).arg(dateString));
+    }
+    
+    if (m_controller->isActiveDay()) {
+        ui->workdayButton->setText(tr("Stop &Workday"));
+    }
+    else {
+        ui->workdayButton->setText(tr("Start &New Workday"));
+        m_statusRecording->setText("");
+    }
+    
+    totalTimeChanged(m_hours, m_minutes);
 }
 
 void 

@@ -118,6 +118,12 @@ WorkTrackerController::isRecording() const
     return m_isRecording;
 }
 
+bool 
+WorkTrackerController::isActiveDay() const
+{
+    return m_isNewWorkDay;
+}
+
 QString
 WorkTrackerController::generateSummary() const
 {

@@ -76,6 +76,12 @@ public:
      * Returns `true` if a task is currently recorded or `false` otherwise.
      */
     bool isRecording() const;
+    
+    /*!
+     * \return
+     * Returns `true` if a day is currently active or `false` otherwise.
+     */
+    bool isActiveDay() const;
 
     /*!
      * \return

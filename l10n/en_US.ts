@@ -197,12 +197,15 @@ work-tasks and all of their recorded times?</translation>
     </message>
     <message>
         <location filename="../ui/worktracker.ui" line="47"/>
+        <location filename="../src/worktracker.cpp" line="217"/>
+        <location filename="../src/worktracker.cpp" line="306"/>
         <source>Start &amp;New Workday</source>
         <translation>Start &amp;New Workday</translation>
     </message>
     <message>
         <location filename="../ui/worktracker.ui" line="67"/>
-        <location filename="../src/worktracker.cpp" line="153"/>
+        <location filename="../src/worktracker.cpp" line="160"/>
+        <location filename="../src/worktracker.cpp" line="307"/>
         <source>Start &amp;Task</source>
         <translation>Start &amp;Task</translation>
     </message>
@@ -282,13 +285,8 @@ work-tasks and all of their recorded times?</translation>
         <translation>&amp;Deutsch</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="290"/>
-        <source>Not recording anything yet</source>
-        <translation>Not recording anything yet</translation>
-    </message>
-    <message>
-        <location filename="../src/worktracker.cpp" line="273"/>
-        <location filename="../src/worktracker.cpp" line="291"/>
+        <location filename="../src/worktracker.cpp" line="280"/>
+        <location filename="../src/worktracker.cpp" line="312"/>
         <source>Total time %1h %2m</source>
         <translation>Total time %1h %2m</translation>
     </message>
@@ -298,29 +296,28 @@ work-tasks and all of their recorded times?</translation>
         <translation>You must enter a task description</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="140"/>
+        <location filename="../src/worktracker.cpp" line="144"/>
+        <location filename="../src/worktracker.cpp" line="301"/>
         <source>Stop &amp;Task</source>
         <translation>Stop &amp;Task</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="143"/>
+        <location filename="../src/worktracker.cpp" line="147"/>
+        <location filename="../src/worktracker.cpp" line="303"/>
         <source>%1 started at %2</source>
         <translation>%1 started at %2</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="156"/>
+        <location filename="../src/worktracker.cpp" line="163"/>
+        <location filename="../src/worktracker.cpp" line="309"/>
         <source>%1 stopped at %2</source>
         <translation>%1 stopped at %2</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="202"/>
-        <source>Stop Workday</source>
-        <translation>Stop Workday</translation>
-    </message>
-    <message>
-        <location filename="../src/worktracker.cpp" line="210"/>
-        <source>Start New Workday</source>
-        <translation>Start New Workday</translation>
+        <location filename="../src/worktracker.cpp" line="209"/>
+        <location filename="../src/worktracker.cpp" line="300"/>
+        <source>Stop &amp;Workday</source>
+        <translation>Stop &amp;Workday</translation>
     </message>
 </context>
 <context>
