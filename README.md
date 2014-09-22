@@ -65,11 +65,6 @@ You compiler of choice should support C++11 although this is not yet used extens
 
 All data is written to and read from an XML file that is located in the current user's `AppData` folder on Windows, e.g. `C:\Users\Robert\AppData\Local\Typical Nerd\WorkTracker\Database.xml`.
 
-## Known Issues
-
-*   Depending on the length of the task description, the UI's width grows
-*   The `Quit` option in the `File` menu doesn't work
-
 ## Future Plans
 
 *   Support global hotkeys
