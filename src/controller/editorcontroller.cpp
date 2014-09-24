@@ -88,8 +88,13 @@ EditorController::addTask()
         SelectedWorkDayModel* model = qobject_cast<SelectedWorkDayModel*>(view->model());
         model->appendTask(dlg.taskName());
         
-        // Don't care about the return value. The emitted signal concerning duplicates
-        // is handled in the page. That's the only realistic scenario of failure.
+        QItemSelectionModel* selectionModel = view->selectionModel();
+        QModelIndex newItemIndex = model->index(model->rowCount(QModelIndex()) - 1);
+        
+        selectionModel->clearSelection();
+        selectionModel->select(newItemIndex, QItemSelectionModel::Select);
+        
+        view->setFocus();
     }
 }
 
@@ -135,6 +140,14 @@ EditorController::addTime()
     QTableView* view = m_editWorkTaskPage->workTimesView();
     WorkTaskModel* model = qobject_cast<WorkTaskModel*>(view->model());
     model->appendTime();
+    
+    QItemSelectionModel* selectionModel = view->selectionModel();
+    QModelIndex newItemIndex = model->index(model->rowCount(QModelIndex()) - 1, 0);
+    
+    selectionModel->clearSelection();
+    selectionModel->select(newItemIndex, QItemSelectionModel::Select);
+    
+    view->setFocus();
 }
 
 void 

@@ -3,8 +3,8 @@ IDI_ICON1   ICON    DISCARDABLE "icon\icon.ico"
 #include <windows.h>
 
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION     1,2,0,2
-PRODUCTVERSION  1,2,0,0
+FILEVERSION     1,2,1,0
+PRODUCTVERSION  1,2,1,0
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
@@ -12,12 +12,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName",        "Typical Nerd"
             VALUE "FileDescription",    "WorkTracker"
-            VALUE "FileVersion",        "1,2,0,2"
+            VALUE "FileVersion",        "1,2,1,0"
             VALUE "InternalName",       "WorkTracker"
             VALUE "LegalCopyright",     "2014 Robert Lohr"
             VALUE "OriginalFilename",   "WorkTracker"
             VALUE "ProductName",        "WorkTracker"
-            VALUE "ProductVersion",     "1,2,0,0"
+            VALUE "ProductVersion",     "1,2,1,0"
         END
     END
 

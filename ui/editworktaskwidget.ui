@@ -78,12 +78,18 @@
          </item>
          <item>
           <widget class="QToolButton" name="addTaskButton">
+           <property name="toolTip">
+            <string>Strg-A,Strg-T</string>
+           </property>
            <property name="text">
             <string/>
            </property>
            <property name="icon">
             <iconset resource="../icons.qrc">
              <normaloff>:/icon/Add.svg</normaloff>:/icon/Add.svg</iconset>
+           </property>
+           <property name="shortcut">
+            <string>Ctrl+A, Ctrl+T</string>
            </property>
           </widget>
          </item>
@@ -92,12 +98,18 @@
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="toolTip">
+            <string>Strg-R,Strg-T</string>
+           </property>
            <property name="text">
             <string/>
            </property>
            <property name="icon">
             <iconset resource="../icons.qrc">
              <normaloff>:/icon/Remove.svg</normaloff>:/icon/Remove.svg</iconset>
+           </property>
+           <property name="shortcut">
+            <string>Ctrl+R, Ctrl+T</string>
            </property>
           </widget>
          </item>
@@ -188,12 +200,21 @@
          </item>
          <item>
           <widget class="QToolButton" name="addTimeButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="toolTip">
+            <string>Strg-A,Strg-D</string>
+           </property>
            <property name="text">
             <string/>
            </property>
            <property name="icon">
             <iconset resource="../icons.qrc">
              <normaloff>:/icon/Add.svg</normaloff>:/icon/Add.svg</iconset>
+           </property>
+           <property name="shortcut">
+            <string>Ctrl+A, Ctrl+D</string>
            </property>
           </widget>
          </item>
@@ -202,12 +223,18 @@
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="toolTip">
+            <string>Strg-R,Strg-D</string>
+           </property>
            <property name="text">
             <string/>
            </property>
            <property name="icon">
             <iconset resource="../icons.qrc">
              <normaloff>:/icon/Remove.svg</normaloff>:/icon/Remove.svg</iconset>
+           </property>
+           <property name="shortcut">
+            <string>Ctrl+R, Ctrl+D</string>
            </property>
           </widget>
          </item>

@@ -145,16 +145,19 @@ EditWorkTaskPage::taskSelected(const QItemSelection& p_selection)
 {
     QModelIndexList indexes = p_selection.indexes();
     if (!indexes.isEmpty()) {
-        // Only single selection allowed
-        QModelIndex index = indexes.at(0);
-        if (index.isValid()) {
-            auto* source = qobject_cast<SelectedWorkDayModel*>(ui->tasksListView->model());
-            auto* destin = qobject_cast<WorkTaskModel*>(ui->timesTableView->model());
-            m_controller->setModelData(index, source, destin);
+        if (1 == indexes.size()) {
+            QModelIndex index = indexes.at(0);
+            if (index.isValid()) {
+                auto* src = qobject_cast<SelectedWorkDayModel*>(ui->tasksListView->model());
+                auto* dst = qobject_cast<WorkTaskModel*>(ui->timesTableView->model());
+                m_controller->setModelData(index, src, dst);
+            }
         }
     }
     
     ui->removeTaskButton->setDisabled(indexes.isEmpty());
+    ui->removeTimeButton->setDisabled(indexes.isEmpty());
+    ui->addTimeButton->setDisabled(indexes.isEmpty());
 }
 
 void 

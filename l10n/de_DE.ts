@@ -10,8 +10,8 @@
     </message>
     <message>
         <location filename="../ui/aboutdialog.ui" line="69"/>
-        <source>Version 1.2.0</source>
-        <translation>Version 1.2.0</translation>
+        <source>Version 1.2.1</source>
+        <translation>Version 1.2.1</translation>
     </message>
     <message>
         <location filename="../ui/aboutdialog.ui" line="76"/>
@@ -47,12 +47,12 @@
         <translation>Wähle die zu bearbeitende Aufgabe. Änderungen werden sofort übernommen. Es kann jederzeit zur vorigen Seite zurückgekehrt werden, um einen anderen Tag zum Bearbeiten auszuwählen.</translation>
     </message>
     <message>
-        <location filename="../src/editworktaskpage.cpp" line="181"/>
+        <location filename="../src/editworktaskpage.cpp" line="184"/>
         <source>Task already exists</source>
         <translation>Aufgabe existiert bereits</translation>
     </message>
     <message>
-        <location filename="../src/editworktaskpage.cpp" line="182"/>
+        <location filename="../src/editworktaskpage.cpp" line="185"/>
         <source>There is already a task in use with the name &quot;%1&quot;.</source>
         <translation>Es gibt schon eine Aufgabe mit dem Namen: &quot;%1&quot;.</translation>
     </message>
@@ -64,48 +64,88 @@
         <source>Form</source>
         <translation></translation>
     </message>
+    <message>
+        <location filename="../ui/editworktaskwidget.ui" line="82"/>
+        <source>Strg-A,Strg-T</source>
+        <translation>Strg-A,Strg-T</translation>
+    </message>
+    <message>
+        <location filename="../ui/editworktaskwidget.ui" line="92"/>
+        <source>Ctrl+A, Ctrl+T</source>
+        <translation>Ctrl+A, Ctrl+T</translation>
+    </message>
+    <message>
+        <location filename="../ui/editworktaskwidget.ui" line="102"/>
+        <source>Strg-R,Strg-T</source>
+        <translation>Strg-R,Strg-T</translation>
+    </message>
+    <message>
+        <location filename="../ui/editworktaskwidget.ui" line="112"/>
+        <source>Ctrl+R, Ctrl+T</source>
+        <translation>Ctrl+R, Ctrl+T</translation>
+    </message>
+    <message>
+        <location filename="../ui/editworktaskwidget.ui" line="207"/>
+        <source>Strg-A,Strg-D</source>
+        <translation>Strg-A,Strg-D</translation>
+    </message>
+    <message>
+        <location filename="../ui/editworktaskwidget.ui" line="217"/>
+        <source>Ctrl+A, Ctrl+D</source>
+        <translation>Ctrl+A, Ctrl+D</translation>
+    </message>
+    <message>
+        <location filename="../ui/editworktaskwidget.ui" line="227"/>
+        <source>Strg-R,Strg-D</source>
+        <translation>Strg-R,Strg-D</translation>
+    </message>
+    <message>
+        <location filename="../ui/editworktaskwidget.ui" line="237"/>
+        <source>Ctrl+R, Ctrl+D</source>
+        <translation>Ctrl+R, Ctrl+D</translation>
+    </message>
 </context>
 <context>
     <name>EditorController</name>
     <message>
-        <location filename="../src/controller/editorcontroller.cpp" line="116"/>
+        <location filename="../src/controller/editorcontroller.cpp" line="119"/>
         <source>Are you sure you want to delete the work-task &quot;%1&quot; 
 and all of its recorded times?</source>
         <translation>Soll die Aufgabe &quot;%1&quot; und alle ihre Einzelschritte wirklich gelöscht werden?</translation>
     </message>
     <message>
-        <location filename="../src/controller/editorcontroller.cpp" line="120"/>
+        <location filename="../src/controller/editorcontroller.cpp" line="123"/>
         <source>Are you sure you want to delete the selected %1 
 work-tasks and all of their recorded times?</source>
         <translation>Sollen alle %1 Aufgaben und alle ihre Einzelschritte wirklich gelöscht werden?</translation>
     </message>
     <message>
-        <location filename="../src/controller/editorcontroller.cpp" line="124"/>
+        <location filename="../src/controller/editorcontroller.cpp" line="127"/>
         <source>Delete Task</source>
         <translation>Aufgabe löschen</translation>
     </message>
     <message>
-        <location filename="../src/controller/editorcontroller.cpp" line="146"/>
+        <location filename="../src/controller/editorcontroller.cpp" line="155"/>
         <source>Delete Time</source>
         <translation>Arbeitschritt löschen</translation>
     </message>
     <message>
-        <location filename="../src/controller/editorcontroller.cpp" line="147"/>
+        <location filename="../src/controller/editorcontroller.cpp" line="156"/>
         <source>Are you sure you want to delete %1 recorded times?</source>
         <translation>Soll(en) wirklich %1 Zeitstempel gelöscht werden?</translation>
     </message>
     <message>
-        <location filename="../src/controller/editorcontroller.cpp" line="179"/>
+        <location filename="../src/controller/editorcontroller.cpp" line="188"/>
         <source>There is a work-task without a name</source>
         <translation>Es gibt eine Aufgabe ohne Namen</translation>
     </message>
     <message>
-        <location filename="../src/controller/editorcontroller.cpp" line="186"/>
+        <location filename="../src/controller/editorcontroller.cpp" line="195"/>
         <source>Work-task &quot;%1&quot; has no start time</source>
         <translation>Aufgabe &quot;%1&quot; hat keinen Startzeitpunkt</translation>
     </message>
     <message>
-        <location filename="../src/controller/editorcontroller.cpp" line="200"/>
+        <location filename="../src/controller/editorcontroller.cpp" line="209"/>
         <source>The following tasks are active: %1</source>
         <translation>Folgende Aufgaben sind aktiv: %1</translation>
     </message>
@@ -165,7 +205,7 @@ work-tasks and all of their recorded times?</source>
     <message>
         <location filename="../src/model/delegate/workdaydelegate.cpp" line="86"/>
         <source>Start: %1</source>
-        <translation>Beginn: %1</translation>
+        <translation>Begonnen: %1</translation>
     </message>
     <message>
         <location filename="../src/model/delegate/workdaydelegate.cpp" line="87"/>
@@ -195,15 +235,15 @@ work-tasks and all of their recorded times?</source>
     </message>
     <message>
         <location filename="../ui/worktracker.ui" line="47"/>
-        <location filename="../src/worktracker.cpp" line="217"/>
-        <location filename="../src/worktracker.cpp" line="306"/>
+        <location filename="../src/worktracker.cpp" line="219"/>
+        <location filename="../src/worktracker.cpp" line="322"/>
         <source>Start &amp;New Workday</source>
         <translation>&amp;Neuer Arbeitstag</translation>
     </message>
     <message>
         <location filename="../ui/worktracker.ui" line="67"/>
-        <location filename="../src/worktracker.cpp" line="160"/>
-        <location filename="../src/worktracker.cpp" line="307"/>
+        <location filename="../src/worktracker.cpp" line="162"/>
+        <location filename="../src/worktracker.cpp" line="311"/>
         <source>Start &amp;Task</source>
         <translation>Beginne &amp;Aufgabe</translation>
     </message>
@@ -283,37 +323,36 @@ work-tasks and all of their recorded times?</source>
         <translation>&amp;Deutsch</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="280"/>
-        <location filename="../src/worktracker.cpp" line="312"/>
+        <location filename="../src/worktracker.cpp" line="282"/>
         <source>Total time %1h %2m</source>
         <translation>Gesamt %1h %2m</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="121"/>
+        <location filename="../src/worktracker.cpp" line="123"/>
         <source>You must enter a task description</source>
         <translation>Es muss eine Aufgabenbeschreibung angegeben werden</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="144"/>
-        <location filename="../src/worktracker.cpp" line="301"/>
+        <location filename="../src/worktracker.cpp" line="146"/>
+        <location filename="../src/worktracker.cpp" line="304"/>
         <source>Stop &amp;Task</source>
         <translation>Beende &amp;Aufgabe</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="147"/>
-        <location filename="../src/worktracker.cpp" line="303"/>
+        <location filename="../src/worktracker.cpp" line="149"/>
+        <location filename="../src/worktracker.cpp" line="307"/>
         <source>%1 started at %2</source>
         <translation>%1 begonnen am %2</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="163"/>
-        <location filename="../src/worktracker.cpp" line="309"/>
+        <location filename="../src/worktracker.cpp" line="165"/>
+        <location filename="../src/worktracker.cpp" line="314"/>
         <source>%1 stopped at %2</source>
         <translation>%1 beendet am %2</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="209"/>
-        <location filename="../src/worktracker.cpp" line="300"/>
+        <location filename="../src/worktracker.cpp" line="211"/>
+        <location filename="../src/worktracker.cpp" line="319"/>
         <source>Stop &amp;Workday</source>
         <translation>Arbeitstag &amp;Beenden</translation>
     </message>
@@ -321,22 +360,22 @@ work-tasks and all of their recorded times?</source>
 <context>
     <name>WorkTrackerController</name>
     <message>
-        <location filename="../src/controller/worktrackercontroller.cpp" line="137"/>
+        <location filename="../src/controller/worktrackercontroller.cpp" line="143"/>
         <source>Could not create &lt;workday&gt; XML element</source>
         <translation>Konnte &lt;workday&gt; XML Element nicht erstellen</translation>
     </message>
     <message>
-        <location filename="../src/controller/worktrackercontroller.cpp" line="142"/>
+        <location filename="../src/controller/worktrackercontroller.cpp" line="148"/>
         <source>Could not add &lt;workday&gt; to &lt;workdays&gt; XML element</source>
         <translation>Konnte &lt;workday&gt; nicht in das &lt;workdays&gt; XML Element einfügen</translation>
     </message>
     <message>
-        <location filename="../src/controller/worktrackercontroller.cpp" line="152"/>
+        <location filename="../src/controller/worktrackercontroller.cpp" line="158"/>
         <source>No active work-day</source>
         <translation>Kein aktiver Arbeitstag</translation>
     </message>
     <message>
-        <location filename="../src/controller/worktrackercontroller.cpp" line="164"/>
+        <location filename="../src/controller/worktrackercontroller.cpp" line="170"/>
         <source>A task-name must be specified to start a new task</source>
         <translation>Es muss ein Aufgabenname angegeben werden, um eine neue Aufgabe anzufangen</translation>
     </message>
