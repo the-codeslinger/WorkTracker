@@ -77,11 +77,18 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     completer->setFilterMode(Qt::MatchContains);
     ui->tasksEdit->setCompleter(completer);
 
-    connect(ui->workdayButton,    SIGNAL(clicked()),  m_controller, SLOT(toggleWorkDay()));
-    connect(ui->selectTaskButton, SIGNAL(clicked()),  this,         SLOT(taskSelected()));
-    connect(ui->taskButton,       SIGNAL(clicked()),  this,         SLOT(showInput()));
-    connect(ui->summaryButton,    SIGNAL(clicked()),  this,         SLOT(showSummary()));
-    connect(&m_showAnimation,     SIGNAL(finished()), this,         SLOT(showAnimationFinished()));
+    connect(ui->workdayButton,    SIGNAL(clicked()),  
+            m_controller,         SLOT(toggleWorkDay()));
+    connect(ui->selectTaskButton, SIGNAL(clicked()),
+            this,                 SLOT(taskSelected()));
+    connect(ui->taskButton,       SIGNAL(clicked()),
+            this,                 SLOT(showInput()));
+    connect(ui->summaryButton,    SIGNAL(clicked()),
+            this,                 SLOT(showSummary()));
+    connect(&m_showAnimation,     SIGNAL(finished()),
+            this,                 SLOT(showAnimationFinished()));
+    connect(ui->tasksEdit,        SIGNAL(returnPressed()),
+            ui->selectTaskButton, SIGNAL(clicked()));
 
     connect(m_controller, SIGNAL(workDayStarted(QDateTime)),
             this,         SLOT(workDayStarted(QDateTime)));
@@ -201,6 +208,9 @@ WorkTracker::showAnimationFinished()
     // just create space for it on its own and the animation would add more space on top
     // of that, resulting in a too large window.
     m_animatedWidget->setVisible(true);
+    if (m_animatedWidget == ui->frame) {
+        ui->tasksEdit->setFocus();
+    }
 }
 
 void
