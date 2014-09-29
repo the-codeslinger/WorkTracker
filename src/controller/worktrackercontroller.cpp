@@ -388,5 +388,6 @@ WorkTrackerController::closeCurrentTask()
         // Simply rely on what we already have. This also takes care about sending the 
         // necessary signal to update the ui.
         stopWorkTask(m_recordingWorkTask.task().name());
+        m_isRecording = false;
     }
 }
