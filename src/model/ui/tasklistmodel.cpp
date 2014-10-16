@@ -79,3 +79,15 @@ TaskListModel::itemAppended()
     beginInsertRows(QModelIndex(), position, position + 1);
     endInsertRows();
 }
+
+void 
+TaskListModel::beginAddTask()
+{
+    beginResetModel();
+}
+
+void 
+TaskListModel::endAddTask()
+{
+    endResetModel();
+}

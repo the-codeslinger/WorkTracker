@@ -119,7 +119,6 @@ void
 WorkTracker::setTaskListModel(TaskListModel* model)
 {
     ui->tasksEdit->completer()->setModel(model);
-    m_taskModel = model;
 }
 
 void

@@ -72,6 +72,17 @@ public:
      */
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const;
+    
+public slots:
+    /*!
+     * Calles `beginModelReset()`. Connect this to `Task::aboutToAddTask()`.
+     */
+    void beginAddTask();
+    
+    /*!
+     * Calles `endModelReset()`. Connect this to `Task::taskAdded()`.
+     */
+    void endAddTask();
 
 private:
     /*!

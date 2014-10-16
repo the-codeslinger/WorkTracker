@@ -17,6 +17,7 @@
 #ifndef XMLDATA_H
 #define XMLDATA_H
 
+#include <QObject>
 #include <QString>
 #include <QDomElement>
 
@@ -36,8 +37,9 @@ class QDomDocument;
  * from this class. By that it gets access to getter and setter methods for DOM
  * manipulation.
  */
-class XmlData
+class XmlData : public QObject
 {
+    Q_OBJECT
 public:
     /*!
      * \return 

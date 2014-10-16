@@ -170,10 +170,6 @@ private:
      */
     Ui::WorkTracker* ui;
     /*!
-     * The model used for suggestions.
-     */
-    TaskListModel* m_taskModel;
-    /*!
      * Label for the left part of the status bar.
      */
     QLabel* m_statusDuration;

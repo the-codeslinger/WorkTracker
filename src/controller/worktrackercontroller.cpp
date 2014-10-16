@@ -176,6 +176,11 @@ WorkTrackerController::startWorkTask(QString name)
     QDateTime now = QDateTime::currentDateTimeUtc();
     Task task(m_dataSource, name, now.date());
     
+    connect(&task, &Task::aboutToAddTask, m_taskListModel, &TaskListModel::beginAddTask);
+    connect(&task, &Task::taskAdded,      m_taskListModel, &TaskListModel::endAddTask);
+    
+    task.addToDom();
+    
     // Always reset before starting a new one.
     m_recordingWorkTime = WorkTime(m_dataSource);
     m_recordingWorkTask = m_workday.workTask(task);
@@ -207,6 +212,12 @@ WorkTrackerController::stopWorkTask(QString name)
     // are different then we have to re-assign the work-time from the current work-task
     // to the new one.
     Task newTask(m_dataSource, name, QDate::currentDate());
+    
+    connect(&newTask, &Task::aboutToAddTask, m_taskListModel, &TaskListModel::beginAddTask);
+    connect(&newTask, &Task::taskAdded,      m_taskListModel, &TaskListModel::endAddTask);
+    
+    newTask.addToDom();
+    
     Task recTask = m_recordingWorkTask.task();
     
     if (newTask.id() != recTask.id()) {

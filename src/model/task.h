@@ -34,7 +34,7 @@ class QDomAttr;
  * \brief A task is a named description of a certain kind of work.
  *
  * It contains a unique id, a name and a value when it was last used (this feature is not
- * taken advantage of, yet). The name is the value that can be entered by the user when
+ * taken advantage of yet). The name is the value that can be entered by the user when
  * starting or stoppig a task.
  *
  * This class provides static helper methods to load a specific `Task` instance from the
@@ -42,6 +42,7 @@ class QDomAttr;
  */
 class Task : public XmlData
 {
+    Q_OBJECT
 public:
     /*!
      * Constant value. If a task has not yet been saved to the DOM then its
@@ -116,6 +117,12 @@ public:
      * Set a new `lastUsed` date.
      */
     void setLastUsed(const QDate& p_lastUsed);
+    
+    /*!
+     * Adds the current task to the DOM tree, to the <tasks> element specifically. If the
+     * task is already part of the DOM then no change will be made.
+     */
+    void addToDom();
 
     /*!
      * Get a specific `Task` instance from the database based on its id.
@@ -172,6 +179,18 @@ public:
      * Returns the number of tasks in the database.
      */
     static int count(const QDomDocument& p_dataSource);
+    
+signals:
+    /*!
+     * Emitted when it's clear that a new task has to be added to the DOM. Connect models
+     * to this signal in order to trigger the `aboutTo...` methods.
+     */
+    void aboutToAddTask();
+    
+    /*!
+     * Emitted after a new task has been added to the DOM.
+     */
+    void taskAdded();
 
 private:
     /*!
@@ -179,11 +198,6 @@ private:
      * `XmlData::m_node`.
      */
     void createNode(int p_id, const QString& p_name, const QDate& p_lastUsed);
-    
-    /*!
-     * Adds the task to the <tasks> DOM node.
-     */
-    void addToList();
 
     /*!
      * Generic helper that searches tasks based on the predicate function that actually

@@ -80,9 +80,6 @@ void
 Task::setName(const QString& p_name)
 {
     setAttribute("name", p_name);
-    if (!p_name.isEmpty()) {
-        addToList();
-    }
 }
 
 QDate
@@ -124,8 +121,6 @@ Task::createNode(int p_id, const QString& p_name, const QDate& p_lastUsed)
             setAttribute("id",        p_id);
             setAttribute("name",      p_name);
             setAttribute("last_used", p_lastUsed);
-            
-            addToList();
         }
     }
     else {
@@ -134,12 +129,14 @@ Task::createNode(int p_id, const QString& p_name, const QDate& p_lastUsed)
 }
 
 void 
-Task::addToList()
+Task::addToDom()
 {
     // The parent in this case is the <tasks> DOM element that contains all the task
     // items. This is not a parent as we define it for our relations, so it is not 
     // explicitly saved in m_parent.
     if (m_node.parentNode().isNull()) {
+        emit aboutToAddTask();
+        
         QDomElement root = m_dataSource.documentElement();
         QDomNode tasks = root.namedItem("tasks");
         if (tasks.isNull()) {
@@ -148,6 +145,8 @@ Task::addToList()
         }
         
         tasks.appendChild(m_node);
+        
+        emit taskAdded();
     }
 }
 
