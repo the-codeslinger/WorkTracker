@@ -15,7 +15,7 @@
  */
 
 #include "workdaymodel.h"
-#include "../workday.h"
+#include "../../model/workday.h"
 
 WorkDayModel::WorkDayModel(QObject* p_parent)
     : QAbstractListModel(p_parent)

@@ -16,10 +16,10 @@
 
 #include "editworktaskpage.h"
 #include "ui_editworktaskwidget.h"
-#include "controller/editorcontroller.h"
-#include "model/ui/selectedworkdaymodel.h"
-#include "model/ui/worktaskmodel.h"
-#include "model/delegate/taskdelegate.h"
+#include "../controller/editorcontroller.h"
+#include "model/selectedworkdaymodel.h"
+#include "model/worktaskmodel.h"
+#include "delegate/taskdelegate.h"
 
 #include <QVBoxLayout>
 #include <QItemSelection>

@@ -17,8 +17,8 @@
 #ifndef WORKTASKMODEL_H
 #define WORKTASKMODEL_H
 
-#include "../worktask.h"
-#include "../worktime.h"
+#include "../../model/worktask.h"
+#include "../../model/worktime.h"
 
 #include <QAbstractItemModel>
 

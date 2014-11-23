@@ -15,7 +15,7 @@
  */
 
 #include "workdaydelegate.h"
-#include "../workday.h"
+#include "../../model/workday.h"
 
 #include <QStyleOptionViewItemV4>
 #include <QPainter>

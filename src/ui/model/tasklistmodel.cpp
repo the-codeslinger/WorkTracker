@@ -15,7 +15,7 @@
  */
 
 #include "tasklistmodel.h"
-#include "../task.h"
+#include "../../model/task.h"
 
 #include <QDomElement>
 #include <QDomNamedNodeMap>

@@ -1,5 +1,5 @@
 #include "preferencescontroller.h"
-#include "../preferencesdialog.h"
+#include "../ui/preferencesdialog.h"
 
 #include <QSettings>
 

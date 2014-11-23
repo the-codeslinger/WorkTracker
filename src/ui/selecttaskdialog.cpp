@@ -1,6 +1,6 @@
 #include "selecttaskdialog.h"
 #include "ui_selecttaskdialog.h"
-#include "model/ui/tasklistmodel.h"
+#include "model/tasklistmodel.h"
 
 #include <QCompleter>
 #include <QPushButton>

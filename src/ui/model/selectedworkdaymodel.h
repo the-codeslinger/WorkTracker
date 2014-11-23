@@ -17,7 +17,7 @@
 #ifndef SELECTEDWORKDAYMODEL_H
 #define SELECTEDWORKDAYMODEL_H
 
-#include "../workday.h"
+#include "../../model/workday.h"
 
 #include <QAbstractListModel>
 

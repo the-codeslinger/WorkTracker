@@ -17,7 +17,7 @@
 #ifndef WORKTRACKER_H
 #define WORKTRACKER_H
 
-#include "model/ui/tasklistmodel.h"
+#include "model/tasklistmodel.h"
 
 #include <QMainWindow>
 #include <QPropertyAnimation>

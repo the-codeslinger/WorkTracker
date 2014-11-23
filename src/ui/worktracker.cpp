@@ -17,9 +17,9 @@
 #include "worktracker.h"
 #include "aboutdialog.h"
 #include "ui_worktracker.h"
-#include "model/worktask.h"
-#include "model/task.h"
-#include "controller/worktrackercontroller.h"
+#include "../model/worktask.h"
+#include "../model/task.h"
+#include "../controller/worktrackercontroller.h"
 
 #include <QFile>
 #include <QDebug>

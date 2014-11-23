@@ -15,8 +15,8 @@
  */
 
 #include "worktrackercontroller.h"
-#include "../model/ui/tasklistmodel.h"
-#include "../worktracker.h"
+#include "../ui/model/tasklistmodel.h"
+#include "../ui/worktracker.h"
 #include "../helper.h"
 #include "editorcontroller.h"
 #include "preferencescontroller.h"

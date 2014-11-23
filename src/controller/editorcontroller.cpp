@@ -15,13 +15,13 @@
  */
 
 #include "editorcontroller.h"
-#include "../selectworkdaypage.h"
-#include "../editworktaskpage.h"
-#include "../model/ui/workdaymodel.h"
-#include "../model/ui/worktaskmodel.h"
-#include "../model/ui/selectedworkdaymodel.h"
-#include "../selecttaskdialog.h"
-#include "../editorwizard.h"
+#include "../ui/selectworkdaypage.h"
+#include "../ui/editworktaskpage.h"
+#include "../ui/model/workdaymodel.h"
+#include "../ui/model/worktaskmodel.h"
+#include "../ui/model/selectedworkdaymodel.h"
+#include "../ui/selecttaskdialog.h"
+#include "../ui/editorwizard.h"
 
 #include <QWizard>
 #include <QListView>

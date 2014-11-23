@@ -1,5 +1,5 @@
 #include "taskdelegate.h"
-#include "../ui/tasklistmodel.h"
+#include "../model/tasklistmodel.h"
 
 #include <QCompleter>
 #include <QLineEdit>

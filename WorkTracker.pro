@@ -22,54 +22,57 @@ TEMPLATE  = app
 CONFIG   += c++11
 RC_FILE   = WorkTracker.rc
 
-SOURCES += src/main.cpp\
-        src/worktracker.cpp \
-    src/model/ui/tasklistmodel.cpp \
+SOURCES += \
+    src/main.cpp\
+    src/helper.cpp \
+    src/controller/editorcontroller.cpp \
+    src/controller/preferencescontroller.cpp \
+    src/controller/worktrackercontroller.cpp \
     src/model/task.cpp \
     src/model/worktask.cpp \
     src/model/workday.cpp \
-    src/controller/worktrackercontroller.cpp \
     src/model/xmldata.cpp \
-    src/aboutdialog.cpp \
-    src/helper.cpp \
-    src/selectworkdaypage.cpp \
-    src/editworktaskpage.cpp \
-    src/controller/editorcontroller.cpp \
-    src/model/ui/workdaymodel.cpp \
-    src/model/delegate/workdaydelegate.cpp \
-    src/model/ui/selectedworkdaymodel.cpp \
-    src/model/ui/worktaskmodel.cpp \
-    src/controller/preferencescontroller.cpp \
-    src/preferencesdialog.cpp \
     src/model/worktime.cpp \
-    src/selecttaskdialog.cpp \
-    src/model/delegate/taskdelegate.cpp \
-    src/editorwizard.cpp
+    src/ui/delegate/workdaydelegate.cpp \
+    src/ui/delegate/taskdelegate.cpp \
+    src/ui/model/tasklistmodel.cpp \
+    src/ui/model/workdaymodel.cpp \
+    src/ui/model/selectedworkdaymodel.cpp \
+    src/ui/model/worktaskmodel.cpp \
+    src/ui/aboutdialog.cpp \
+    src/ui/selectworkdaypage.cpp \
+    src/ui/editworktaskpage.cpp \
+    src/ui/preferencesdialog.cpp \
+    src/ui/selecttaskdialog.cpp \
+    src/ui/editorwizard.cpp \
+    src/ui/worktracker.cpp 
 
-HEADERS  += src/worktracker.h \
-    src/model/ui/tasklistmodel.h \
+HEADERS  += \
+    src/helper.h \
+    src/controller/worktrackercontroller.h \
+    src/controller/editorcontroller.h \
+    src/controller/preferencescontroller.h \
     src/model/task.h \
     src/model/worktask.h \
     src/model/workday.h \
-    src/controller/worktrackercontroller.h \
     src/model/xmldata.h \
-    src/aboutdialog.h \
-    src/helper.h \
-    src/selectworkdaypage.h \
-    src/editworktaskpage.h \
-    src/controller/editorcontroller.h \
-    src/model/ui/workdaymodel.h \
-    src/model/delegate/workdaydelegate.h \
-    src/model/ui/selectedworkdaymodel.h \
-    src/model/ui/worktaskmodel.h \
-    src/controller/preferencescontroller.h \
-    src/preferencesdialog.h \
     src/model/worktime.h \
-    src/selecttaskdialog.h \
-    src/model/delegate/taskdelegate.h \
-    src/editorwizard.h
+    src/ui/delegate/workdaydelegate.h \
+    src/ui/delegate/taskdelegate.h \
+    src/ui/model/tasklistmodel.h \
+    src/ui/model/workdaymodel.h \
+    src/ui/model/selectedworkdaymodel.h \
+    src/ui/model/worktaskmodel.h \
+    src/ui/worktracker.h \
+    src/ui/aboutdialog.h \
+    src/ui/selectworkdaypage.h \
+    src/ui/editworktaskpage.h \
+    src/ui/preferencesdialog.h \
+    src/ui/selecttaskdialog.h \
+    src/ui/editorwizard.h
 
-FORMS    += ui/worktracker.ui \
+FORMS    += \
+    ui/worktracker.ui \
     ui/aboutdialog.ui \
     ui/selectworkdaywidget.ui \
     ui/editworktaskwidget.ui \

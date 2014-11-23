@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "worktracker.h"
+#include "ui/worktracker.h"
 #include "controller/worktrackercontroller.h"
 #include "model/worktask.h"
 

@@ -15,7 +15,7 @@
  */
 
 #include "selectedworkdaymodel.h"
-#include "../task.h"
+#include "../../model/task.h"
 
 #include <algorithm>
 

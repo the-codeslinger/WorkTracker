@@ -1,6 +1,6 @@
 #include "preferencesdialog.h"
 #include "ui_preferencesdialog.h"
-#include "controller/preferencescontroller.h"
+#include "../controller/preferencescontroller.h"
 
 #include <QMapIterator>
 #include <QApplication>

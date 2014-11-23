@@ -16,9 +16,9 @@
 
 #include "selectworkdaypage.h"
 #include "ui_selectworkdaywidget.h"
-#include "controller/editorcontroller.h"
-#include "model/ui/workdaymodel.h"
-#include "model/delegate/workdaydelegate.h"
+#include "../controller/editorcontroller.h"
+#include "model/workdaymodel.h"
+#include "delegate/workdaydelegate.h"
 
 #include <QVBoxLayout>
 #include <QItemSelectionModel>
