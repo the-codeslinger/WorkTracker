@@ -16,8 +16,37 @@
 
 #include "helper.h"
 
+#include <QDomNodeList>
+#include <QDomElement>
+
 float
 roundTwoDecimals(float number)
 {
     return static_cast<float>(static_cast<int>(number * 100 + 0.5) / 100.0);
+}
+
+void 
+forEachNode(const QDomNodeList& nodes, std::function<void(QDomElement)> func)
+{
+    for (int c = 0; c < nodes.length(); c++) {
+        auto node = nodes.item(c);
+        if (node.isElement()) {
+            func(node.toElement());
+        }
+    }
+}
+
+QDomElement 
+findFirstNode(const QDomNodeList& nodes, std::function<bool(QDomElement)> func)
+{
+    for (int c = 0; c < nodes.length(); c++) {
+        auto node = nodes.item(c);
+        if (node.isElement()) {
+            auto element = node.toElement();
+            if (func(element)) {
+                return element;
+            }
+        }
+    }
+    return QDomElement();
 }

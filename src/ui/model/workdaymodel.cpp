@@ -27,6 +27,7 @@ WorkDayModel::setDataSource(const QDomDocument& p_dataSource)
 {
     beginResetModel();
     m_dataSource = p_dataSource;
+    m_workDayList.setDataSource(p_dataSource);
     endResetModel();
 }
 
@@ -34,7 +35,7 @@ int
 WorkDayModel::rowCount(const QModelIndex& /* ignored */) const
 {
     if (!m_dataSource.isNull()) {
-        return WorkDay::count(m_dataSource);
+        return m_workDayList.size();
     }
 
     return 0;
@@ -50,7 +51,7 @@ WorkDayModel::data(const QModelIndex& p_index, int p_role) const
     if (Qt::DisplayRole == p_role || Qt::EditRole == p_role) {
         // Descending order means treating the last item in the tree as "0"
         int reversedIndex = rowCount() - 1 - p_index.row();
-        WorkDay workday = WorkDay::at(reversedIndex, m_dataSource);
+        WorkDay workday = m_workDayList.at(reversedIndex);
         if (workday.isNull()) {
             return QVariant();
         }

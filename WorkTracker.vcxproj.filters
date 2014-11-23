@@ -206,18 +206,6 @@
     <ClCompile Include="build\GeneratedFiles\Release\moc_taskdelegate.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="build\GeneratedFiles\Debug\moc_xmldata.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="build\GeneratedFiles\Release\moc_xmldata.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="build\GeneratedFiles\Debug\moc_task.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="build\GeneratedFiles\Release\moc_task.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="build\GeneratedFiles\Debug\moc_worktrackercontroller.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -238,6 +226,12 @@
     </ClCompile>
     <ClCompile Include="build\GeneratedFiles\qrc_icons.cpp">
       <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\TaskList.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\WorkDayList.cpp">
+      <Filter>Source Files\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -402,6 +396,12 @@
     </ClInclude>
     <ClInclude Include="build\GeneratedFiles\ui_worktracker.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model\TaskList.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model\WorkDayList.h">
+      <Filter>Header Files\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

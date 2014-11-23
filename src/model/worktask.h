@@ -21,6 +21,8 @@
 #include "xmldata.h"
 #include "worktime.h"
 
+#include <QList>
+
 /*!
  * \brief Combines a `Task` with a start and a stop time, making it one unit of work.
  *
@@ -41,38 +43,21 @@ public:
      * Create a new `WorkTask` instance without any values.
      */
     WorkTask();
-
-    /*!
-     * Creates a new `WorkTask` with a data source. An associated DOM node is also created
-     * but cannot be added to the DOM until a parent, the `WorkDay`, is set.
-     */
-    WorkTask(const QDomDocument& p_dataSource);
     
     /*!
-     * Creates a new `WorkTask` with a data source and the associated DOM node from which
-     * to read the data and write it to.
+     * Creates a new instance with based on the DOM element.
      */
-    WorkTask(const QDomDocument& p_dataSource, const QDomElement& p_node, 
-             const QDomNode& p_parent);
+    WorkTask(const QDomDocument& dataSource, const QDomElement& element);
     
     /*!
      * Creates a new instance with a task and the parent to assign the node to.
      */
-    WorkTask(const QDomDocument& p_dataSource, const QDomNode& p_parent, 
-             const Task& p_task);
+    WorkTask(const QDomDocument& dataSource, const Task& task);
     
     /*!
      * Copy constructor.
      */
-    WorkTask(const WorkTask& p_other);
-    
-    /*!
-     * Sets the data-source and creates a node if none exists.
-     * 
-     * \param p_dataSource
-     * The data-source of this work-task.
-     */
-    void setDataSource(const QDomDocument &p_dataSource);
+    WorkTask(const WorkTask& other);
 
     /*!
      * \return
@@ -83,21 +68,22 @@ public:
     /*!
      * Set a new `task`.
      */
-    void setTask(const Task& p_task);
+    void setTask(const Task& task);
     
     /*!
-     * Add a time element to the work-task's list of times.
+     * Add a time element to the work-task's list of times. This is just a more aptly 
+     * named wrapper around `XmlData::appendChild(const XmlData&)`.
      * 
-     * \param p_time
-     * The time element to add. This sets the parent of `p_time` to be the work-task.
+     * \param time
+     * The time element to add. This sets the parent of `time` to be the work-task.
      */
-    void addTime(const WorkTime& p_time);
+    void addTime(const WorkTime& time);
     
     /*!
      * \return 
      * Returns the list of work-times that are part of this work-task.
      */
-    QList<WorkTime> workTimes() const;
+    QList<WorkTime> times() const;
 
     /*!
      * \return
@@ -117,25 +103,10 @@ public:
      * Returns the currently active work-time or a null-work-time if there is none without
      * a stop timestamp.
      */
-    WorkTime activeWorkTime() const;
+    WorkTime activeTime() const;
 
-private:
-    /*!
-     * Creates the work-task DOM node on the parent and sets the values.
-     * 
-     * \param p_parent
-     * The node of the work-day to which to attach this work-task.
-     * 
-     * \param p_task
-     * The actual `Task`.
-     * 
-     * \param p_start
-     * The starting timestamp of the work-task.
-     * 
-     * \param p_stop
-     * The stopped timestamp of the work-task.
-     */
-    void createNode(const QDomNode& p_parent, const Task& p_task);
+protected:
+    QString elementName() const;
 };
 
 #endif // WORKTASK_H

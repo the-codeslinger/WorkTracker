@@ -17,8 +17,11 @@
 #ifndef WORKTRACKERCONTROLLER_H
 #define WORKTRACKERCONTROLLER_H
 
-#include "../model/task.h"
 #include "../model/workday.h"
+#include "../model/worktask.h"
+#include "../model/worktime.h"
+#include "../model/tasklist.h"
+#include "../model/workdaylist.h"
 
 #include <QObject>
 #include <QString>
@@ -27,6 +30,7 @@
 #include <QDateTime>
 #include <QTimer>
 #include <QDomDocument>
+#include <QMap>
 
 class TaskListModel;
 class WorkTracker;
@@ -240,6 +244,14 @@ private:
      * The current start and stop time of the work-task.
      */
     WorkTime m_recordingWorkTime;
+    /*!
+     * The list of all known tasks in the database.
+     */
+    TaskList m_taskList;
+    /*!
+     * The list of all known workdays in the database.
+     */
+    WorkDayList m_WorkDayList;
 
     /*!
      * The current state of the workday.
@@ -290,6 +302,12 @@ private:
      * `toggleTask(QString)`.
      */
     void stopWorkTask(QString name);
+
+    /*!
+     * Looks up the task name in the list of tasks and returns the found one or creates 
+     * and adds a new task.
+     */
+    Task findOrCreateTask(const QString& name);
     
     /*!
      * Sets up the language and translation related objects. Loads the translation files

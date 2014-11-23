@@ -24,6 +24,7 @@
 #include <QStyle>
 #include <QApplication>
 #include <QLocale>
+#include <QDateTime>
 
 WorkDayDelegate::WorkDayDelegate(QObject* p_parent)
     : QStyledItemDelegate(p_parent)

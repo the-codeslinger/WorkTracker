@@ -17,6 +17,8 @@
 #ifndef TASKLISTMODEL_H
 #define TASKLISTMODEL_H
 
+#include "../../model/tasklist.h"
+
 #include <QAbstractListModel>
 #include <QModelIndex>
 #include <QVariant>
@@ -89,6 +91,7 @@ private:
      * The data source that has been passed via the constructor.
      */
     QDomDocument m_dataSource;
+    TaskList     m_taskList;
 
 };
 

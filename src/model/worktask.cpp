@@ -16,85 +16,65 @@
 
 #include "worktask.h"
 #include "task.h"
+#include "tasklist.h"
+#include "../helper.h"
 
-#include <QDomNodeList>
+#include <QDateTime>
+
+static const QString g_elementName = "task";
 
 WorkTask::WorkTask()
     : XmlData()
+{ }
+
+WorkTask::WorkTask(const QDomDocument& dataSource, const QDomElement& element)
+    : XmlData(dataSource, element)
+{ }
+
+WorkTask::WorkTask(const QDomDocument& dataSource, const Task& task)
+    : XmlData(dataSource, g_elementName)
 {
+    setTask(task);
 }
 
-WorkTask::WorkTask(const QDomDocument& p_dataSource)
-    : XmlData(p_dataSource)
-{
-    createNode(QDomNode(), Task());
-}
-
-WorkTask::WorkTask(const QDomDocument& p_dataSource, const QDomElement& p_node, 
-                   const QDomNode& p_parent)
-    : XmlData(p_dataSource, p_node, p_parent)
-{
-}
-
-WorkTask::WorkTask(const QDomDocument& p_dataSource, const QDomNode& p_parent, 
-                   const Task& p_task)
-    : XmlData(p_dataSource)
-{
-    createNode(p_parent, p_task);
-}
-
-WorkTask::WorkTask(const WorkTask& p_other)
-    : XmlData(p_other)
-{
-}
-
-void 
-WorkTask::setDataSource(const QDomDocument &p_dataSource)
-{
-    XmlData::setDataSource(p_dataSource);
-    createNode(QDomNode(), Task());
-}
+WorkTask::WorkTask(const WorkTask& other)
+    : XmlData(other)
+{ }
 
 Task
 WorkTask::task() const
 {
     int id = attributeInt("id");
-    Task task;
-    if (-1 != id) {
-        task = Task::get(id, m_dataSource);
+    if (XmlData::invalidId != id) {
+        TaskList tl(m_dataSource);
+        return tl.find(id);
     }
-    return task;
+    return Task();
 }
 
 void
-WorkTask::setTask(const Task& p_task)
+WorkTask::setTask(const Task& task)
 {
-    if (!p_task.isNull()) {
-        setAttribute("id", p_task.id());
+    if (!task.isNull()) {
+        setAttribute("id", task.id());
     }
 }
 
 void 
-WorkTask::addTime(const WorkTime& p_time)
+WorkTask::addTime(const WorkTime& time)
 {
-    if (!p_time.isNull() && !m_node.isNull()) {
-        m_node.appendChild(p_time.node());
-    }
+    appendChild(time);
 }
 
 QList<WorkTime> 
-WorkTask::workTimes() const
+WorkTask::times() const
 {
     QList<WorkTime> goodTimes;
     
-    QDomNodeList children = m_node.childNodes();
-    int count = children.size();
-    for (int c = 0; c < count; c++) {
-        QDomNode child = children.at(c);
-        if (child.isElement()) {
-            goodTimes << WorkTime(m_dataSource, child.toElement(), m_node);
-        }
-    }
+    auto children = m_element.childNodes();
+    forEachNode(children, [&goodTimes, this](const QDomElement& element) {
+        goodTimes << WorkTime(m_dataSource, element);
+    });
     
     return goodTimes;
 }
@@ -103,57 +83,33 @@ qint64
 WorkTask::timeInSeconds() const
 {
     qint64 totalTime = 0;
-    
-    QList<WorkTime> times = workTimes();
-    for (const WorkTime& time : times) {
+
+    forEach(times(), [&totalTime](const WorkTime& time) {
         totalTime += time.timeInSeconds();
-    }
+    });
             
     return totalTime;
-}
-
-void 
-WorkTask::createNode(const QDomNode& p_parent, const Task& p_task)
-{
-    if (m_dataSource.isNull() || !m_node.isNull()) {
-        return;
-    }
-    
-    m_parent = p_parent;
-    m_node   = m_dataSource.createElement("task");
-    
-    if (!m_parent.isNull()) {
-        m_parent.appendChild(m_node);
-    }
-    
-    if (!p_task.name().isEmpty()) {
-        if (0 < p_task.id()) {
-            
-        }
-        setAttribute("id", p_task.id());
-    }
 }
 
 bool
 WorkTask::isActiveTask() const
 {
-    QList<WorkTime> times = workTimes();
-    for (const WorkTime& time : times) {
-        if (time.stop().isNull()) {
-            return true;
-        }
-    }
-    return false;
+    auto list = times();
+    return std::end(list) != findIf(list, [](const WorkTime& time) {
+        return time.stop().isNull();
+    });
 }
 
 WorkTime 
-WorkTask::activeWorkTime() const
+WorkTask::activeTime() const
 {
-    QList<WorkTime> times = workTimes();
-    for (const WorkTime& time : times) {
-        if (time.stop().isNull()) {
-            return time;
-        }
-    }
-    return WorkTime();
+    return firstOrDefault(times(), [](const WorkTime& time) {
+        return time.stop().isNull();
+    });
+}
+
+QString 
+WorkTask::elementName() const
+{
+    return g_elementName;
 }

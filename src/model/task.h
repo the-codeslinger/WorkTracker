@@ -19,17 +19,6 @@
 
 #include "xmldata.h"
 
-#include <QString>
-#include <QDate>
-#include <QDomNode>
-#include <QList>
-#include <QVariant>
-
-#include <functional>
-
-class QDomDocument;
-class QDomAttr;
-
 /*!
  * \brief A task is a named description of a certain kind of work.
  *
@@ -42,23 +31,11 @@ class QDomAttr;
  */
 class Task : public XmlData
 {
-    Q_OBJECT
 public:
-    /*!
-     * Constant value. If a task has not yet been saved to the DOM then its
-     * `Task::id() const` method returns `Task::invalidId`.
-     */
-    static int invalidId;
-
     /*!
      * Creates a new `Task` without any values.
      */
     Task();
-
-    /*!
-     * Creates a new `Task` with a data source
-     */
-    Task(const QDomDocument& p_p_dataSource);
 
     /*!
      * Creates a new `Task` with a data source and a DOM node.
@@ -117,99 +94,9 @@ public:
      * Set a new `lastUsed` date.
      */
     void setLastUsed(const QDate& p_lastUsed);
-    
-    /*!
-     * Adds the current task to the DOM tree, to the <tasks> element specifically. If the
-     * task is already part of the DOM then no change will be made.
-     */
-    void addToDom();
 
-    /*!
-     * Get a specific `Task` instance from the database based on its id.
-     *
-     * \param id
-     * The database id of the task.
-     *
-     * \param p_dataSource
-     * The database that is searched for the `id`. This value is also passed to the new
-     * `Task` instance.
-     *
-     * \return
-     * If the `id` doesn't exist then a null-Task is returned, otherwise a valid new
-     * instance is returned.
-     */
-    static Task get(int p_id, const QDomDocument& p_dataSource);
-
-    /*!
-     * Works similar to `Task::get(int, const QDomDocument&)` but searches by name rather than
-     * database id.
-     *
-     * \param name
-     * The exact name of the task.
-     *
-     * \param p_dataSource
-     * The database that is searched for the `name`. This value is also passed to the new
-     * `Task` instance.
-     *
-     * \return
-     * If the `name` doesn't exist then a null-Task is returned, otherwise a valid new
-     * instance is returned.
-     */
-    static Task findByName(const QString& p_name, const QDomDocument& p_dataSource);
-
-    /*!
-     * Fetches a list of all available tasks from the database.
-     *
-     * \param p_dataSource
-     * The database that contains the list of tasks.
-     *
-     * \return
-     * If no tasks exist in the database then an empty list is returned, otherwise the
-     * list contains all tasks that could be found.
-     */
-    static QList<Task> list(const QDomDocument& p_dataSource);
-
-    /*!
-     * Get the number of tasks in the database.
-     *
-     * \param p_dataSource
-     * The database that contains the list of tasks.
-     *
-     * \return
-     * Returns the number of tasks in the database.
-     */
-    static int count(const QDomDocument& p_dataSource);
-    
-signals:
-    /*!
-     * Emitted when it's clear that a new task has to be added to the DOM. Connect models
-     * to this signal in order to trigger the `aboutTo...` methods.
-     */
-    void aboutToAddTask();
-    
-    /*!
-     * Emitted after a new task has been added to the DOM.
-     */
-    void taskAdded();
-
-private:
-    /*!
-     * Creates a new DOM node with the values provided and stores the result in
-     * `XmlData::m_node`.
-     */
-    void createNode(int p_id, const QString& p_name, const QDate& p_lastUsed);
-
-    /*!
-     * Generic helper that searches tasks based on the predicate function that actually
-     * does the check for the correct task item.
-     */
-    static Task findTask(const QDomDocument&             p_dataSource, 
-                         std::function<bool(Task)> p_predicate);
-
-    /*!
-     * Convenience method that hides some of the ugly DOM API.
-     */
-    static QDomNodeList getTaskNodes(const QDomDocument& p_dataSource);
+protected:
+    QString elementName() const;
 };
 
 #endif // TASK_H

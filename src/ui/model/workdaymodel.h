@@ -17,6 +17,8 @@
 #ifndef WORKDAYMODEL_H
 #define WORKDAYMODEL_H
 
+#include "../../model/workdaylist.h"
+
 #include <QAbstractListModel>
 #include <QDomDocument>
 
@@ -58,6 +60,7 @@ public:
 
 private:
     QDomDocument m_dataSource;
+    WorkDayList  m_workDayList;
 
 };
 

@@ -22,11 +22,13 @@
 #include "../ui/model/selectedworkdaymodel.h"
 #include "../ui/selecttaskdialog.h"
 #include "../ui/editorwizard.h"
+#include "../model/workdaylist.h"
 
 #include <QWizard>
 #include <QListView>
 #include <QTableView>
 #include <QMessageBox>
+#include <QDateTime>
 
 EditorController::EditorController(const QDomDocument& p_dataSource, QObject* p_parent)
     : QObject(p_parent)
@@ -193,7 +195,7 @@ EditorController::validateModel()
                 return;
             }
             
-            QList<WorkTime> workTimes = workTask.workTimes();
+            QList<WorkTime> workTimes = workTask.times();
             for (const WorkTime& workTime : workTimes) {
                 if (workTime.start().isNull()) {
                     emit validationError(tr("Work-task \"%1\" has no start time")
@@ -224,8 +226,9 @@ EditorController::updateActiveWorkTasks()
 {
     // Find the latest workday and see what's active and what is not. The latest work-day
     // is number of work-days minus 1 (zero-based index).
-    int countDays = WorkDay::count(m_dataSource);
-    WorkDay workDay = WorkDay::at(countDays - 1, m_dataSource);
+    WorkDayList workDayList(m_dataSource);
+    int countDays = workDayList.size();
+    WorkDay workDay = workDayList.at(countDays - 1);
     
     if (!workDay.isNull()) {
         WorkTask activeWorkTask;

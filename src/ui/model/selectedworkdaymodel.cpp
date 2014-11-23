@@ -17,6 +17,8 @@
 #include "selectedworkdaymodel.h"
 #include "../../model/task.h"
 
+#include <QDate>
+
 #include <algorithm>
 
 SelectedWorkDayModel::SelectedWorkDayModel(QObject* p_parent)
@@ -59,7 +61,7 @@ SelectedWorkDayModel::setData(const QModelIndex& p_index, const QVariant& p_valu
             QDomDocument dataSource = m_workday.dataSource();
             Task task(dataSource, name, QDate::currentDate());
             
-            WorkTask existingWorkTask = m_workday.workTask(task);
+            WorkTask existingWorkTask = m_workday.findWorkTask(task);
             WorkTask workTask         = m_workTasks.at(p_index.row());
             
             // If the to-be-changed work-task is different from another worktask that
@@ -120,7 +122,7 @@ SelectedWorkDayModel::appendTask(const QString& p_name)
     QDomDocument dataSource = m_workday.dataSource();
     Task task(dataSource, p_name, QDate::currentDate());
     
-    WorkTask workTask = m_workday.workTask(task);
+    WorkTask workTask = m_workday.findWorkTask(task);
     if (!workTask.isNull()) {
         emit taskAlreadyExists(p_name);
         return;
@@ -131,7 +133,7 @@ SelectedWorkDayModel::appendTask(const QString& p_name)
     // We know nothing about this task right now, other than it exists. The setData() 
     // method has to do all the heavy lifting to figure out where it belongs once it
     // receives a name.
-    m_workTasks.append(WorkTask(dataSource, m_workday.node(), task));
+    m_workTasks.append(WorkTask(dataSource, task));
     
     endInsertRows();
 }
@@ -160,7 +162,7 @@ SelectedWorkDayModel::removeTasks(QModelIndexList p_indexes)
         
         WorkTask workTask = m_workTasks.at(index.row());
         m_workTasks.removeAt(index.row());
-        workTask.remove();
+        workTask.clear();
         
         endRemoveRows();
     }

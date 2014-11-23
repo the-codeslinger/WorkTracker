@@ -16,6 +16,8 @@
 
 #include "worktaskmodel.h"
 
+#include <QDateTime>
+
 WorkTaskModel::WorkTaskModel(QObject* p_parent)
     : QAbstractItemModel(p_parent)
 {
@@ -26,7 +28,7 @@ WorkTaskModel::setWorkTask(const WorkTask& p_workTask)
 {
     beginResetModel();
     m_workTask  = p_workTask;
-    m_workTimes = p_workTask.workTimes();
+    m_workTimes = p_workTask.times();
     endResetModel();
 }
 
@@ -146,7 +148,7 @@ WorkTaskModel::appendTime()
 {
     beginInsertRows(QModelIndex(), m_workTimes.size(), m_workTimes.size());
     
-    WorkTime workTime(m_workTask.dataSource());
+    WorkTime workTime(m_workTask.dataSource(), QDateTime(), QDateTime());
     m_workTask.addTime(workTime);
     m_workTimes.append(workTime);
     
@@ -213,7 +215,7 @@ WorkTaskModel::removeTimes(QModelIndexList p_indexes)
             beginRemoveRows(QModelIndex(), curIndex.row(), curIndex.row());
             
             m_workTimes.removeAt(curIndex.row());
-            workTime.remove();
+            workTime.clear();
             
             endRemoveRows();
         }

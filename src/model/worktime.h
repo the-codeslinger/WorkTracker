@@ -4,7 +4,7 @@
 #include "xmldata.h"
 
 /*!
- * Implements the DOM node of the work-task that contains the start and stop time.
+ * Implements the DOM element of the work-task that contains the start and stop time.
  */
 class WorkTime : public XmlData
 {
@@ -15,28 +15,20 @@ public:
     WorkTime();
     
     /*!
-     * Creates a new instance. The XML node will not be attached to the DOM until the
-     * parent is set.
+     * Creates a new instance from the DOM element.
      */
-    WorkTime(const QDomDocument& p_dataSource);
+    WorkTime(const QDomDocument& dataSource, const QDomElement& element);
     
     /*!
-     * Creates a new instance from the DOM node and the parent od that node.
+     * Creates a new instance with the start and stop time.
      */
-    WorkTime(const QDomDocument& p_dataSource, const QDomElement& p_node, 
-             const QDomNode& p_parent);
-    
-    /*!
-     * Creates a new instance with the start and stop time that is immediately attached to
-     * the DOM tree through the parent.
-     */
-    WorkTime(const QDomDocument& p_dataSource, const QDomNode& p_parent, 
-             const QDateTime& p_start, const QDateTime& p_stop);
+    WorkTime(const QDomDocument& dataSource, const QDateTime& start, 
+             const QDateTime& stop);
     
     /*!
      * Copy constructor.
      */
-    WorkTime(const WorkTime& p_other);
+    WorkTime(const WorkTime& other);
     
     /*!
      * \return 
@@ -47,10 +39,10 @@ public:
     /*!
      * Set the start date-time.
      * 
-     * \param p_start
-     * The new start value. If is is null then the DOM node is cleared.
+     * \param start
+     * The new start value. If is is null then the DOM element is cleared.
      */
-    void setStart(const QDateTime& p_start);
+    void setStart(const QDateTime& start);
     
     /*!
      * \return 
@@ -61,33 +53,19 @@ public:
     /*!
      * Set the stop date-time.
      * 
-     * \param p_stop
-     * The new stop value. If is is null then the DOM node is cleared.
+     * \param stop
+     * The new stop value. If is is null then the DOM element is cleared.
      */
-    void setStop(const QDateTime& p_stop);
+    void setStop(const QDateTime& stop);
     
     /*!
      * \return 
      * Returns the total amount of seconds between start and stop.
      */
     qint64 timeInSeconds() const;
-    
+
 protected:
-    /*!
-     * Creates a new DOM node with the given start and stop times. Depending on whether
-     * the data-source and parent are set the respective DOM nodes are created.
-     * 
-     * \param p_parent
-     * The node's parent node.
-     * 
-     * \param p_start
-     * The new start value. If is is null then the DOM node is empty.
-     * 
-     * \param p_stop
-     * The new stop value. If is is null then the DOM node is empty.
-     */
-    void createNode(const QDomNode& p_parent, const QDateTime& p_start, 
-                    const QDateTime& p_stop);
+    QString elementName() const;
 };
 
 #endif // WORKTIME_H

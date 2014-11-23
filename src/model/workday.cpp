@@ -18,40 +18,30 @@
 #include "task.h"
 #include "../helper.h"
 
-#include <QDomDocument>
 #include <QTextStream>
 #include <QMapIterator>
-#include <QDebug>
+#include <QDateTime>
 
 #include <algorithm>
 
+static const QString g_elementName = "workday";
+
 WorkDay::WorkDay()
     : XmlData()
+{ }
+
+
+WorkDay::WorkDay(const QDomDocument& dataSource, const QDomElement& node)
+    : XmlData(dataSource, node)
 {
 }
 
-WorkDay::WorkDay(const QDomDocument& p_dataSource)
-    : XmlData(p_dataSource)
+WorkDay::WorkDay(const QDomDocument& dataSource, const QDateTime& start, 
+                 const QDateTime& stop)
+    : XmlData(dataSource, g_elementName)
 {
-    createNode(QDateTime(), QDateTime());
-}
-
-WorkDay::WorkDay(const QDomDocument& p_dataSource, const QDomElement& p_node)
-    : XmlData(p_dataSource, p_node)
-{
-}
-
-WorkDay::WorkDay(const QDomDocument& p_dataSource, const QDateTime& p_start)
-    : XmlData(p_dataSource)
-{
-    createNode(p_start, QDateTime());
-}
-
-WorkDay::WorkDay(const QDomDocument& p_dataSource, const QDateTime& p_start, 
-                 const QDateTime& p_stop)
-    : XmlData(p_dataSource)
-{
-    createNode(p_start, p_stop);
+    setAttribute("start", start);
+    setAttribute("stop",  stop);
 }
 
 QDateTime
@@ -61,9 +51,9 @@ WorkDay::start() const
 }
 
 void
-WorkDay::setStart(const QDateTime& p_start)
+WorkDay::setStart(const QDateTime& start)
 {
-    setAttribute("start", p_start);
+    setAttribute("start", start);
 }
 
 QDateTime
@@ -73,35 +63,23 @@ WorkDay::stop() const
 }
 
 void
-WorkDay::setStop(const QDateTime& p_stop)
+WorkDay::setStop(const QDateTime& stop)
 {
-    setAttribute("stop", p_stop);
+    setAttribute("stop", stop);
 }
 
 void
-WorkDay::addWorkTask(const WorkTask& p_task)
+WorkDay::addWorkTask(const WorkTask& task)
 {
-    QDomNode workTask = p_task.node();
-    if (!workTask.isNull() && !m_node.isNull()) {
-        m_node.appendChild(workTask);
-    }
+    appendChild(task);
 }
 
 WorkTask 
-WorkDay::workTask(const Task& p_task) const
+WorkDay::findWorkTask(const Task& task) const
 {
-    return findWorkTask([p_task](const WorkTask& p_workTask) {
-        return p_workTask.task().id() == p_task.id();
+    return findWorkTask([task](const WorkTask& workTask) {
+        return workTask.task().id() == task.id();
     });
-}
-
-void
-WorkDay::createNode(const QDateTime& p_start, const QDateTime& p_stop)
-{
-    m_node = m_dataSource.createElement("workday");
-
-    setAttribute("start", p_start);
-    setAttribute("stop",  p_stop);
 }
 
 QString
@@ -114,16 +92,16 @@ WorkDay::generateSummary() const
          << "<body><ul>";
 
     QMap<QString, int> durations;
-    iterateWorkTasks([&durations](const WorkTask& p_workTask) {
-        Task task = p_workTask.task();
+    iterateWorkTasks([&durations](const WorkTask& workTask) {
+        Task task = workTask.task();
         
         QMap<QString, int>::iterator found = durations.find(task.name());
         if (found == durations.end()) {
-            durations.insert(task.name(), p_workTask.timeInSeconds());
+            durations.insert(task.name(), workTask.timeInSeconds());
         }
         else {
             int& totalTime = found.value();
-            totalTime += p_workTask.timeInSeconds();
+            totalTime += workTask.timeInSeconds();
         }
     });
 
@@ -144,52 +122,11 @@ WorkDay::generateSummary() const
     return value;
 }
 
-WorkDay
-WorkDay::findLastOpen(const QDomDocument& p_dataSource)
-{
-    QDomElement root = p_dataSource.documentElement();
-    QDomElement days = root.firstChildElement("workdays");
-
-    QDomNodeList children = days.childNodes();
-
-    // Fetch the last item of the list which is the only one that can still be unfinished
-    int count = children.count();
-    if (count == 0) {
-        return WorkDay();
-    }
-
-    QDomNode day = children.item(count - 1);
-    if (day.isNull() || !day.isElement()) {
-        return WorkDay();
-    }
-
-    QDomNamedNodeMap attributes = day.attributes();
-    QDomAttr stopAttr = attributes.namedItem("stop").toAttr();
-    if (stopAttr.isNull() || stopAttr.value().isEmpty()) {
-        // No "stop" attribute means that this day is still ongoing
-        return fromDomNode(day.toElement(), p_dataSource);
-    }
-
-    return WorkDay();
-}
-
-WorkDay
-WorkDay::fromDomNode(const QDomElement& p_node, const QDomDocument& p_dataSource)
-{
-    QDomNamedNodeMap attributes = p_node.attributes();
-    QDomAttr dateAttr = attributes.namedItem("start").toAttr();
-    if (dateAttr.isNull()) {
-        return WorkDay();
-    }
-    
-    return WorkDay(p_dataSource, p_node);
-}
-
 WorkTask
 WorkDay::activeWorkTask() const
 {
-    return findWorkTask([](const WorkTask& p_workTask) {
-        return p_workTask.isActiveTask();
+    return findWorkTask([](const WorkTask& workTask) {
+        return workTask.isActiveTask();
     });
 }
 
@@ -197,53 +134,22 @@ int
 WorkDay::totalTime() const
 {
     int duration = 0;
-    iterateWorkTasks([&duration](const WorkTask& p_workTask) {
-        duration += p_workTask.timeInSeconds();
+    iterateWorkTasks([&duration](const WorkTask& workTask) {
+        duration += workTask.timeInSeconds();
     });
     return duration;
-}
-
-int
-WorkDay::count(const QDomDocument& p_dataSource)
-{
-    QDomNodeList nodes = getWorkDayNodes(p_dataSource);
-    return nodes.size();
-}
-
-WorkDay
-WorkDay::at(int p_index, const QDomDocument& p_dataSource)
-{
-    QDomNodeList nodes = getWorkDayNodes(p_dataSource);
-    QDomNode workday = nodes.at(p_index);
-    return fromDomNode(workday.toElement(), p_dataSource);
-}
-
-QDomNodeList
-WorkDay::getWorkDayNodes(const QDomDocument& p_dataSource)
-{
-    QDomElement root  = p_dataSource.documentElement();
-    if (root.isNull()) {
-        return QDomNodeList();
-    }
-
-    QDomNode workdays = root.firstChildElement("workdays");
-    if (workdays.isNull()) {
-        return QDomNodeList();
-    }
-
-    return workdays.childNodes();
 }
 
 QList<Task>
 WorkDay::distinctTasks() const
 {
     QList<Task> tasks;
-    iterateWorkTasks([&tasks](const WorkTask& p_workTask) {
-        Task task = p_workTask.task();
+    iterateWorkTasks([&tasks](const WorkTask& workTask) {
+        Task task = workTask.task();
         
         auto found = std::find_if(std::begin(tasks), std::end(tasks),
-                                  [task](const Task& p_task) {
-            return task.id() == p_task.id();
+                                  [task](const Task& task) {
+            return task.id() == task.id();
         });
 
         if (found == std::end(tasks)) {
@@ -257,45 +163,37 @@ QList<WorkTask>
 WorkDay::workTasks() const
 {
     QList<WorkTask> tasks;
-            
-    QDomNodeList children = m_node.childNodes();
-    int count = children.size();
-    for (int c = 0; c < count; c++) {
-        QDomNode node = children.at(c);
-        if ("task" == node.nodeName() && node.isElement()) {
-            tasks << WorkTask(m_dataSource, node.toElement(), m_node);
-        }
-    }
+    
+    forEachNode(m_element.childNodes(), [&tasks, this](const QDomElement& element) {
+        tasks << WorkTask(m_dataSource, element);
+    });
     
     return tasks;
 }
 
 void 
-WorkDay::iterateWorkTasks(std::function<void(const WorkTask&)> p_predicate) const
+WorkDay::iterateWorkTasks(std::function<void(const WorkTask&)> predicate) const
 {
-    QDomNodeList children = m_node.childNodes();
-    int count = children.size();
-    for (int c = 0; c < count; c++) {
-        QDomNode node = children.at(c);
-        if ("task" == node.nodeName() && node.isElement()) {
-            p_predicate(WorkTask(m_dataSource, node.toElement(), m_node));
+    forEachNode(m_element.childNodes(), [this, predicate](const QDomElement& element) {
+        if ("task" == element.nodeName()) {
+            predicate(WorkTask(m_dataSource, element));
         }
-    }
+    });
 }
 
 WorkTask 
-WorkDay::findWorkTask(std::function<bool(const WorkTask&)> p_predicate) const
+WorkDay::findWorkTask(std::function<bool(const WorkTask&)> predicate) const
 {
-    QDomNodeList children = m_node.childNodes();
-    int count = children.size();
-    for (int c = 0; c < count; c++) {
-        QDomNode node = children.at(c);
-        if ("task" == node.nodeName() && node.isElement()) {
-            WorkTask workTask(m_dataSource, node.toElement(), m_node);
-            if (p_predicate(workTask)) {
-                return workTask;
-            }
+    auto element = findFirstNode(m_element.childNodes(), 
+                                 [this, predicate](const QDomElement& element) {
+        if ("task" == element.nodeName()) {
+            WorkTask workTask(m_dataSource, element);
+            return predicate(workTask);
         }
+        return false;
+    });
+    if (!element.isNull()) {
+        return WorkTask(m_dataSource, element);
     }
     
     return WorkTask();
