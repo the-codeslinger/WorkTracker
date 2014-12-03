@@ -22,17 +22,14 @@
 
 static const QString g_elementName = "tasks";
 
+TaskList::TaskList()
+    : XmlData()
+{ }
+
 TaskList::TaskList(const QDomDocument& dataSource)
     : XmlData(dataSource, QDomElement())
 {
-    QDomElement root = m_dataSource.documentElement();
-    if (!root.isNull()) {
-        m_element = root.firstChildElement(g_elementName);
-        if (m_element.isNull()) {
-            m_element = m_dataSource.createElement(g_elementName);
-            root.appendChild(m_element);
-        }
-    }
+    findOrCreateElement();
 }
 
 void 

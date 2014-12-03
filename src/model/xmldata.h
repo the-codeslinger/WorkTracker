@@ -17,6 +17,8 @@
 #ifndef XMLDATA_H
 #define XMLDATA_H
 
+#include "datasource.h"
+
 #include <QDomElement>
 #include <QDomDocument>
 
@@ -46,7 +48,7 @@ public:
      * Returns the data source of this XML data object. Do not delete the `QDomDocument`
      * instance.
      */
-    QDomDocument dataSource() const;
+    DataSource dataSource() const;
     
     /*!
      * Set the data source from which to read the data.
@@ -54,7 +56,7 @@ public:
      * \param dataSource
      * A loaded XML file. Ownership of the data source stays with the calling code.
      */
-    void setDataSource(const QDomDocument& dataSource);
+    void setDataSource(const DataSource& dataSource);
 
     /*!
      * \return
@@ -127,12 +129,12 @@ protected:
      * Creates a new instance with a data source and a DOM element with the specified 
      * name.
      */
-    XmlData(const QDomDocument& dataSource, const QString& name);
+    XmlData(DataSource dataSource, const QString& name);
 
     /*!
      * Creates a new instance with a data source and a DOM element.
      */
-    XmlData(const QDomDocument& dataSource, const QDomElement& element);
+    XmlData(DataSource dataSource, const QDomElement& element);
 
     /*!
      * Copy the values from another instance. This is not a deep copy. In the end both
@@ -158,21 +160,9 @@ protected:
     QString attributeString(const QString& name) const;
     
     /*!
-     * Gets the given element's attribute value as a string. 
-     */
-    __declspec(deprecated)
-    QString attributeString(const QString& name, const QDomElement& element) const;
-    
-    /*!
      * Gets a current element's attribute value as a date-time. 
      */
     QDateTime attributeDateTime(const QString& name) const;
-    
-    /*!
-     * Gets the given element's attribute value as a date-time. 
-     */
-    __declspec(deprecated)
-    QDateTime attributeDateTime(const QString& name, const QDomElement& element) const;
     
     /*!
      * Gets a current element's attribute value as a date. 
@@ -180,20 +170,9 @@ protected:
     QDate attributeDate(const QString& name) const;
     
     /*!
-     * Gets the given element's attribute value as a date. 
-     */
-    __declspec(deprecated)
-    QDate attributeDate(const QString& name, const QDomElement& element) const;
-    
-    /*!
      * Gets a current element's attribute value as an integer. 
      */
     int attributeInt(const QString& name) const;
-    
-    /*!
-     * Gets the given element's attribute value as an integer. 
-     */
-    int attributeInt(const QString& name, const QDomElement& element) const;
 
     /*!
      * Add a new attribute to the element or assign a new value to an already existing
@@ -256,7 +235,7 @@ protected:
     /*!
      * The DOM document that represents the XML database file.
      */
-    QDomDocument m_dataSource;
+    DataSource m_dataSource;
     /*!
      * The link into the DOM tree that represents exactly one item of a specific (
      * arbitrarily complex) model class.

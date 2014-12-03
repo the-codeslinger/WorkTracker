@@ -269,11 +269,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="src\controller\abstractcontroller.cpp" />
     <ClCompile Include="src\controller\editorcontroller.cpp" />
     <ClCompile Include="src\controller\preferencescontroller.cpp" />
     <ClCompile Include="src\controller\worktrackercontroller.cpp" />
     <ClCompile Include="src\helper.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\model\datasource.cpp" />
     <ClCompile Include="src\model\task.cpp" />
     <ClCompile Include="src\model\tasklist.cpp" />
     <ClCompile Include="src\model\workday.cpp" />
@@ -536,7 +538,9 @@
     <ClInclude Include="build\GeneratedFiles\ui_selecttaskdialog.h" />
     <ClInclude Include="build\GeneratedFiles\ui_selectworkdaywidget.h" />
     <ClInclude Include="build\GeneratedFiles\ui_worktracker.h" />
+    <ClInclude Include="src\controller\abstractcontroller.h" />
     <ClInclude Include="src\helper.h" />
+    <ClInclude Include="src\model\datasource.h" />
     <ClInclude Include="src\model\tasklist.h" />
     <ClInclude Include="src\model\workday.h" />
     <ClInclude Include="src\model\workdaylist.h" />

@@ -30,6 +30,12 @@ class TaskList : public XmlData
 {
 public:
     /*!
+     * Creates a new task list that cannot be reasonably used until 
+     * `TaskList::setDataSource(const QDomDocument&)` is called.
+     */
+    TaskList();
+
+    /*!
      * Creates a new instance with a data source. If the <tasks> element doesn't exist it
      * is created.
      */

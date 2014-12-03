@@ -233,6 +233,12 @@
     <ClCompile Include="src\model\WorkDayList.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
+    <ClCompile Include="src\controller\abstractcontroller.cpp">
+      <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\datasource.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="icons.qrc">
@@ -401,6 +407,12 @@
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="src\model\WorkDayList.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controller\abstractcontroller.h">
+      <Filter>Header Files\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model\datasource.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
   </ItemGroup>

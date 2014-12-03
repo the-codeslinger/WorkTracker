@@ -23,17 +23,17 @@
 XmlData::XmlData()
 { }
 
-XmlData::XmlData(const QDomDocument& dataSource, const QString& name)
-    : m_dataSource(dataSource)
+XmlData::XmlData(DataSource dataSource, const QString& name)
+    : m_dataSource(std::move(dataSource))
 {
     if (!dataSource.isNull()) {
 
-        m_element = m_dataSource.createElement(name);
+        m_element = m_dataSource.document().createElement(name);
     }
 }
 
-XmlData::XmlData(const QDomDocument& dataSource, const QDomElement& element)
-    : m_dataSource(dataSource)
+XmlData::XmlData(DataSource dataSource, const QDomElement& element)
+    : m_dataSource(std::move(dataSource))
     , m_element(element)
 { }
 
@@ -50,20 +50,20 @@ XmlData::operator=(const XmlData& other)
     return *this;
 }
 
-QDomDocument
+DataSource
 XmlData::dataSource() const
 {
     return m_dataSource;
 }
 
 void
-XmlData::setDataSource(const QDomDocument& dataSource)
+XmlData::setDataSource(const DataSource& dataSource)
 {
     // New data source means to reset the connection to the current DOM.
     m_element.clear();
     m_dataSource = dataSource;
     if (!dataSource.isNull()) {
-        m_element = m_dataSource.createElement(elementName());
+        m_element = m_dataSource.document().createElement(elementName());
     }
 }
 
@@ -169,49 +169,25 @@ XmlData::setAttribute(const QString& name, int value)
 QString 
 XmlData::attributeString(const QString& name) const
 {
-    return attributeString(name, m_element);
-}
-
-QString 
-XmlData::attributeString(const QString& name, const QDomElement& element) const
-{
-    return element.attribute(name);
+    return m_element.attribute(name);
 }
 
 QDateTime 
 XmlData::attributeDateTime(const QString& name) const
 {
-    return attributeDateTime(name, m_element);
-}
-
-QDateTime 
-XmlData::attributeDateTime(const QString& name, const QDomElement& element) const
-{
-    return QDateTime::fromString(attributeString(name, element), Qt::ISODate);
+    return QDateTime::fromString(attributeString(name), Qt::ISODate);
 }
 
 QDate
 XmlData::attributeDate(const QString& name) const
 {
-    return attributeDate(name, m_element);
-}
-
-QDate 
-XmlData::attributeDate(const QString& name, const QDomElement& element) const
-{
-    return QDate::fromString(attributeString(name, element), Qt::ISODate);
+    return QDate::fromString(attributeString(name), Qt::ISODate);
 }
 
 int 
 XmlData::attributeInt(const QString& name) const
 {
-    return attributeInt(name, m_element);
-}
-
-int 
-XmlData::attributeInt(const QString& name, const QDomElement& element) const
-{
-    QString dt = attributeString(name, element);
+    QString dt = attributeString(name);
     bool ok = false;
     int number = dt.toInt(&ok);
     return ok ? number : XmlData::invalidId;
