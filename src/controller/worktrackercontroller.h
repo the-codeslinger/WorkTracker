@@ -17,6 +17,7 @@
 #ifndef WORKTRACKERCONTROLLER_H
 #define WORKTRACKERCONTROLLER_H
 
+#include "abstractcontroller.h"
 #include "../model/workday.h"
 #include "../model/worktask.h"
 #include "../model/worktime.h"
@@ -29,12 +30,10 @@
 #include <QTime>
 #include <QDateTime>
 #include <QTimer>
-#include <QDomDocument>
 #include <QMap>
 
 class TaskListModel;
 class WorkTracker;
-class PreferencesController;
 class QTranslator;
 
 /*!
@@ -48,27 +47,18 @@ class QTranslator;
  * state of the application. The same goes for `toggleTask(QString)`. Both methods emit
  * signals to convey the current status as a result of the `toggle*()` methods.
  */
-class WorkTrackerController : public QObject
+class WorkTrackerController : public AbstractController,
+                              public QObject
 {
     Q_OBJECT
 public:
     /*!
-     * Create a new controller with a data source. `dataSource` is owned by client code,
-     * the controller only uses it as a reference.
+     * Create a new controller.
+     * 
+     * \param[in] location
+     * Full filename of the database if specified by the user on the command line.
      */
-    WorkTrackerController(const QDomDocument& dataSource);
-
-    /*!
-     * Sets the user interface implementation `ui`. This injects the `TaskListModel`
-     * into the UI and stores the reference. Calling `run()` after that shows the UI.
-     */
-    void setUi(WorkTracker* ui);
-
-    /*!
-     * Loads a previously opened but not yet finished workday and shows the UI. Emits the
-     * signal `workDayStarted(QDateTime)` if an unfinished workday was loaded.
-     */
-    void run();
+    WorkTrackerController(const QString& databaseLocation);
 
     /*!
      * Closes any open task in order to not loose any data.
@@ -203,11 +193,6 @@ public slots:
      * Shows the editor wizard.
      */
     void showEditor();
-    
-    /*!
-     * Shows the settings dialog.
-     */
-    void showPreferences();
 
     /**
      * Installs the language based on the locale.
@@ -219,19 +204,6 @@ public slots:
     void setLanguage(const QString& p_locale);
 
 private:
-    /*!
-     * The loaded XML database.
-     */
-    QDomDocument m_dataSource;
-    /*!
-     * The user interface.
-     */
-    WorkTracker* m_ui;
-    /*!
-     * The Qt Model View based model as injected into the UI.
-     */
-    TaskListModel* m_taskListModel;
-
     /*!
      * The currently recorded workday.
      */
@@ -265,11 +237,6 @@ private:
      * The timer is used to fire every minute when a task is currently running.
      */
     QTimer m_timer;
-    
-    /*!
-     * Lazily created settings controller and dialog.
-     */
-    PreferencesController* m_preferencesController;
 
     /*!
      * Maps the locale to the Qt and the application translation.
@@ -314,6 +281,12 @@ private:
      * and sets the system's language or the one the user selected.
      */
     void loadTranslations();
+
+    /*!
+     * Loads the database from the location passed as arguments, the default location
+     * or creates a new one from scratch.
+     */
+    void loadOrCreateDatabase(const QString& location);
 };
 
 #endif // WORKTRACKERCONTROLLER_H

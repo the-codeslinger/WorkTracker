@@ -28,31 +28,31 @@
 #include <QTranslator>
 #include <QMapIterator>
 #include <QSettings>
+#include <QStandardPaths>
 
 static const int TIMER_TIMEOUT = 30 * 1000;
 
-WorkTrackerController::WorkTrackerController(const QDomDocument& dataSource)
-    : m_dataSource(dataSource)
-    , m_taskListModel(nullptr)
-    , m_taskList(dataSource)
-    , m_WorkDayList(dataSource)
+WorkTrackerController::WorkTrackerController(const QString& databaseLocation)
+    : AbstractController()
     , m_isNewWorkDay(false)
     , m_isRecording(false)
-    , m_preferencesController(nullptr)
 {
-    connect(&m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
+    loadOrCreateDatabase(databaseLocation);
     loadTranslations();
+
+    connect(&m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
 }
 
+/*
+    TODO: Remove language
 void
 WorkTrackerController::setUi(WorkTracker* ui)
 {
-    m_ui = ui;
-    m_taskListModel = new TaskListModel(m_dataSource, this);
-    m_ui->setTaskListModel(m_taskListModel);
     m_ui->setLanguageChecked(m_currentLocale);
 }
+*/
 
+/*
 void
 WorkTrackerController::run()
 {
@@ -77,6 +77,7 @@ WorkTrackerController::run()
         }
     }
 }
+*/
 
 void
 WorkTrackerController::toggleWorkDay()
@@ -262,18 +263,6 @@ WorkTrackerController::showEditor()
     econ.run();
 }
 
-void 
-WorkTrackerController::showPreferences()
-{
-    if (nullptr == m_preferencesController) {
-        m_preferencesController = new PreferencesController(m_ui, this);
-        connect(m_preferencesController, &PreferencesController::languageChanged,
-                this,                    &WorkTrackerController::setLanguage);
-    }
-    
-    m_preferencesController->run();
-}
-
 void
 WorkTrackerController::setLanguage(const QString& p_locale)
 {
@@ -405,4 +394,10 @@ WorkTrackerController::findOrCreateTask(const QString& name)
         m_taskList.add(found);
     }
     return found;
+}
+
+void 
+WorkTrackerController::loadOrCreateDatabase(const QString& location)
+{
+
 }
