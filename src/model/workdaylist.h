@@ -18,6 +18,7 @@
 #define WORKDAYLIST_H
 
 #include "xmldata.h"
+#include "datasource.h"
 
 class WorkDay;
 
@@ -25,9 +26,9 @@ class WorkDayList : public XmlData
 {
 public:
     WorkDayList();
-    WorkDayList(const QDomDocument& dataSource);
+    WorkDayList(DataSource dataSource);
     
-    void setDataSource(const QDomDocument& dataSource);
+    void setDataSource(DataSource dataSource);
 
     int size() const;
     WorkDay findLastOpen() const;

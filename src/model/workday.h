@@ -18,6 +18,7 @@
 #define WORKDAY_H
 
 #include "xmldata.h"
+#include "datasource.h"
 #include "worktask.h"
 
 #include <QList>
@@ -47,13 +48,12 @@ public:
     /*!
      * Creates a new `WorkDay` with a data source and a DOM node.
      */
-    WorkDay(const QDomDocument& dataSource, const QDomElement& element);
+    WorkDay(DataSource dataSource, const QDomElement& element);
 
     /*!
      * Creates a new instance with a data source, a start and a stop timestamp.
      */
-    WorkDay(const QDomDocument& dataSource, const QDateTime& start, 
-            const QDateTime& stop);
+    WorkDay(DataSource dataSource, const QDateTime& start, const QDateTime& stop);
 
     /*!
      * \return

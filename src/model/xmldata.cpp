@@ -169,25 +169,49 @@ XmlData::setAttribute(const QString& name, int value)
 QString 
 XmlData::attributeString(const QString& name) const
 {
-    return m_element.attribute(name);
+    return attributeString(name, m_element);
+}
+
+QString 
+XmlData::attributeString(const QString& name, const QDomElement& element) const
+{
+    return element.attribute(name);
 }
 
 QDateTime 
 XmlData::attributeDateTime(const QString& name) const
 {
-    return QDateTime::fromString(attributeString(name), Qt::ISODate);
+    return attributeDateTime(name, m_element);
+}
+
+QDateTime 
+XmlData::attributeDateTime(const QString& name, const QDomElement& element) const
+{
+    return QDateTime::fromString(attributeString(name, element), Qt::ISODate);
 }
 
 QDate
 XmlData::attributeDate(const QString& name) const
 {
-    return QDate::fromString(attributeString(name), Qt::ISODate);
+    return attributeDate(name, m_element);
+}
+
+QDate 
+XmlData::attributeDate(const QString& name, const QDomElement& element) const
+{
+    return QDate::fromString(attributeString(name, element), Qt::ISODate);
 }
 
 int 
 XmlData::attributeInt(const QString& name) const
 {
-    QString dt = attributeString(name);
+    return attributeInt(name, m_element);
+}
+
+int 
+XmlData::attributeInt(const QString& name, const QDomElement& element) const
+{
+    QString dt = attributeString(name, element);
     bool ok = false;
     int number = dt.toInt(&ok);
     return ok ? number : XmlData::invalidId;

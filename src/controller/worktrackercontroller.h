@@ -47,8 +47,8 @@ class QTranslator;
  * state of the application. The same goes for `toggleTask(QString)`. Both methods emit
  * signals to convey the current status as a result of the `toggle*()` methods.
  */
-class WorkTrackerController : public AbstractController,
-                              public QObject
+class WorkTrackerController : public QObject, public AbstractController
+                              
 {
     Q_OBJECT
 public:
@@ -281,12 +281,6 @@ private:
      * and sets the system's language or the one the user selected.
      */
     void loadTranslations();
-
-    /*!
-     * Loads the database from the location passed as arguments, the default location
-     * or creates a new one from scratch.
-     */
-    void loadOrCreateDatabase(const QString& location);
 };
 
 #endif // WORKTRACKERCONTROLLER_H

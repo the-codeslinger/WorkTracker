@@ -19,6 +19,8 @@
 
 #include "../model/datasource.h"
 
+#include <QString>
+
 /*!
  * Base class for all controllers that share working on the XML database.
  */
@@ -36,7 +38,7 @@ protected:
      * Constructor for derived classes that create the data source, either by loading
      * from a file or constructing it in memory.
      */
-    AbstractController();
+    AbstractController(QString databaseLocation);
 
     /*!
      * Constructor for derived classes that receive a data source as part of their 

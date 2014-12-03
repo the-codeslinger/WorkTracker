@@ -1,6 +1,8 @@
 #ifndef SELECTTASKDIALOG_H
 #define SELECTTASKDIALOG_H
 
+#include "../model/datasource.h"
+
 #include <QDialog>
 #include <QDomDocument>
 
@@ -21,7 +23,7 @@ public:
      * Create a new dialog. The data-source is needed to create the model that the 
      * completer uses.
      */
-    SelectTaskDialog(const QDomDocument& p_dataSource, QWidget* p_parent = nullptr);
+    SelectTaskDialog(DataSource dataSource, QWidget* parent = nullptr);
     
     /*!
      * Releases the ui resources.
@@ -39,7 +41,7 @@ protected slots:
      * Evaluates the current content of the line-edit and enables or disables the OK
      * button accordingly.
      */
-    void textChanged(const QString& p_text);
+    void textChanged(const QString& text);
     
 private:
     Ui::SelectTaskDialog* ui;

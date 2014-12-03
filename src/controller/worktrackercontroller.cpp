@@ -33,12 +33,31 @@
 static const int TIMER_TIMEOUT = 30 * 1000;
 
 WorkTrackerController::WorkTrackerController(const QString& databaseLocation)
-    : AbstractController()
+    : QObject()
+    , AbstractController(databaseLocation)
     , m_isNewWorkDay(false)
     , m_isRecording(false)
 {
-    loadOrCreateDatabase(databaseLocation);
     loadTranslations();
+    if (!m_dataSource.load()) {
+        qDebug() << "Could not load database.";
+    }
+    else {
+        m_workday      = m_WorkDayList.findLastOpen();
+        m_isNewWorkDay = !m_workday.isNull();
+        if (m_isNewWorkDay) {
+            emit workDayStarted(m_workday.start());
+
+            m_recordingWorkTask = m_workday.activeWorkTask();
+            m_recordingWorkTime = m_recordingWorkTask.activeTime();
+            m_isRecording = !m_recordingWorkTime.isNull();
+            if (m_isRecording) {
+                m_timer.start(TIMER_TIMEOUT);
+                emit workTaskStarted(m_recordingWorkTime.start(),
+                                     m_recordingWorkTask.task().name());
+            }
+        }
+    }
 
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
 }
@@ -49,33 +68,6 @@ void
 WorkTrackerController::setUi(WorkTracker* ui)
 {
     m_ui->setLanguageChecked(m_currentLocale);
-}
-*/
-
-/*
-void
-WorkTrackerController::run()
-{
-    m_workday = m_WorkDayList.findLastOpen();
-
-    // The UI needs to be shown first or otherwise the displaying the status text for a
-    // running task can end up very short. If there's no UI then the shortening algorithm
-    // won't know the true available length of the label.
-    m_ui->show();
-
-    m_isNewWorkDay = !m_workday.isNull();
-    if (m_isNewWorkDay) {
-        emit workDayStarted(m_workday.start());
-
-        m_recordingWorkTask = m_workday.activeWorkTask();
-        m_recordingWorkTime = m_recordingWorkTask.activeTime();
-        m_isRecording = !m_recordingWorkTime.isNull();
-        if (m_isRecording) {
-            m_timer.start(TIMER_TIMEOUT);
-            emit workTaskStarted(m_recordingWorkTime.start(),
-                                 m_recordingWorkTask.task().name());
-        }
-    }
 }
 */
 
@@ -109,7 +101,9 @@ WorkTrackerController::toggleTask(QString name)
 void
 WorkTrackerController::close()
 {
-    // Nothing to do (any more) at the moment
+    if (!m_dataSource.save()) {
+        qDebug() << "Could not save database.";
+    }
 }
 
 bool
@@ -135,7 +129,7 @@ WorkTrackerController::startWorkDay(QDateTime p_now)
 {
     m_workday = WorkDay(m_dataSource, p_now, QDateTime());
 
-    QDomElement root = m_dataSource.documentElement();
+    QDomElement root = m_dataSource.document().documentElement();
     QDomElement days = root.firstChildElement("workdays");
 
     QDomNode elem = m_workday.element();
@@ -394,10 +388,4 @@ WorkTrackerController::findOrCreateTask(const QString& name)
         m_taskList.add(found);
     }
     return found;
-}
-
-void 
-WorkTrackerController::loadOrCreateDatabase(const QString& location)
-{
-
 }

@@ -2,6 +2,7 @@
 #define WORKTIME_H
 
 #include "xmldata.h"
+#include "datasource.h"
 
 /*!
  * Implements the DOM element of the work-task that contains the start and stop time.
@@ -17,13 +18,12 @@ public:
     /*!
      * Creates a new instance from the DOM element.
      */
-    WorkTime(const QDomDocument& dataSource, const QDomElement& element);
+    WorkTime(DataSource dataSource, const QDomElement& element);
     
     /*!
      * Creates a new instance with the start and stop time.
      */
-    WorkTime(const QDomDocument& dataSource, const QDateTime& start, 
-             const QDateTime& stop);
+    WorkTime(DataSource dataSource, const QDateTime& start, const QDateTime& stop);
     
     /*!
      * Copy constructor.

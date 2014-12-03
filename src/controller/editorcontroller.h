@@ -17,8 +17,10 @@
 #ifndef EDITORCONTROLLER_H
 #define EDITORCONTROLLER_H
 
+#include "abstractcontroller.h"
+#include "../model/datasource.h"
+
 #include <QObject>
-#include <QDomDocument>
 
 class WorkDayModel;
 class WorkTaskModel;
@@ -31,21 +33,21 @@ class WorkTask;
  * Handles all the requests and necessary tasks that are part of editing workdays and
  * their worktask items.
  */
-class EditorController : public QObject
+class EditorController : public QObject, public AbstractController
 {
     Q_OBJECT
 public:
     /*!
      * Create a new instance of the controller.
      *
-     * \param p_dataSource
+     * \param dataSource
      * The loaded XML database. The datasource itself is owned by calling code, the
      * controller only stores a reference for use.
      *
-     * \param p_parent
+     * \param parent
      * Parent of the controller.
      */
-    EditorController(const QDomDocument& p_dataSource, QObject* p_parent = nullptr);
+    EditorController(DataSource dataSource, QObject* parent = nullptr);
 
     /**
      * Show a modal wizard dialog and block until it is finished.
@@ -55,44 +57,38 @@ public:
     /*!
      * Set the wizard page that lets the user select a workday for editing.
      */
-    void setWizardPage(SelectWorkDayPage* p_page);
+    void setWizardPage(SelectWorkDayPage* page);
 
     /*!
      * Set the wizard page that lets the
      */
-    void setWizardPage(EditWorkTaskPage* p_page);
+    void setWizardPage(EditWorkTaskPage* page);
 
     /*!
      * Sets context specific data for the model of the select-workday page.
      */
-    void setModelData(WorkDayModel* p_model);
+    void setModelData(WorkDayModel* model);
 
     /*!
      * Sets context specific data for the select-task model of the edit-workday page.
      */
-    void setModelData(SelectedWorkDayModel* p_model);
+    void setModelData(SelectedWorkDayModel* model);
 
     /*!
      * Sets context specific data for the edit-worktask model of the edit-workday page.
      */
-    void setModelData(const QModelIndex& p_index, SelectedWorkDayModel* p_source,
-                      WorkTaskModel* p_destination);
-    
-    /*!
-     * \return 
-     * Returns the data-source to use for models.
-     */
-    QDomDocument dataSource() const;
+    void setModelData(const QModelIndex& index, SelectedWorkDayModel* source,
+                      WorkTaskModel* destination);
     
 signals:
     /*!
      * Emitted by `EditorController::validateModel()` if an error has been found in the
      * currently edited work-day's model.
      * 
-     * \param p_error
+     * \param error
      * A description of the error.
      */
-    void validationError(const QString& p_error);
+    void validationError(const QString& error);
     
     /*!
      * Emitted by `EditorController::validateModel()` if the currently edited work-day's 
@@ -103,7 +99,7 @@ signals:
     /*!
      * Emitted when the wizard is closed (no matter how) and there's an active task.
      */
-    void setActiveTask(const WorkTask& p_task);
+    void setActiveTask(const WorkTask& task);
     
     /*!
      * Emitted when the wizard is closed (no matter how) and there's no more active task.
@@ -145,10 +141,6 @@ public slots:
     void updateActiveWorkTasks();
 
 private:
-    /*!
-     * The loaded XML database.
-     */
-    QDomDocument m_dataSource;
 
     SelectWorkDayPage* m_selectWorkDayPage;
     EditWorkTaskPage*  m_editWorkTaskPage;

@@ -30,9 +30,9 @@
 #include <QMessageBox>
 #include <QDateTime>
 
-EditorController::EditorController(const QDomDocument& p_dataSource, QObject* p_parent)
-    : QObject(p_parent)
-    , m_dataSource(p_dataSource)
+EditorController::EditorController(DataSource dataSource, QObject* parent)
+    : QObject(parent)
+    , AbstractController(std::move(dataSource))
 {
 }
 
@@ -60,25 +60,25 @@ EditorController::run()
 }
 
 void
-EditorController::setModelData(WorkDayModel* p_model)
+EditorController::setModelData(WorkDayModel* model)
 {
-    p_model->setDataSource(m_dataSource);
+    model->setDataSource(m_dataSource);
 }
 
 void
-EditorController::setModelData(SelectedWorkDayModel* p_model)
+EditorController::setModelData(SelectedWorkDayModel* model)
 {
     QVariant value = m_selectWorkDayPage->selectedItem();
     if (value.canConvert<WorkDay>()) {
-        p_model->setWorkDay(qvariant_cast<WorkDay>(value));
+        model->setWorkDay(qvariant_cast<WorkDay>(value));
     }
 }
 
 void
-EditorController::setModelData(const QModelIndex& p_index, SelectedWorkDayModel* p_source,
-                               WorkTaskModel* p_destination)
+EditorController::setModelData(const QModelIndex& index, SelectedWorkDayModel* source,
+                               WorkTaskModel* destination)
 {
-    p_destination->setWorkTask(p_source->workTask(p_index));
+    destination->setWorkTask(source->workTask(index));
 }
 
 void 
@@ -169,12 +169,6 @@ EditorController::removeTime()
             model->removeTimes(indexes);
         }
     }
-}
-
-QDomDocument 
-EditorController::dataSource() const
-{
-    return m_dataSource;
 }
 
 void 

@@ -22,7 +22,7 @@
 #include <QDate>
 #include <QDebug>
 
-TaskListModel::TaskListModel(const QDomDocument& dataSource, QObject* parent)
+TaskListModel::TaskListModel(DataSource dataSource, QObject* parent)
     : QAbstractListModel(parent)
     , m_dataSource(dataSource)
     , m_taskList(dataSource)

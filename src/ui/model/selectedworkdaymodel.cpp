@@ -58,7 +58,7 @@ SelectedWorkDayModel::setData(const QModelIndex& p_index, const QVariant& p_valu
     if (Qt::EditRole == p_role) {
         QString name = p_value.toString();
         if (!name.isEmpty()) {
-            QDomDocument dataSource = m_workday.dataSource();
+            auto dataSource = m_workday.dataSource();
             Task task(dataSource, name, QDate::currentDate());
             
             WorkTask existingWorkTask = m_workday.findWorkTask(task);
@@ -119,7 +119,7 @@ SelectedWorkDayModel::appendTask(const QString& p_name)
         return;
     }
     
-    QDomDocument dataSource = m_workday.dataSource();
+    auto dataSource = m_workday.dataSource();
     Task task(dataSource, p_name, QDate::currentDate());
     
     WorkTask workTask = m_workday.findWorkTask(task);

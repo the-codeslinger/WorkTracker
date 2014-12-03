@@ -160,9 +160,19 @@ protected:
     QString attributeString(const QString& name) const;
     
     /*!
+     * Gets the given element's attribute value as a string. 
+     */
+    QString attributeString(const QString& name, const QDomElement& element) const;
+    
+    /*!
      * Gets a current element's attribute value as a date-time. 
      */
     QDateTime attributeDateTime(const QString& name) const;
+    
+    /*!
+     * Gets the given element's attribute value as a date-time. 
+     */
+    QDateTime attributeDateTime(const QString& name, const QDomElement& element) const;
     
     /*!
      * Gets a current element's attribute value as a date. 
@@ -170,9 +180,19 @@ protected:
     QDate attributeDate(const QString& name) const;
     
     /*!
+     * Gets the given element's attribute value as a date. 
+     */
+    QDate attributeDate(const QString& name, const QDomElement& element) const;
+    
+    /*!
      * Gets a current element's attribute value as an integer. 
      */
     int attributeInt(const QString& name) const;
+    
+    /*!
+     * Gets the given element's attribute value as an integer. 
+     */
+    int attributeInt(const QString& name, const QDomElement& element) const;
 
     /*!
      * Add a new attribute to the element or assign a new value to an already existing

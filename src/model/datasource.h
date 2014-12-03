@@ -47,11 +47,6 @@ public:
     DataSource(DataSource&& temp);
 
     /*!
-     * Saves the current state of the database and releases the resources.
-     */
-    ~DataSource();
-
-    /*!
      * \return
      * Returns the state of the data source. If it is correctly loaded then `false` is
      * returned. If there's a problem loading or creating the database then `true` is
@@ -64,6 +59,24 @@ public:
      * Returns the internal DOM document for use when DOM objects need to be created.
      */
     QDomDocument document() const;
+
+    /*!
+     * Reads the XML database from the given location, the default location in the user's
+     * data directory or creates a new one in memory which will be written to the default
+     * location.
+     * 
+     * \return
+     * `true` on success or `false` if any error occurred.
+     */
+    bool load();
+
+    /*!
+     * Saves the database to the location determined in `DataSource::load()`.
+     * 
+     * \return
+     * `true` on success or `false` if any error occurred.
+     */
+    bool save() const;
 
 private:
     QDomDocument m_dom;

@@ -5,9 +5,11 @@
 #include <QCompleter>
 #include <QPushButton>
 
-SelectTaskDialog::SelectTaskDialog(const QDomDocument& p_dataSource, QWidget* p_parent)
-    : QDialog(p_parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint
-                        | Qt::WindowCloseButtonHint)
+#include <algorithm>
+
+SelectTaskDialog::SelectTaskDialog(DataSource dataSource, QWidget* parent)
+    : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint
+                      | Qt::WindowCloseButtonHint)
     , ui(new Ui::SelectTaskDialog)
 {
     ui->setupUi(this);
@@ -16,7 +18,7 @@ SelectTaskDialog::SelectTaskDialog(const QDomDocument& p_dataSource, QWidget* p_
     QCompleter* completer = new QCompleter(this);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setFilterMode(Qt::MatchContains);
-    completer->setModel(new TaskListModel(p_dataSource, this));
+    completer->setModel(new TaskListModel(std::move(dataSource), this));
     ui->lineEdit->setCompleter(completer);
     
     connect(ui->lineEdit, &QLineEdit::textChanged, this, &SelectTaskDialog::textChanged);
@@ -34,7 +36,7 @@ SelectTaskDialog::taskName() const
 }
 
 void 
-SelectTaskDialog::textChanged(const QString& p_text)
+SelectTaskDialog::textChanged(const QString& text)
 {
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setDisabled(p_text.isEmpty());
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setDisabled(text.isEmpty());
 }

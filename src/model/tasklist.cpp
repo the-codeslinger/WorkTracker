@@ -26,16 +26,16 @@ TaskList::TaskList()
     : XmlData()
 { }
 
-TaskList::TaskList(const QDomDocument& dataSource)
-    : XmlData(dataSource, QDomElement())
+TaskList::TaskList(DataSource dataSource)
+    : XmlData(std::move(dataSource), QDomElement())
 {
     findOrCreateElement();
 }
 
 void 
-TaskList::setDataSource(const QDomDocument& dataSource)
+TaskList::setDataSource(DataSource dataSource)
 {
-    XmlData::setDataSource(dataSource);
+    XmlData::setDataSource(std::move(dataSource));
     findOrCreateElement();
 }
 
@@ -97,11 +97,11 @@ TaskList::find(std::function<bool(QDomElement)> predicate) const
 void 
 TaskList::findOrCreateElement()
 {
-    QDomElement root = m_dataSource.documentElement();
+    QDomElement root = m_dataSource.document().documentElement();
     if (!root.isNull()) {
         m_element = root.firstChildElement(g_elementName);
         if (m_element.isNull()) {
-            m_element = m_dataSource.createElement(g_elementName);
+            m_element = m_dataSource.document().createElement(g_elementName);
             root.appendChild(m_element);
         }
     }

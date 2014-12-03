@@ -18,6 +18,7 @@
 #define TASKLIST_H
 
 #include "xmldata.h"
+#include "datasource.h"
 #include <functional>
 
 class Task;
@@ -39,13 +40,13 @@ public:
      * Creates a new instance with a data source. If the <tasks> element doesn't exist it
      * is created.
      */
-    TaskList(const QDomDocument& dataSource);
+    TaskList(DataSource dataSource);
     
     /*!
      * Overrides the base class' version to call `TaskList::findOrCreateElement()` after
      * setting the new data source.
      */
-    void setDataSource(const QDomDocument& dataSource);
+    void setDataSource(DataSource dataSource);
 
     /*!
      * Returns the number of tasks in the task list.

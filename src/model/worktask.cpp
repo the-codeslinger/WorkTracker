@@ -21,18 +21,20 @@
 
 #include <QDateTime>
 
+#include <algorithm>
+
 static const QString g_elementName = "task";
 
 WorkTask::WorkTask()
     : XmlData()
 { }
 
-WorkTask::WorkTask(const QDomDocument& dataSource, const QDomElement& element)
-    : XmlData(dataSource, element)
+WorkTask::WorkTask(DataSource dataSource, const QDomElement& element)
+    : XmlData(std::move(dataSource), element)
 { }
 
-WorkTask::WorkTask(const QDomDocument& dataSource, const Task& task)
-    : XmlData(dataSource, g_elementName)
+WorkTask::WorkTask(DataSource dataSource, const Task& task)
+    : XmlData(std::move(dataSource), g_elementName)
 {
     setTask(task);
 }

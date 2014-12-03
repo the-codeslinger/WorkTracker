@@ -17,17 +17,19 @@
 #include "workdaymodel.h"
 #include "../../model/workday.h"
 
+#include <algorithm>
+
 WorkDayModel::WorkDayModel(QObject* p_parent)
     : QAbstractListModel(p_parent)
 {
 }
 
 void
-WorkDayModel::setDataSource(const QDomDocument& p_dataSource)
+WorkDayModel::setDataSource(DataSource p_dataSource)
 {
     beginResetModel();
     m_dataSource = p_dataSource;
-    m_workDayList.setDataSource(p_dataSource);
+    m_workDayList.setDataSource(std::move(p_dataSource));
     endResetModel();
 }
 

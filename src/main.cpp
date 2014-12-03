@@ -47,6 +47,7 @@ int main(int argc, char *argv[])
 
     WorkTrackerController controller(filePath);
     WorkTracker w(&controller);
+    w.show();
 
     int result = a.exec();
 

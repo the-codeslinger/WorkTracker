@@ -17,6 +17,7 @@
 #ifndef WORKDAYMODEL_H
 #define WORKDAYMODEL_H
 
+#include "../../model/datasource.h"
 #include "../../model/workdaylist.h"
 
 #include <QAbstractListModel>
@@ -35,32 +36,32 @@ public:
      * \param parent
      * The parent of the `TaskListModel`.
      */
-    explicit WorkDayModel(QObject* p_parent = nullptr);
+    explicit WorkDayModel(QObject* parent = nullptr);
 
     /*!
      * Set a new data source.
      *
-     * \param p_dataSource
+     * \param dataSource
      * The new data source from which to read the values. This replaces the old one. The
      * data source is only used, ownership stays with the calling code.
      */
-    void setDataSource(const QDomDocument& p_dataSource);
+    void setDataSource(DataSource dataSource);
 
     /*!
      * \return
      * Returns the number of workdays in the database.
      */
-    int rowCount(const QModelIndex& p_parent = QModelIndex()) const;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
     /*!
      * \return
      * Returns a specific workday from the database.
      */
-    QVariant data(const QModelIndex& p_index, int p_role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
 private:
-    QDomDocument m_dataSource;
-    WorkDayList  m_workDayList;
+    DataSource  m_dataSource;
+    WorkDayList m_workDayList;
 
 };
 

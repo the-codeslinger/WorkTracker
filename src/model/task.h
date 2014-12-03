@@ -18,6 +18,7 @@
 #define TASK_H
 
 #include "xmldata.h"
+#include "datasource.h"
 
 /*!
  * \brief A task is a named description of a certain kind of work.
@@ -40,18 +41,17 @@ public:
     /*!
      * Creates a new `Task` with a data source and a DOM node.
      */
-    Task(const QDomDocument& p_dataSource, const QDomElement& p_node);
+    Task(DataSource p_dataSource, const QDomElement& p_node);
 
     /*!
      * Creates a new instance with a data source, a name and the last-used date.
      */
-    Task(const QDomDocument& p_dataSource, const QString& p_name, 
-         const QDate& p_lastUsed);
+    Task(DataSource p_dataSource, const QString& p_name, const QDate& p_lastUsed);
 
     /*!
      * Creates a new instance with a data source, an id, a name and the last-used date.
      */
-    Task(const QDomDocument& p_dataSource, int p_id, const QString& p_name, 
+    Task(DataSource p_dataSource, int p_id, const QString& p_name, 
          const QDate& p_lastUsed);
 
     /*!

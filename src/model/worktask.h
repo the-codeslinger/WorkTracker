@@ -20,6 +20,7 @@
 #include "task.h"
 #include "xmldata.h"
 #include "worktime.h"
+#include "datasource.h"
 
 #include <QList>
 
@@ -47,12 +48,12 @@ public:
     /*!
      * Creates a new instance with based on the DOM element.
      */
-    WorkTask(const QDomDocument& dataSource, const QDomElement& element);
+    WorkTask(DataSource dataSource, const QDomElement& element);
     
     /*!
      * Creates a new instance with a task and the parent to assign the node to.
      */
-    WorkTask(const QDomDocument& dataSource, const Task& task);
+    WorkTask(DataSource dataSource, const Task& task);
     
     /*!
      * Copy constructor.

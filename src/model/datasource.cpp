@@ -24,8 +24,36 @@
 #include <QDir>
 #include <QDebug>
 
+#include <algorithm>
+
 DataSource::DataSource(const QString& location)
     : m_location(location)
+{ }
+
+DataSource::DataSource(const DataSource& other)
+    : m_dom(other.m_dom)
+    , m_location(other.m_location)
+{ }
+
+DataSource::DataSource(DataSource&& temp)
+    : m_dom(std::move(temp.m_dom))
+    , m_location(std::move(temp.m_location))
+{ }
+
+bool
+DataSource::isNull() const
+{
+    return m_dom.isNull();
+}
+
+QDomDocument
+DataSource::document() const
+{
+    return m_dom;
+}
+
+bool
+DataSource::load() 
 {
     if (m_location.isEmpty())  {
         // Set up the data source for our application, i.e. load an existing database or,
@@ -36,6 +64,7 @@ DataSource::DataSource(const QString& location)
         if (!dir.exists()) {
             if (dir.mkpath(path)) {
                 qDebug() << "Cannot create database dir: " << path;
+                return false;
             }
         }
         m_location = path + "/Database.xml";
@@ -60,34 +89,27 @@ DataSource::DataSource(const QString& location)
         root.appendChild(m_dom.createElement("workdays"));
     }
     xmlFile.close();
+
+    return true;
 }
 
-DataSource::DataSource(const DataSource& other)
-    : m_dom(other.m_dom)
-{ }
-
-DataSource::DataSource(DataSource&& temp)
-    : m_dom(std::move(temp.m_dom))
-{ }
-
-DataSource::~DataSource()
+bool
+DataSource::save() const
 {
     if (!m_dom.isNull()) {
         QFile xmlFile(m_location);
         if (!xmlFile.open(QIODevice::WriteOnly)) {
             qDebug() << "Cannot open XML file for writing.";
+            return false;
         }
         else {
             QTextStream out(&xmlFile);
             out.setCodec("UTF-8");
             m_dom.save(out, 2, QDomNode::EncodingFromTextStream);
             xmlFile.close();
+            return true;
         }
     }
-}
 
-bool
-DataSource::isNull() const
-{
-    return m_dom.isNull();
+    return false;
 }

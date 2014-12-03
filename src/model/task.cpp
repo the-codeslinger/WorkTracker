@@ -19,28 +19,28 @@
 #include <QDate>
 #include <QString>
 
+#include <algorithm>
+
 static const QString g_elementName = "item";
 
 Task::Task()
     : XmlData()
 { }
 
-Task::Task(const QDomDocument& dataSource, const QString& name, 
-           const QDate& lastUsed)
-    : Task(dataSource, Task::invalidId, name, lastUsed)
+Task::Task(DataSource dataSource, const QString& name, const QDate& lastUsed)
+    : Task(std::move(dataSource), Task::invalidId, name, lastUsed)
 { }
 
-Task::Task(const QDomDocument& dataSource, int p_id, const QString& name, 
-           const QDate& lastUsed)
-    : XmlData(dataSource, g_elementName)
+Task::Task(DataSource dataSource, int p_id, const QString& name, const QDate& lastUsed)
+    : XmlData(std::move(dataSource), g_elementName)
 {
     setAttribute("id", p_id);
     setAttribute("name", name);
     setAttribute("last_used", lastUsed);
 }
 
-Task::Task(const QDomDocument& dataSource, const QDomElement& node)
-    : XmlData(dataSource, node)
+Task::Task(DataSource dataSource, const QDomElement& node)
+    : XmlData(std::move(dataSource), node)
 { }
 
 Task::Task(const Task& other)

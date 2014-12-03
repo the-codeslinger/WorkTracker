@@ -31,14 +31,13 @@ WorkDay::WorkDay()
 { }
 
 
-WorkDay::WorkDay(const QDomDocument& dataSource, const QDomElement& node)
-    : XmlData(dataSource, node)
+WorkDay::WorkDay(DataSource dataSource, const QDomElement& node)
+    : XmlData(std::move(dataSource), node)
 {
 }
 
-WorkDay::WorkDay(const QDomDocument& dataSource, const QDateTime& start, 
-                 const QDateTime& stop)
-    : XmlData(dataSource, g_elementName)
+WorkDay::WorkDay(DataSource dataSource, const QDateTime& start, const QDateTime& stop)
+    : XmlData(std::move(dataSource), g_elementName)
 {
     setAttribute("start", start);
     setAttribute("stop",  stop);

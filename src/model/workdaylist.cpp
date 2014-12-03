@@ -19,22 +19,24 @@
 
 #include <QDateTime>
 
+#include <algorithm>
+
 static const QString g_elementName = "workdays";
 
 WorkDayList::WorkDayList()
     : XmlData()
 { }
 
-WorkDayList::WorkDayList(const QDomDocument& dataSource)
-    : XmlData(dataSource, QDomElement())
+WorkDayList::WorkDayList(DataSource dataSource)
+    : XmlData(std::move(dataSource), QDomElement())
 {
     findOrCreateElement();
 }
 
 void 
-WorkDayList::setDataSource(const QDomDocument& dataSource)
+WorkDayList::setDataSource(DataSource dataSource)
 {
-    XmlData::setDataSource(dataSource);
+    XmlData::setDataSource(std::move(dataSource));
     findOrCreateElement();
 }
 
@@ -84,11 +86,11 @@ WorkDayList::at(int index) const
 void 
 WorkDayList::findOrCreateElement()
 {
-    QDomElement root = m_dataSource.documentElement();
+    QDomElement root = m_dataSource.document().documentElement();
     if (!root.isNull()) {
         m_element = root.firstChildElement(g_elementName);
         if (m_element.isNull()) {
-            m_element = m_dataSource.createElement(g_elementName);
+            m_element = m_dataSource.document().createElement(g_elementName);
             root.appendChild(m_element);
         }
     }

@@ -17,6 +17,7 @@
 #ifndef TASKLISTMODEL_H
 #define TASKLISTMODEL_H
 
+#include "../../model/datasource.h"
 #include "../../model/tasklist.h"
 
 #include <QAbstractListModel>
@@ -40,7 +41,7 @@ public:
      * \param parent
      * The parent of the `TaskListModel`.
      */
-    TaskListModel(const QDomDocument& dataSource, QObject* parent = nullptr);
+    TaskListModel(DataSource dataSource, QObject* parent = nullptr);
 
     /*!
      * This method must be called if a new `Task` has been added to the database. Since
@@ -90,8 +91,8 @@ private:
     /*!
      * The data source that has been passed via the constructor.
      */
-    QDomDocument m_dataSource;
-    TaskList     m_taskList;
+    DataSource m_dataSource;
+    TaskList   m_taskList;
 
 };
 

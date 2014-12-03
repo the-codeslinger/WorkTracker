@@ -2,19 +2,20 @@
 
 #include <QDateTime>
 
+#include <algorithm>
+
 static const QString g_elementName = "time";
 
 WorkTime::WorkTime()
     : XmlData()
 { }
 
-WorkTime::WorkTime(const QDomDocument& dataSource, const QDomElement& element)
-    : XmlData(dataSource, element)
+WorkTime::WorkTime(DataSource dataSource, const QDomElement& element)
+    : XmlData(std::move(dataSource), element)
 { }
 
-WorkTime::WorkTime(const QDomDocument& dataSource, const QDateTime& start, 
-                   const QDateTime& stop)
-    : XmlData(dataSource, g_elementName)
+WorkTime::WorkTime(DataSource dataSource, const QDateTime& start, const QDateTime& stop)
+    : XmlData(std::move(dataSource), g_elementName)
 {
     setAttribute("start", start);
     setAttribute("stop",  stop);
