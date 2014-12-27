@@ -55,12 +55,6 @@ public:
      * Releases the resources of the UI widgets.
      */
     ~WorkTracker();
-
-    /*!
-     * Allows to set a `model` that adheres to the Qt Model View architecture. This is
-     * used to show suggestions to the user based on previous input.
-     */
-    void setTaskListModel(TaskListModel* model);
     
     /**
      * Set a specific language menu item to checked. This unchecks all other items.
@@ -149,6 +143,11 @@ private slots:
      * Shows the about dialog
      */
     void about();
+
+    /*!
+     * Shows the editor wizard.
+     */
+    void showEditor();
     
     /*!
      * Handles the `QAction::triggered` signals related to language selection;
@@ -163,6 +162,11 @@ protected:
      * The event that happened.
      */
     void changeEvent(QEvent* p_event);
+
+    /*!
+     * Handles the `QEvent::Polish` event to call the `load()`method on  the controller.
+     */
+    void showEvent(QShowEvent* event);
 
 private:
     /*!

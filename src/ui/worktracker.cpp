@@ -20,6 +20,7 @@
 #include "../model/worktask.h"
 #include "../model/task.h"
 #include "../controller/worktrackercontroller.h"
+#include "../controller/editorcontroller.h"
 
 #include <QFile>
 #include <QDebug>
@@ -34,6 +35,7 @@
 #include <QDir>
 #include <QIcon>
 #include <QFontMetrics>
+#include <QShowEvent>
 
 WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     : QMainWindow(parent)
@@ -105,18 +107,12 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     connect(ui->actionQuit,     SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(ui->actionAbout_QT, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
     connect(ui->actionAbout,    SIGNAL(triggered()), this, SLOT(about()));
-    connect(ui->actionEditor,   SIGNAL(triggered()), m_controller, SLOT(showEditor()));
+    connect(ui->actionEditor,   SIGNAL(triggered()), this, SLOT(showEditor()));
 }
 
 WorkTracker::~WorkTracker()
 {
     delete ui;
-}
-
-void
-WorkTracker::setTaskListModel(TaskListModel* model)
-{
-    ui->tasksEdit->completer()->setModel(model);
 }
 
 void
@@ -182,6 +178,10 @@ WorkTracker::showInput()
     m_showAnimation.setEndValue(size);
     m_showAnimation.start();
     m_animatedWidget = ui->frame;
+
+    // Model is owned by the completer. We create a new one to always be up-to-date.
+    auto* model = new TaskListModel(m_controller->dataSource(), ui->tasksEdit);
+    ui->tasksEdit->completer()->setModel(model);
 }
 
 void
@@ -273,6 +273,19 @@ WorkTracker::about()
 }
 
 void
+WorkTracker::showEditor()
+{
+    EditorController econ(m_controller->dataSource(), this);
+    
+    connect(&econ,        &EditorController::closeCurrentTask,
+            m_controller, &WorkTrackerController::closeCurrentTask);
+    connect(&econ,        &EditorController::setActiveTask,
+            m_controller, &WorkTrackerController::setActiveTask);
+    
+    econ.run();
+}
+
+void
 WorkTracker::setShortenedTaskStatusText(const QString& text) const
 {
     int maxWidth = m_statusRecording->width();
@@ -300,6 +313,17 @@ WorkTracker::changeEvent(QEvent* p_event)
     }
     
     QMainWindow::changeEvent(p_event);
+}
+
+void
+WorkTracker::showEvent(QShowEvent* event)
+{
+    QMainWindow::showEvent(event);
+    if (!event->spontaneous()) {
+        if (!m_controller->load()) {
+            // TODO: Do something to show a message to the user.
+        }
+    }
 }
 
 void 

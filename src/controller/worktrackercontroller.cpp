@@ -15,10 +15,7 @@
  */
 
 #include "worktrackercontroller.h"
-#include "editorcontroller.h"
 #include "preferencescontroller.h"
-#include "../ui/model/tasklistmodel.h"
-#include "../ui/worktracker.h"
 #include "../helper.h"
 
 #include <QDomDocument>
@@ -39,11 +36,36 @@ WorkTrackerController::WorkTrackerController(const QString& databaseLocation)
     , m_isRecording(false)
 {
     loadTranslations();
+    
+    connect(&m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
+}
+
+/*
+    TODO: Remove language
+void
+WorkTrackerController::setUi(WorkTracker* ui)
+{
+    m_ui->setLanguageChecked(m_currentLocale);
+}
+*/
+
+bool
+WorkTrackerController::load()
+{
+    // Do nothing if the datasource is already loaded.
+    if (!m_dataSource.isNull()) {
+        return true;
+    }
+
     if (!m_dataSource.load()) {
         qDebug() << "Could not load database.";
+        return false;
     }
     else {
-        m_workday      = m_WorkDayList.findLastOpen();
+        m_taskList.setDataSource(m_dataSource);
+        m_workDayList.setDataSource(m_dataSource);
+
+        m_workday      = m_workDayList.findLastOpen();
         m_isNewWorkDay = !m_workday.isNull();
         if (m_isNewWorkDay) {
             emit workDayStarted(m_workday.start());
@@ -57,19 +79,10 @@ WorkTrackerController::WorkTrackerController(const QString& databaseLocation)
                                      m_recordingWorkTask.task().name());
             }
         }
+
+        return true;
     }
-
-    connect(&m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
 }
-
-/*
-    TODO: Remove language
-void
-WorkTrackerController::setUi(WorkTracker* ui)
-{
-    m_ui->setLanguageChecked(m_currentLocale);
-}
-*/
 
 void
 WorkTrackerController::toggleWorkDay()
@@ -170,9 +183,6 @@ WorkTrackerController::startWorkTask(QString name)
     QDateTime now = QDateTime::currentDateTimeUtc();
     Task task = findOrCreateTask(name);
 
-    //connect(&task, &Task::aboutToAddTask, m_taskListModel, &TaskListModel::beginAddTask);
-    //connect(&task, &Task::taskAdded,      m_taskListModel, &TaskListModel::endAddTask);
-    
     // Always reset before starting a new one.
     m_recordingWorkTime = WorkTime(m_dataSource, now, QDateTime());
     m_recordingWorkTask = m_workday.findWorkTask(task);
@@ -202,9 +212,6 @@ WorkTrackerController::stopWorkTask(QString name)
     // are different then we have to re-assign the work-time from the current work-task
     // to the new one.
     Task newTask = findOrCreateTask(name);
-
-    //connect(&newTask, &Task::aboutToAddTask, m_taskListModel, &TaskListModel::beginAddTask);
-    //connect(&newTask, &Task::taskAdded,      m_taskListModel, &TaskListModel::endAddTask);
     
     Task recTask = m_recordingWorkTask.task();
     
@@ -242,19 +249,6 @@ WorkTrackerController::timeout()
     int minutes = static_cast<int>(totalMinutes % 60);
 
     emit totalTimeChanged(hours, minutes);
-}
-
-void
-WorkTrackerController::showEditor()
-{
-    EditorController econ(m_dataSource, this);
-    
-    connect(&econ, &EditorController::closeCurrentTask,
-            this,  &WorkTrackerController::closeCurrentTask);
-    connect(&econ, &EditorController::setActiveTask,
-            this,  &WorkTrackerController::setActiveTask);
-    
-    econ.run();
 }
 
 void

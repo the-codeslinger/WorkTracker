@@ -61,6 +61,17 @@ public:
     WorkTrackerController(const QString& databaseLocation);
 
     /*!
+     * Search the database for the last open workday and load it. Emits 
+     * `WorkTrackerController::workDayStarted(QDateTime)` if an ongoing day is found and
+     * `WorkTrackerController::workTaskStarted(QDateTime, QString)` for an active task.
+     * 
+     * \return
+     * Returns `true` on success or `false` if there was a problem initializing the
+     * database.
+     */
+    bool load();
+
+    /*!
      * Closes any open task in order to not loose any data.
      */
     void close();
@@ -189,11 +200,6 @@ public slots:
      */
     void timeout();
 
-    /*!
-     * Shows the editor wizard.
-     */
-    void showEditor();
-
     /**
      * Installs the language based on the locale.
      *
@@ -223,7 +229,7 @@ private:
     /*!
      * The list of all known workdays in the database.
      */
-    WorkDayList m_WorkDayList;
+    WorkDayList m_workDayList;
 
     /*!
      * The current state of the workday.
