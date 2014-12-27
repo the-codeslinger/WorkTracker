@@ -16,6 +16,7 @@
 
 #include "selectedworkdaymodel.h"
 #include "../../model/task.h"
+#include "../../model/tasklist.h"
 
 #include <QDate>
 
@@ -29,18 +30,18 @@ SelectedWorkDayModel::SelectedWorkDayModel(QObject* p_parent)
 int
 SelectedWorkDayModel::rowCount(const QModelIndex& /* ignored */) const
 {
-    return m_workTasks.size();
+    return m_workday.countWorkTasks();
 }
 
 QVariant
 SelectedWorkDayModel::data(const QModelIndex& p_index, int p_role) const
 {
-    if (!p_index.isValid() || p_index.row() >= m_workTasks.count()) {
+    if (!p_index.isValid() || p_index.row() >= m_workday.countWorkTasks()) {
         return QVariant();
     }
 
     if (Qt::DisplayRole == p_role || Qt::EditRole == p_role) {
-        const WorkTask& wt = m_workTasks.at(p_index.row());
+        auto wt = m_workday.at(p_index.row());
         return QVariant(wt.task().name());
     }
 
@@ -51,7 +52,7 @@ bool
 SelectedWorkDayModel::setData(const QModelIndex& p_index, const QVariant& p_value, 
                               int p_role)
 {
-    if (!p_index.isValid() || p_index.row() >= m_workTasks.count()) {
+    if (!p_index.isValid() || p_index.row() >= m_workday.countWorkTasks()) {
         return false;
     }
     
@@ -59,16 +60,21 @@ SelectedWorkDayModel::setData(const QModelIndex& p_index, const QVariant& p_valu
         QString name = p_value.toString();
         if (!name.isEmpty()) {
             auto dataSource = m_workday.dataSource();
-            Task task(dataSource, name, QDate::currentDate());
+            auto tlist      = TaskList{dataSource};
+            auto task       = tlist.find(name);
+            if (task.isNull()) {
+                task = Task{dataSource, name, QDate::currentDate()};
+                tlist.add(task);
+            }
             
-            WorkTask existingWorkTask = m_workday.findWorkTask(task);
-            WorkTask workTask         = m_workTasks.at(p_index.row());
+            auto existing = m_workday.findWorkTask(task);
+            auto current  = m_workday.at(p_index.row());
             
             // If the to-be-changed work-task is different from another worktask that
             // already exists with that name then we'd have two different work-tasks with
             // the same task. We don't allow that.
-            if (existingWorkTask.isNull() || existingWorkTask == workTask) {
-                workTask.setTask(task);
+            if (existing.isNull() || existing == current) {
+                current.setTask(task);
                 
                 emit dataChanged(p_index, p_index, { p_role });
                 return true;
@@ -97,7 +103,6 @@ SelectedWorkDayModel::setWorkDay(const WorkDay& p_workday)
     beginResetModel();
 
     m_workday   = p_workday;
-    m_workTasks = m_workday.workTasks();
 
     endResetModel();
 }
@@ -105,11 +110,11 @@ SelectedWorkDayModel::setWorkDay(const WorkDay& p_workday)
 WorkTask
 SelectedWorkDayModel::workTask(const QModelIndex& p_index) const
 {
-    if (!p_index.isValid() || p_index.row() >= m_workTasks.count()) {
+    if (!p_index.isValid() || p_index.row() >= m_workday.countWorkTasks()) {
         return WorkTask();
     }
 
-    return m_workTasks.at(p_index.row());
+    return m_workday.at(p_index.row());
 }
 
 void
@@ -120,20 +125,26 @@ SelectedWorkDayModel::appendTask(const QString& p_name)
     }
     
     auto dataSource = m_workday.dataSource();
-    Task task(dataSource, p_name, QDate::currentDate());
+    auto tlist      = TaskList{dataSource};
+    auto task       = tlist.find(p_name);
+    if (task.isNull()) {
+        task = Task{dataSource, p_name, QDate::currentDate()};
+        tlist.add(task);
+    }
     
-    WorkTask workTask = m_workday.findWorkTask(task);
+    auto workTask = m_workday.findWorkTask(task);
     if (!workTask.isNull()) {
         emit taskAlreadyExists(p_name);
         return;
     }
     
-    beginInsertRows(QModelIndex(), m_workTasks.size(), m_workTasks.size());
+    auto count = m_workday.countWorkTasks();
+    beginInsertRows(QModelIndex(), count, count);
     
     // We know nothing about this task right now, other than it exists. The setData() 
     // method has to do all the heavy lifting to figure out where it belongs once it
     // receives a name.
-    m_workTasks.append(WorkTask(dataSource, task));
+    m_workday.addWorkTask(WorkTask{dataSource, task});
     
     endInsertRows();
 }
@@ -154,14 +165,13 @@ SelectedWorkDayModel::removeTasks(QModelIndexList p_indexes)
     });
     
     for (const QModelIndex& index : p_indexes) {
-        if (!index.isValid() || index.row() >= m_workTasks.count()) {
+        if (!index.isValid() || index.row() >= m_workday.countWorkTasks()) {
             continue;
         }
         
         beginRemoveRows(QModelIndex(), index.row(), index.row());
         
-        WorkTask workTask = m_workTasks.at(index.row());
-        m_workTasks.removeAt(index.row());
+        auto workTask = m_workday.at(index.row());
         workTask.clear();
         
         endRemoveRows();

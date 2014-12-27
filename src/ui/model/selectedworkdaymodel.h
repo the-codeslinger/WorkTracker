@@ -108,8 +108,7 @@ public slots:
     
 
 private:
-    WorkDay         m_workday;
-    QList<WorkTask> m_workTasks;
+    WorkDay m_workday;
 };
 
 #endif // SELECTEDWORKDAYMODEL_H
