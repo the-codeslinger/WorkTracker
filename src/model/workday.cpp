@@ -197,3 +197,29 @@ WorkDay::findWorkTask(std::function<bool(const WorkTask&)> predicate) const
     
     return WorkTask();
 }
+
+WorkTask 
+WorkDay::at(int index) const
+{
+    auto nodes = m_element.childNodes();
+    if (index < 0 || index >= nodes.count()) {
+        return WorkTask{};
+    }
+
+    auto node = nodes.at(index);
+    if (node.isElement()) {
+        return WorkTask{m_dataSource, node.toElement()};
+    }
+
+    return WorkTask{};
+}
+
+int 
+WorkDay::countWorkTasks() const
+{
+    auto count = 0;
+    forEachNode(m_element.childNodes(), [&count](const QDomElement&) {
+        count++;
+    });
+    return count;
+}

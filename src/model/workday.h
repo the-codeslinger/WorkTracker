@@ -143,6 +143,21 @@ public:
      */
     int totalTime() const;
 
+    /*!
+     * Fetches the work-task at the specified index position.
+     * 
+     * \return
+     * If the index is out of bounds a null-work-task is returned. Otherwise the 
+     * work-task at the specified index position is returned.
+     */
+    WorkTask at(int index) const;
+
+    /*!
+     * \return
+     * Returns the number of work-task elements in this work-day.
+     */
+    int countWorkTasks() const;
+
 protected:
     QString elementName() const;
 
