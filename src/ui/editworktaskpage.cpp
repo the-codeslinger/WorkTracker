@@ -16,10 +16,12 @@
 
 #include "editworktaskpage.h"
 #include "ui_editworktaskwidget.h"
-#include "../controller/editorcontroller.h"
+#include "selectworkdaypage.h"
+#include "selecttaskdialog.h"
 #include "model/selectedworkdaymodel.h"
 #include "model/worktaskmodel.h"
 #include "delegate/taskdelegate.h"
+#include "../controller/editorcontroller.h"
 
 #include <QVBoxLayout>
 #include <QItemSelection>
@@ -27,10 +29,13 @@
 #include <QMessageBox>
 #include <QShortcut>
 
-EditWorkTaskPage::EditWorkTaskPage(EditorController* p_controller, QWidget* p_parent)
-    : QWizardPage(p_parent)
+EditWorkTaskPage::EditWorkTaskPage(EditorController* controller, 
+                                   SelectWorkDayPage* workDayPage, 
+                                   QWidget* parent)
+    : QWizardPage(parent)
     , ui(new Ui::EditWorktaskWidget)
-    , m_controller(p_controller)
+    , m_controller(controller)
+    , m_workDayPage(workDayPage)
 {
     ui->setupUi(this);
     
@@ -40,7 +45,7 @@ EditWorkTaskPage::EditWorkTaskPage(EditorController* p_controller, QWidget* p_pa
     ui->tasksListView->setModel(tasks);
     ui->timesTableView->setModel(times);
     
-    ui->tasksListView->setItemDelegate(new TaskDelegate(p_controller->dataSource(),
+    ui->tasksListView->setItemDelegate(new TaskDelegate(controller->dataSource(),
                                                         ui->tasksListView));
     
     ui->splitter->setStretchFactor(0, 1);
@@ -57,36 +62,38 @@ EditWorkTaskPage::EditWorkTaskPage(EditorController* p_controller, QWidget* p_pa
                                       0, 0, Qt::WidgetWithChildrenShortcut);
     
     connect(rmTask,               &QShortcut::activated, 
-            p_controller,         &EditorController::removeTask);
+            this,                 &EditWorkTaskPage::removeTask);
     connect(rmTime,               &QShortcut::activated, 
-            p_controller,         &EditorController::removeTime);
+            this,                 &EditWorkTaskPage::removeTime);
     connect(ui->addTaskButton,    &QToolButton::clicked, 
-            p_controller,         &EditorController::addTask);
+            this,                 &EditWorkTaskPage::addTask);
     connect(ui->removeTaskButton, &QToolButton::clicked, 
-            p_controller,         &EditorController::removeTask);
+            this,                 &EditWorkTaskPage::removeTask);
     connect(ui->addTimeButton,    &QToolButton::clicked, 
-            p_controller,         &EditorController::addTime);
+            this,                 &EditWorkTaskPage::addTime);
     connect(ui->removeTimeButton, &QToolButton::clicked, 
-            p_controller,         &EditorController::removeTime);
+            this,                 &EditWorkTaskPage::removeTime);
     connect(tasks,                &SelectedWorkDayModel::taskAlreadyExists, 
             this,                 &EditWorkTaskPage::taskAlreadyExists);
     
     // Model validation.
     connect(tasks,                &QAbstractItemModel::dataChanged,
-            p_controller,         &EditorController::validateModel);
+            this,                 &EditWorkTaskPage::validateModel);
     connect(times,                &QAbstractItemModel::dataChanged,
-            p_controller,         &EditorController::validateModel);
+            this,                 &EditWorkTaskPage::validateModel);
     connect(tasks,                &QAbstractItemModel::rowsInserted,
-            p_controller,         &EditorController::validateModel);
+            this,                 &EditWorkTaskPage::validateModel);
     connect(times,                &QAbstractItemModel::rowsInserted,
-            p_controller,         &EditorController::validateModel);
+            this,                 &EditWorkTaskPage::validateModel);
     connect(tasks,                &QAbstractItemModel::rowsRemoved,
-            p_controller,         &EditorController::validateModel);
+            this,                 &EditWorkTaskPage::validateModel);
     connect(times,                &QAbstractItemModel::rowsRemoved,
-            p_controller,         &EditorController::validateModel);
-    connect(p_controller,         &EditorController::validationError,
+            this,                 &EditWorkTaskPage::validateModel);
+    connect(times,                &QAbstractItemModel::columnsRemoved,
+            this,                 &EditWorkTaskPage::validateModel);
+    connect(controller,           &EditorController::validationError,
             this,                 &EditWorkTaskPage::validationError);
-    connect(p_controller,         &EditorController::validationSuccess,
+    connect(controller,           &EditorController::validationSuccess,
             this,                 &EditWorkTaskPage::validationSuccess);
     
     connect(ui->tasksListView->selectionModel(), 
@@ -107,12 +114,105 @@ void
 EditWorkTaskPage::initializePage()
 {
     auto* model = qobject_cast<SelectedWorkDayModel*>(ui->tasksListView->model());
-    m_controller->setModelData(model);
+    
+    QVariant value = m_workDayPage->selectedItem();
+    if (value.canConvert<WorkDay>()) {
+        model->setWorkDay(qvariant_cast<WorkDay>(value));
+    }
 
     // Select the first item if there is one
-    if (0 < ui->tasksListView->model()->rowCount()) {
-        QModelIndex index = ui->tasksListView->model()->index(0, 0);
+    if (0 < model->rowCount(QModelIndex())) {
+        QModelIndex index = model->index(0, 0);
         ui->tasksListView->selectionModel()->select(index, QItemSelectionModel::Select);
+    }
+}
+
+void 
+EditWorkTaskPage::addTask()
+{
+    SelectTaskDialog dlg(m_controller->dataSource());
+    if (QDialog::Accepted == dlg.exec()) {
+        QListView* view = ui->tasksListView;
+        SelectedWorkDayModel* model = qobject_cast<SelectedWorkDayModel*>(view->model());
+        model->appendTask(dlg.taskName());
+        
+        QItemSelectionModel* selectionModel = view->selectionModel();
+        QModelIndex newItemIndex = model->index(model->rowCount(QModelIndex()) - 1);
+        
+        selectionModel->clearSelection();
+        selectionModel->select(newItemIndex, QItemSelectionModel::Select);
+        
+        view->setFocus();
+    }
+}
+
+void 
+EditWorkTaskPage::removeTask()
+{
+    QModelIndexList indexes = selectedTasks();
+    QListView* view = ui->tasksListView;
+    
+    SelectedWorkDayModel* model = qobject_cast<SelectedWorkDayModel*>(view->model());
+    
+    if (0 == indexes.size()) {
+        return;
+    }
+    
+    QString question;
+    if (1 == indexes.size()) {
+        auto workTask = model->workTask(indexes.at(0));
+        if (workTask.isNull()) {
+            return;
+        }
+        
+        question = tr("Are you sure you want to delete the work-task \"%1\" \n"
+                      "and all of its recorded times?").arg(workTask.task().name());
+    }
+    else {
+        question = tr("Are you sure you want to delete the selected %1 \n"
+                      "work-tasks and all of their recorded times?").arg(indexes.size());
+    }
+    
+    int result = QMessageBox::question(this, tr("Delete Task"), question, 
+                                       QMessageBox::Yes, QMessageBox::No);
+    
+    if (QMessageBox::Yes == result) {
+        model->removeTasks(indexes);
+    }
+}
+
+void 
+EditWorkTaskPage::addTime()
+{
+    QTableView* view = ui->timesTableView;
+    WorkTaskModel* model = qobject_cast<WorkTaskModel*>(view->model());
+    model->appendTime();
+    
+    QItemSelectionModel* selectionModel = view->selectionModel();
+    QModelIndex newItemIndex = model->index(model->rowCount(QModelIndex()) - 1, 0);
+    
+    selectionModel->clearSelection();
+    selectionModel->select(newItemIndex, QItemSelectionModel::Select);
+    
+    view->setFocus();
+}
+
+void 
+EditWorkTaskPage::removeTime()
+{
+    QModelIndexList indexes = selectedTimes();
+    if (!indexes.isEmpty()) {
+        int result = QMessageBox::question(
+                    nullptr/*m_editWorkTaskPage*/, tr("Delete Time"), 
+                    tr("Are you sure you want to delete %1 recorded times?")
+                      .arg(indexes.size()), 
+                    QMessageBox::Yes, QMessageBox::No);
+        
+        if (QMessageBox::Yes == result) {
+            QTableView* view = ui->timesTableView;
+            WorkTaskModel* model = qobject_cast<WorkTaskModel*>(view->model());
+            model->removeTimes(indexes);
+        }
     }
 }
 
@@ -128,29 +228,17 @@ EditWorkTaskPage::selectedTimes() const
     return ui->timesTableView->selectionModel()->selectedIndexes();
 }
 
-QListView* 
-EditWorkTaskPage::workTasksView() const
-{
-    return ui->tasksListView;
-}
-
-QTableView* 
-EditWorkTaskPage::workTimesView() const
-{
-    return ui->timesTableView;
-}
-
 void
-EditWorkTaskPage::taskSelected(const QItemSelection& p_selection)
+EditWorkTaskPage::taskSelected(const QItemSelection& selection)
 {
-    QModelIndexList indexes = p_selection.indexes();
+    QModelIndexList indexes = selection.indexes();
     if (!indexes.isEmpty()) {
         if (1 == indexes.size()) {
             QModelIndex index = indexes.at(0);
             if (index.isValid()) {
                 auto* src = qobject_cast<SelectedWorkDayModel*>(ui->tasksListView->model());
                 auto* dst = qobject_cast<WorkTaskModel*>(ui->timesTableView->model());
-                m_controller->setModelData(index, src, dst);
+                dst->setWorkTask(src->workTask(index));
             }
         }
     }
@@ -161,39 +249,48 @@ EditWorkTaskPage::taskSelected(const QItemSelection& p_selection)
 }
 
 void 
-EditWorkTaskPage::timeSelected(const QItemSelection& p_selection)
+EditWorkTaskPage::timeSelected(const QItemSelection& selection)
 {
-    QModelIndexList indexes = p_selection.indexes();
+    QModelIndexList indexes = selection.indexes();
     ui->removeTimeButton->setDisabled(indexes.isEmpty());
 }
 
 void 
-EditWorkTaskPage::changeEvent(QEvent* p_event)
+EditWorkTaskPage::changeEvent(QEvent* event)
 {
-    if (QEvent::LanguageChange == p_event->type()) {
+    if (QEvent::LanguageChange == event->type()) {
         ui->retranslateUi(this);
     }
     
-    QWizardPage::changeEvent(p_event);
+    QWizardPage::changeEvent(event);
 }
 
 void 
-EditWorkTaskPage::taskAlreadyExists(const QString& p_name)
+EditWorkTaskPage::taskAlreadyExists(const QString& name)
 {
     QMessageBox::information(
                 this, tr("Task already exists"), 
-                tr("There is already a task in use with the name \"%1\".").arg(p_name), 
+                tr("There is already a task in use with the name \"%1\".").arg(name), 
                 QMessageBox::Ok);
 }
 
 void 
-EditWorkTaskPage::validationError(const QString& p_error)
+EditWorkTaskPage::validationError(const QString& error)
 {
-    ui->errorLabel->setText(p_error);
+    ui->errorLabel->setText(error);
 }
 
 void 
 EditWorkTaskPage::validationSuccess()
 {
     ui->errorLabel->setText("");
+}
+
+void 
+EditWorkTaskPage::validateModel()
+{
+    QVariant value = m_workDayPage->selectedItem();
+    if (value.canConvert<WorkDay>()) {
+        m_controller->validateModel(qvariant_cast<WorkDay>(value));
+    }
 }

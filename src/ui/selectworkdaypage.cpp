@@ -55,7 +55,8 @@ SelectWorkDayPage::isComplete() const
 void
 SelectWorkDayPage::initializePage()
 {
-    m_controller->setModelData(qobject_cast<WorkDayModel*>(ui->daysListView->model()));
+    auto* model = qobject_cast<WorkDayModel*>(ui->daysListView->model());
+    model->setDataSource(m_controller->dataSource());
 
     if (0 < ui->daysListView->model()->rowCount()) {
         QModelIndex index = ui->daysListView->model()->index(0, 0);
