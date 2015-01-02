@@ -66,7 +66,7 @@
        <item>
         <widget class="QLabel" name="versionLabel">
          <property name="text">
-          <string>Version 1.2.2</string>
+          <string>Version 1.2.3</string>
          </property>
         </widget>
        </item>
@@ -80,7 +80,7 @@
        <item>
         <widget class="QLabel" name="copyrightLabel">
          <property name="text">
-          <string>Copyright 2014, Robert Lohr</string>
+          <string>Copyright 2015, Robert Lohr</string>
          </property>
         </widget>
        </item>
