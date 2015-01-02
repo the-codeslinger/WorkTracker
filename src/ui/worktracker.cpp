@@ -16,6 +16,7 @@
 
 #include "worktracker.h"
 #include "aboutdialog.h"
+#include "editorwizard.h"
 #include "ui_worktracker.h"
 #include "../model/worktask.h"
 #include "../model/task.h"
@@ -36,6 +37,8 @@
 #include <QIcon>
 #include <QFontMetrics>
 #include <QShowEvent>
+#include <QTranslator>
+#include <QSettings>
 
 WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     : QMainWindow(parent)
@@ -47,6 +50,7 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
 {
     ui->setupUi(this);
     setupLanguageMenu();
+    loadTranslations();
 
     m_showAnimation.setTargetObject(this);
     m_showAnimation.setPropertyName("size");
@@ -276,13 +280,16 @@ void
 WorkTracker::showEditor()
 {
     EditorController econ(m_controller->dataSource(), this);
+    EditorWizard wizard(&econ, this);
     
-    connect(&econ,        &EditorController::closeCurrentTask,
+    connect(&econ,        &EditorController::currentTaskClosed,
             m_controller, &WorkTrackerController::closeCurrentTask);
-    connect(&econ,        &EditorController::setActiveTask,
+    connect(&econ,        &EditorController::activeTaskChanged,
             m_controller, &WorkTrackerController::setActiveTask);
     
-    econ.run();
+    //QSize size = wizard.size();
+    //wizard.resize(size.width() * 1.05, size.height() * 1.05);
+    wizard.exec();
 }
 
 void
@@ -365,9 +372,60 @@ WorkTracker::setupLanguageMenu()
     
     connect(ui->actionEnUS, &QAction::triggered, this, &WorkTracker::languageSelected);
     connect(ui->actionDeDE, &QAction::triggered, this, &WorkTracker::languageSelected);
+    connect(this, &WorkTracker::languageChanged, this, &WorkTracker::setLanguage);
+}
+
+void 
+WorkTracker::loadTranslations()
+{
+    // These are the languages the application supports
+    QStringList locales = { "en_US", "de_DE" };
     
-    connect(this,         &WorkTracker::languageChanged, 
-            m_controller, &WorkTrackerController::setLanguage);
+    // Load the user settings. If none is selected (probably after an update) then try
+    // the system language. If that is not supported then fall back to English.
+    QSettings settings;
+    QString appLocale = settings.value("Locale").toString();
+    if (appLocale.isEmpty()) {
+        appLocale = QLocale().name();
+        settings.setValue("Language", appLocale);
+    }
+    
+    if (!locales.contains(appLocale)) {
+        appLocale = "en_US";
+        settings.setValue("Language", appLocale);
+    }
+    
+    // Now load the translationss and install one
+    QString appDir = QApplication::applicationDirPath();
+    
+    for (const QString& locale : locales) {
+        // Load Qt language file first
+        QTranslator* qtLang = new QTranslator(this);
+        if (!qtLang->load(appDir + "/l10n/qt_" + locale + ".qm")) {
+            qDebug() << "Cannot load Qt language file <" << locale << "> use English";
+            delete qtLang;
+            qtLang = nullptr;
+        }
+        
+        // Now load WorkTracker language file
+        QTranslator* appLang = new QTranslator(this);
+        if (!appLang->load(appDir + "/l10n/" + locale + ".qm")) {
+            qDebug() << "Cannot load WorkTracker language file <" << locale 
+                     << "> use English";
+            delete appLang;
+            appLang = nullptr;
+        }
+        
+        m_translations.insert(locale, qMakePair(qtLang, appLang));
+        
+        if (locale == appLocale) {
+            QLocale::setDefault(QLocale(appLocale));
+            qApp->installTranslator(qtLang);
+            qApp->installTranslator(appLang);
+            m_currentLocale = appLocale;
+        }
+    }
+    setLanguageChecked(m_currentLocale);
 }
 
 void 
@@ -391,4 +449,29 @@ WorkTracker::setLanguageChecked(const QString& p_locale)
         QString locale = action->data().toString();
         action->setChecked(locale == p_locale);
     }
+}
+
+void
+WorkTracker::setLanguage(const QString& p_locale)
+{
+    if (!m_translations.contains(p_locale)) {
+        qDebug() << "Language doesn't exist <" << p_locale << ">";
+        return;
+    }
+
+    auto current     = m_translations.value(m_currentLocale);
+    auto translation = m_translations.value(p_locale);
+
+    qApp->removeTranslator(current.first);
+    qApp->removeTranslator(current.second);
+    
+    QLocale::setDefault(QLocale(p_locale));
+    
+    qApp->installTranslator(translation.first);
+    qApp->installTranslator(translation.second);
+
+    m_currentLocale = p_locale;
+    
+    QSettings settings;
+    settings.setValue("Locale", p_locale);
 }

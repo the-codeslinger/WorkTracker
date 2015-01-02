@@ -28,6 +28,7 @@ namespace Ui {
 }
 
 class QLabel;
+class QTranslator;
 class WorkTrackerController;
 
 /*!
@@ -153,6 +154,15 @@ private slots:
      * Handles the `QAction::triggered` signals related to language selection;
      */
     void languageSelected();
+
+    /**
+     * Installs the language based on the locale.
+     *
+     * @param p_locale
+     * The locale for which to install the language. If the locale doesn't exist then the
+     * language is not changed.
+     */
+    void setLanguage(const QString& p_locale);
     
 protected:
     /*!
@@ -207,6 +217,16 @@ private:
      * is always used to shrink back to the small size.
      */
     int m_collapsedHeight;
+
+    /*!
+     * Maps the locale to the Qt and the application translation.
+     */
+    QMap<QString, QPair<QTranslator*, QTranslator*>> m_translations;
+    /*!
+     * The currently used language. This is needed to remove the currently installed
+     * translations when `WorkTrackerController::setLanguage(const QString&)` is called.
+     */
+    QString m_currentLocale;
     
     /*
      * Following values are needed for setting the correct status message text after the
@@ -237,6 +257,12 @@ private:
      * contains the locale-string which is easy to query by event handlers.
      */
     void setupLanguageMenu();
+    
+    /*!
+     * Sets up the language and translation related objects. Loads the translation files
+     * and sets the system's language or the one the user selected.
+     */
+    void loadTranslations();
 };
 
 #endif // WORKTRACKER_H

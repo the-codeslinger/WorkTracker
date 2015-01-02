@@ -22,10 +22,8 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QApplication>
-#include <QTranslator>
 #include <QMapIterator>
 #include <QSettings>
-#include <QStandardPaths>
 
 static const int TIMER_TIMEOUT = 30 * 1000;
 
@@ -35,19 +33,8 @@ WorkTrackerController::WorkTrackerController(const QString& databaseLocation)
     , m_isNewWorkDay(false)
     , m_isRecording(false)
 {
-    loadTranslations();
-    
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
 }
-
-/*
-    TODO: Remove language
-void
-WorkTrackerController::setUi(WorkTracker* ui)
-{
-    m_ui->setLanguageChecked(m_currentLocale);
-}
-*/
 
 bool
 WorkTrackerController::load()
@@ -249,83 +236,6 @@ WorkTrackerController::timeout()
     int minutes = static_cast<int>(totalMinutes % 60);
 
     emit totalTimeChanged(hours, minutes);
-}
-
-void
-WorkTrackerController::setLanguage(const QString& p_locale)
-{
-    if (!m_translations.contains(p_locale)) {
-        qDebug() << "Language doesn't exist <" << p_locale << ">";
-        return;
-    }
-
-    auto current     = m_translations.value(m_currentLocale);
-    auto translation = m_translations.value(p_locale);
-
-    qApp->removeTranslator(current.first);
-    qApp->removeTranslator(current.second);
-    
-    QLocale::setDefault(QLocale(p_locale));
-    
-    qApp->installTranslator(translation.first);
-    qApp->installTranslator(translation.second);
-
-    m_currentLocale = p_locale;
-    
-    QSettings settings;
-    settings.setValue("Locale", p_locale);
-}
-
-void 
-WorkTrackerController::loadTranslations()
-{
-    // These are the languages the application supports
-    QStringList locales = { "en_US", "de_DE" };
-    
-    // Load the user settings. If none is selected (probably after an update) then try
-    // the system language. If that is not supported then fall back to English.
-    QSettings settings;
-    QString appLocale = settings.value("Locale").toString();
-    if (appLocale.isEmpty()) {
-        appLocale = QLocale().name();
-        settings.setValue("Language", appLocale);
-    }
-    
-    if (!locales.contains(appLocale)) {
-        appLocale = "en_US";
-        settings.setValue("Language", appLocale);
-    }
-    
-    // Now load the translationss and install one
-    QString appDir = QApplication::applicationDirPath();
-    
-    for (const QString& locale : locales) {
-        // Load Qt language file first
-        QTranslator* qtLang = new QTranslator(this);
-        if (!qtLang->load(appDir + "/l10n/qt_" + locale + ".qm")) {
-            qDebug() << "Cannot load Qt language file <" << locale << "> use English";
-            delete qtLang;
-            qtLang = nullptr;
-        }
-        
-        // Now load WorkTracker language file
-        QTranslator* appLang = new QTranslator(this);
-        if (!appLang->load(appDir + "/l10n/" + locale + ".qm")) {
-            qDebug() << "Cannot load WorkTracker language file <" << locale 
-                     << "> use English";
-            delete appLang;
-            appLang = nullptr;
-        }
-        
-        m_translations.insert(locale, qMakePair(qtLang, appLang));
-        
-        if (locale == appLocale) {
-            QLocale::setDefault(QLocale(appLocale));
-            qApp->installTranslator(qtLang);
-            qApp->installTranslator(appLang);
-            m_currentLocale = appLocale;
-        }
-    }
 }
 
 void 

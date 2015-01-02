@@ -32,10 +32,6 @@
 #include <QTimer>
 #include <QMap>
 
-class TaskListModel;
-class WorkTracker;
-class QTranslator;
-
 /*!
  * \brief Contains the business logic of the WorkTracker application.
  *
@@ -200,15 +196,6 @@ public slots:
      */
     void timeout();
 
-    /**
-     * Installs the language based on the locale.
-     *
-     * @param p_locale
-     * The locale for which to install the language. If the locale doesn't exist then the
-     * language is not changed.
-     */
-    void setLanguage(const QString& p_locale);
-
 private:
     /*!
      * The currently recorded workday.
@@ -245,16 +232,6 @@ private:
     QTimer m_timer;
 
     /*!
-     * Maps the locale to the Qt and the application translation.
-     */
-    QMap<QString, QPair<QTranslator*, QTranslator*>> m_translations;
-    /*!
-     * The currently used language. This is needed to remove the currently installed
-     * translations when `WorkTrackerController::setLanguage(const QString&)` is called.
-     */
-    QString m_currentLocale;
-
-    /*!
      * The actual implementation that starts a new workday. Called by `toggleWorkDay()`.
      */
     void startWorkDay(QDateTime now);
@@ -281,12 +258,6 @@ private:
      * and adds a new task.
      */
     Task findOrCreateTask(const QString& name);
-    
-    /*!
-     * Sets up the language and translation related objects. Loads the translation files
-     * and sets the system's language or the one the user selected.
-     */
-    void loadTranslations();
 };
 
 #endif // WORKTRACKERCONTROLLER_H
