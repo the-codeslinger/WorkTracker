@@ -22,9 +22,6 @@
 
 #include <QObject>
 
-class WorkDayModel;
-class WorkTaskModel;
-class SelectedWorkDayModel;
 class WorkTask;
 class WorkDay;
 
@@ -87,9 +84,6 @@ public slots:
      * currently active work-task and work-time based on the changes.
      */
     void updateActiveWorkTasks();
-
-private:
-    SelectedWorkDayModel* m_workDayModel;
 
 };
 

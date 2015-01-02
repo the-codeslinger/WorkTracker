@@ -15,17 +15,10 @@
  */
 
 #include "editorcontroller.h"
-#include "../ui/model/workdaymodel.h"
-#include "../ui/model/worktaskmodel.h"
-#include "../ui/model/selectedworkdaymodel.h"
-#include "../ui/editorwizard.h"
 #include "../model/workdaylist.h"
 #include "../model/workday.h"
 
-#include <QWizard>
-#include <QListView>
-#include <QTableView>
-#include <QMessageBox>
+#include <QStringList>
 #include <QDateTime>
 
 EditorController::EditorController(DataSource dataSource, QObject* parent)
