@@ -321,6 +321,7 @@
     <Image Include="icon\Icon16.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="icon\icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="icon\Start-Day.svg">
@@ -414,6 +415,9 @@
     </ClInclude>
     <ClInclude Include="src\model\datasource.h">
       <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
