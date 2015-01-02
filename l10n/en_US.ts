@@ -9,19 +9,19 @@
         <translation>About WorkTracker</translation>
     </message>
     <message>
-        <location filename="../ui/aboutdialog.ui" line="69"/>
-        <source>Version 1.2.1</source>
-        <translation>Version 1.2.1</translation>
-    </message>
-    <message>
         <location filename="../ui/aboutdialog.ui" line="76"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Published under the &lt;a href=&quot;http://www.apache.org/licenses/LICENSE-2.0&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Apache License, Version 2&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Published under the &lt;a href=&quot;http://www.apache.org/licenses/LICENSE-2.0&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Apache License, Version 2&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
+        <location filename="../ui/aboutdialog.ui" line="69"/>
+        <source>Version 1.2.3</source>
+        <translation>Version 1.2.3</translation>
+    </message>
+    <message>
         <location filename="../ui/aboutdialog.ui" line="83"/>
-        <source>Copyright 2014, Robert Lohr</source>
-        <translation>Copyright 2014, Robert Lohr</translation>
+        <source>Copyright 2015, Robert Lohr</source>
+        <translation>Copyright 2015, Robert Lohr</translation>
     </message>
     <message>
         <location filename="../ui/aboutdialog.ui" line="90"/>
@@ -37,22 +37,51 @@
 <context>
     <name>EditWorkTaskPage</name>
     <message>
-        <location filename="../src/editworktaskpage.cpp" line="49"/>
+        <location filename="../src/ui/editworktaskpage.cpp" line="54"/>
         <source>Edit Worktask</source>
         <translation>Edit Worktask</translation>
     </message>
     <message>
-        <location filename="../src/editworktaskpage.cpp" line="50"/>
+        <location filename="../src/ui/editworktaskpage.cpp" line="55"/>
         <source>Select the task you want to edit. Changes are immediately saved. You can also go back to the previous page and select a different day to edit.</source>
         <translation>Select the task you want to edit. Changes are immediately saved. You can also go back to the previous page and select a different day to edit.</translation>
     </message>
     <message>
-        <location filename="../src/editworktaskpage.cpp" line="184"/>
+        <location filename="../src/ui/editworktaskpage.cpp" line="168"/>
+        <source>Are you sure you want to delete the work-task &quot;%1&quot; 
+and all of its recorded times?</source>
+        <translation>Are you sure you want to delete the work-task &quot;%1&quot; 
+and all of its recorded times?</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/editworktaskpage.cpp" line="172"/>
+        <source>Are you sure you want to delete the selected %1 
+work-tasks and all of their recorded times?</source>
+        <translation>Are you sure you want to delete the selected %1 
+work-tasks and all of their recorded times?</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/editworktaskpage.cpp" line="176"/>
+        <source>Delete Task</source>
+        <translation>Delete Task</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/editworktaskpage.cpp" line="206"/>
+        <source>Delete Time</source>
+        <translation>Delete Time</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/editworktaskpage.cpp" line="207"/>
+        <source>Are you sure you want to delete %1 recorded times?</source>
+        <translation>Are you sure you want to delete %1 recorded time(s)?</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/editworktaskpage.cpp" line="272"/>
         <source>Task already exists</source>
         <translation>Task already exists</translation>
     </message>
     <message>
-        <location filename="../src/editworktaskpage.cpp" line="185"/>
+        <location filename="../src/ui/editworktaskpage.cpp" line="273"/>
         <source>There is already a task in use with the name &quot;%1&quot;.</source>
         <translation>There is already a task in use with the name &quot;%1&quot;.</translation>
     </message>
@@ -108,54 +137,25 @@
 <context>
     <name>EditorController</name>
     <message>
-        <location filename="../src/controller/editorcontroller.cpp" line="119"/>
-        <source>Are you sure you want to delete the work-task &quot;%1&quot; 
-and all of its recorded times?</source>
-        <translation>Are you sure you want to delete the work-task &quot;%1&quot; 
-and all of its recorded times?</translation>
-    </message>
-    <message>
-        <location filename="../src/controller/editorcontroller.cpp" line="123"/>
-        <source>Are you sure you want to delete the selected %1 
-work-tasks and all of their recorded times?</source>
-        <translation>Are you sure you want to delete the selected %1 
-work-tasks and all of their recorded times?</translation>
-    </message>
-    <message>
-        <location filename="../src/controller/editorcontroller.cpp" line="127"/>
-        <source>Delete Task</source>
-        <translation>Delete Task</translation>
-    </message>
-    <message>
-        <location filename="../src/controller/editorcontroller.cpp" line="155"/>
-        <source>Delete Time</source>
-        <translation>Delete Time</translation>
-    </message>
-    <message>
-        <location filename="../src/controller/editorcontroller.cpp" line="156"/>
-        <source>Are you sure you want to delete %1 recorded times?</source>
-        <translation>Are you sure you want to delete %1 recorded time(s)?</translation>
-    </message>
-    <message>
-        <location filename="../src/controller/editorcontroller.cpp" line="188"/>
+        <location filename="../src/controller/editorcontroller.cpp" line="40"/>
         <source>There is a work-task without a name</source>
         <translation>There is a work-task without a name</translation>
     </message>
     <message>
-        <location filename="../src/controller/editorcontroller.cpp" line="195"/>
+        <location filename="../src/controller/editorcontroller.cpp" line="47"/>
         <source>Work-task &quot;%1&quot; has no start time</source>
         <translation>Work-task &quot;%1&quot; has no start time</translation>
     </message>
     <message>
-        <location filename="../src/controller/editorcontroller.cpp" line="209"/>
-        <source>The following tasks are active: %1</source>
-        <translation>The following tasks are active: %1</translation>
+        <location filename="../src/controller/editorcontroller.cpp" line="60"/>
+        <source>The following tasks are active or have more than one active time: %1</source>
+        <translation>The following tasks are active or have more than one active time: %1</translation>
     </message>
 </context>
 <context>
     <name>EditorWizard</name>
     <message>
-        <location filename="../src/editorwizard.cpp" line="10"/>
+        <location filename="../src/ui/editorwizard.cpp" line="29"/>
         <source>Edit Work Tasks</source>
         <translation>Edit Worktasks</translation>
     </message>
@@ -179,12 +179,12 @@ work-tasks and all of their recorded times?</translation>
 <context>
     <name>SelectWorkDayPage</name>
     <message>
-        <location filename="../src/selectworkdaypage.cpp" line="36"/>
+        <location filename="../src/ui/selectworkdaypage.cpp" line="36"/>
         <source>Select Workday</source>
         <translation>Select Workday</translation>
     </message>
     <message>
-        <location filename="../src/selectworkdaypage.cpp" line="37"/>
+        <location filename="../src/ui/selectworkdaypage.cpp" line="37"/>
         <source>Select the specific workday for which you want to edit individual task items. You can always come back to this page.</source>
         <translation>Select the specific workday for which you want to edit individual task items. You can always come back to this page.</translation>
     </message>
@@ -200,17 +200,17 @@ work-tasks and all of their recorded times?</translation>
 <context>
     <name>WorkDayDelegate</name>
     <message>
-        <location filename="../src/model/delegate/workdaydelegate.cpp" line="85"/>
+        <location filename="../src/ui/delegate/workdaydelegate.cpp" line="86"/>
         <source>%1 (%2h %3m)</source>
         <translation>%1 (%2h %3m)</translation>
     </message>
     <message>
-        <location filename="../src/model/delegate/workdaydelegate.cpp" line="86"/>
+        <location filename="../src/ui/delegate/workdaydelegate.cpp" line="87"/>
         <source>Start: %1</source>
         <translation>Start: %1</translation>
     </message>
     <message>
-        <location filename="../src/model/delegate/workdaydelegate.cpp" line="87"/>
+        <location filename="../src/ui/delegate/workdaydelegate.cpp" line="88"/>
         <source>End: %1</source>
         <translation>End: %1</translation>
     </message>
@@ -218,12 +218,12 @@ work-tasks and all of their recorded times?</translation>
 <context>
     <name>WorkTaskModel</name>
     <message>
-        <location filename="../src/model/ui/worktaskmodel.cpp" line="56"/>
+        <location filename="../src/ui/model/worktaskmodel.cpp" line="58"/>
         <source>Start</source>
         <translation>Start</translation>
     </message>
     <message>
-        <location filename="../src/model/ui/worktaskmodel.cpp" line="60"/>
+        <location filename="../src/ui/model/worktaskmodel.cpp" line="62"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
@@ -237,15 +237,15 @@ work-tasks and all of their recorded times?</translation>
     </message>
     <message>
         <location filename="../ui/worktracker.ui" line="47"/>
-        <location filename="../src/worktracker.cpp" line="219"/>
-        <location filename="../src/worktracker.cpp" line="322"/>
+        <location filename="../src/ui/worktracker.cpp" line="230"/>
+        <location filename="../src/ui/worktracker.cpp" line="360"/>
         <source>Start &amp;New Workday</source>
         <translation>Start &amp;New Workday</translation>
     </message>
     <message>
         <location filename="../ui/worktracker.ui" line="67"/>
-        <location filename="../src/worktracker.cpp" line="162"/>
-        <location filename="../src/worktracker.cpp" line="311"/>
+        <location filename="../src/ui/worktracker.cpp" line="166"/>
+        <location filename="../src/ui/worktracker.cpp" line="349"/>
         <source>Start &amp;Task</source>
         <translation>Start &amp;Task</translation>
     </message>
@@ -260,101 +260,101 @@ work-tasks and all of their recorded times?</translation>
         <translation>S&amp;elect Task</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="183"/>
+        <location filename="../ui/worktracker.ui" line="182"/>
         <source>&amp;File</source>
         <translation>&amp;File</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="191"/>
+        <location filename="../ui/worktracker.ui" line="190"/>
         <source>&amp;Help</source>
         <translation>&amp;Help</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="198"/>
+        <location filename="../ui/worktracker.ui" line="197"/>
         <source>&amp;Language</source>
         <translation>&amp;Language</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="214"/>
+        <location filename="../ui/worktracker.ui" line="213"/>
         <source>&amp;Quit</source>
         <translation>&amp;Quit</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="217"/>
+        <location filename="../ui/worktracker.ui" line="216"/>
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="229"/>
+        <location filename="../ui/worktracker.ui" line="228"/>
         <source>&amp;About WorkTracker</source>
         <translation>&amp;About WorkTracker</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="241"/>
+        <location filename="../ui/worktracker.ui" line="240"/>
         <source>About &amp;Qt</source>
         <translation>About &amp;Qt</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="253"/>
+        <location filename="../ui/worktracker.ui" line="252"/>
         <source>&amp;Editor</source>
         <translation>&amp;Editor</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="256"/>
+        <location filename="../ui/worktracker.ui" line="255"/>
         <source>Ctrl+E</source>
         <translation>Ctrl+E</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="265"/>
+        <location filename="../ui/worktracker.ui" line="264"/>
         <source>Preferences</source>
         <translation>Preferences</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="268"/>
+        <location filename="../ui/worktracker.ui" line="267"/>
         <source>Ctrl+,</source>
         <translation>Ctrl+,</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="286"/>
+        <location filename="../ui/worktracker.ui" line="285"/>
         <source>&amp;English (US)</source>
         <translation>&amp;English (US)</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="301"/>
+        <location filename="../ui/worktracker.ui" line="300"/>
         <source>&amp;German</source>
         <translation>&amp;Deutsch</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="282"/>
+        <location filename="../src/ui/worktracker.cpp" line="309"/>
         <source>Total time %1h %2m</source>
         <translation>Total time %1h %2m</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="123"/>
+        <location filename="../src/ui/worktracker.cpp" line="127"/>
         <source>You must enter a task description</source>
         <translation>You must enter a task description</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="146"/>
-        <location filename="../src/worktracker.cpp" line="304"/>
+        <location filename="../src/ui/worktracker.cpp" line="150"/>
+        <location filename="../src/ui/worktracker.cpp" line="342"/>
         <source>Stop &amp;Task</source>
         <translation>Stop &amp;Task</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="149"/>
-        <location filename="../src/worktracker.cpp" line="307"/>
+        <location filename="../src/ui/worktracker.cpp" line="153"/>
+        <location filename="../src/ui/worktracker.cpp" line="345"/>
         <source>%1 started at %2</source>
         <translation>%1 started at %2</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="165"/>
-        <location filename="../src/worktracker.cpp" line="314"/>
+        <location filename="../src/ui/worktracker.cpp" line="169"/>
+        <location filename="../src/ui/worktracker.cpp" line="352"/>
         <source>%1 stopped at %2</source>
         <translation>%1 stopped at %2</translation>
     </message>
     <message>
-        <location filename="../src/worktracker.cpp" line="211"/>
-        <location filename="../src/worktracker.cpp" line="319"/>
+        <location filename="../src/ui/worktracker.cpp" line="222"/>
+        <location filename="../src/ui/worktracker.cpp" line="357"/>
         <source>Stop &amp;Workday</source>
         <translation>Stop &amp;Workday</translation>
     </message>
@@ -362,22 +362,22 @@ work-tasks and all of their recorded times?</translation>
 <context>
     <name>WorkTrackerController</name>
     <message>
-        <location filename="../src/controller/worktrackercontroller.cpp" line="143"/>
+        <location filename="../src/controller/worktrackercontroller.cpp" line="137"/>
         <source>Could not create &lt;workday&gt; XML element</source>
         <translation>Could not create &lt;workday&gt; XML element</translation>
     </message>
     <message>
-        <location filename="../src/controller/worktrackercontroller.cpp" line="148"/>
+        <location filename="../src/controller/worktrackercontroller.cpp" line="142"/>
         <source>Could not add &lt;workday&gt; to &lt;workdays&gt; XML element</source>
         <translation>Could not add &lt;workday&gt; to &lt;workdays&gt; XML element</translation>
     </message>
     <message>
-        <location filename="../src/controller/worktrackercontroller.cpp" line="158"/>
+        <location filename="../src/controller/worktrackercontroller.cpp" line="152"/>
         <source>No active work-day</source>
         <translation>No active workday</translation>
     </message>
     <message>
-        <location filename="../src/controller/worktrackercontroller.cpp" line="170"/>
+        <location filename="../src/controller/worktrackercontroller.cpp" line="164"/>
         <source>A task-name must be specified to start a new task</source>
         <translation>A task-name must be specified to start a new task</translation>
     </message>
