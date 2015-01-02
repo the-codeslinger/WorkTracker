@@ -56,6 +56,7 @@ EditorController::validateModel(const WorkDay& workDay)
     }
         
     if (1 < activeTasks.size()) {
+        activeTasks.removeDuplicates();
         emit validationError(
                 tr("The following tasks are active or have more than one active time: %1")
                   .arg(activeTasks.join(",")));
