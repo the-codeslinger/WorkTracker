@@ -166,7 +166,6 @@
     </item>
    </layout>
    <zorder>frame</zorder>
-   <zorder>verticalSpacer</zorder>
    <zorder>textEdit</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
