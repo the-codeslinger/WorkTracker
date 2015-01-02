@@ -52,10 +52,17 @@ public slots:
      */
     void validationSuccess();
     
+protected:
+    /*!
+     * Resizes the window by 1.10.
+     */
+    void showEvent(QShowEvent* event);
+
 private:
     EditorController*  m_controller;
     SelectWorkDayPage* m_selectWorkDayPage;
     EditWorkTaskPage*  m_editWorkTaskPage;
+    bool               m_resized;
     
 };
 

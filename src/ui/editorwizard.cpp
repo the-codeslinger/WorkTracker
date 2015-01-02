@@ -25,6 +25,7 @@ EditorWizard::EditorWizard(EditorController* controller, QWidget* parent)
     : QWizard(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint
                       | Qt::WindowCloseButtonHint)
     , m_controller(controller)
+    , m_resized(false)
 {
     setWindowTitle(tr("Edit Work Tasks"));
 
@@ -54,4 +55,16 @@ EditorWizard::validationSuccess()
 {
     button(QWizard::BackButton)->setDisabled(false);
     button(QWizard::FinishButton)->setDisabled(false);
+}
+
+void 
+EditorWizard::showEvent(QShowEvent* event)
+{
+    QWizard::showEvent(event);
+    if (!m_resized) {
+        m_resized = true;
+        
+        QSize s = size();
+        resize(s.width() * 1.10, s.height() * 1.10);
+    }
 }

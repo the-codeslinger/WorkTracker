@@ -287,8 +287,6 @@ WorkTracker::showEditor()
     connect(&econ,        &EditorController::activeTaskChanged,
             m_controller, &WorkTrackerController::setActiveTask);
     
-    //QSize size = wizard.size();
-    //wizard.resize(size.width() * 1.05, size.height() * 1.05);
     wizard.exec();
 }
 
