@@ -17,12 +17,33 @@ QT       += core gui xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET    = WorkTracker
-TEMPLATE  = app
-CONFIG   += c++11
+TARGET      = WorkTracker
+TEMPLATE    = app
+CONFIG     += c++11
+VERSION     = 1.2.3
+
+WTROOT      = $$_PRO_FILE_PWD_
+
+OBJECTS_DIR = $$WTROOT/build
+MOC_DIR     = $$OBJECTS_DIR/moc
+RCC_DIR     = $$OBJECTS_DIR/rcc
+UI_DIR      = $$OBJECTS_DIR/ui
+DESTDIR     = $$WTROOT/bin
 
 win32 {
     RC_FILE = WorkTracker.rc
+}
+
+unix:!macx {
+    DISTFILES += LICENSE README.md
+    
+    deb.depends   = $(TARGET)
+    deb.commands  = $(COPY_FILE) $$DESTDIR/WorkTracker $$WTROOT/deb                  && \
+                    $(COPY_FILE) $$WTROOT/icon/Icon.svg $$WTROOT/deb/WorkTracker.svg && \
+                    cd $$WTROOT/deb                                                  && \
+                    dpkg-buildpackage -rfakeroot                                     && \
+                    cd ..
+    QMAKE_EXTRA_TARGETS += deb
 }
 
 SOURCES += \
