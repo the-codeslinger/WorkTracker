@@ -19,6 +19,7 @@
 
 #include <functional>
 #include <algorithm>
+#include <type_traits>
 
 /*! \file
  * Contains useful helper methods that are not necessarily bound to a single class.
@@ -51,9 +52,10 @@ inline typename Container::const_iterator findIf(const Container& container, Fun
  * Iterates the container until `func` returns `true`. Returns the found element or a 
  * default constructed one.
  */
-template<typename Container, typename Func>
-inline typename Container::value_type 
-firstOrDefault(Container&& container, Func&& func)
+template<typename Container>
+inline typename Container::value_type
+firstOrDefault(const Container& container,
+               std::function<bool(typename Container::value_type)> func)
 {
     for (const auto& item : container) {
         if (func(item)) {

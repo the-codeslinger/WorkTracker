@@ -105,7 +105,9 @@ WorkTask::isActiveTask() const
 WorkTime 
 WorkTask::activeTime() const
 {
-    return firstOrDefault(times(), [](const WorkTime& time) {
+    // Looks like GCC 4.8.2 isn't able to correctly deduce the type like MSVC 2013 (or
+    // the latter just behaves incorrectly).
+    return firstOrDefault<QList<WorkTime>>(times(), [](const WorkTime& time) {
         return time.stop().isNull();
     });
 }
