@@ -20,7 +20,10 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET    = WorkTracker
 TEMPLATE  = app
 CONFIG   += c++11
-RC_FILE   = WorkTracker.rc
+
+win32 {
+    RC_FILE = WorkTracker.rc
+}
 
 SOURCES += \
     src/main.cpp\
