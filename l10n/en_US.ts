@@ -355,7 +355,7 @@ work-tasks and all of their recorded times?</translation>
     <message>
         <location filename="../src/ui/worktracker.cpp" line="247"/>
         <source>Hide Summary</source>
-        <translation>Hide Summary</translation>
+        <translation>Hide</translation>
     </message>
     <message>
         <location filename="../src/ui/worktracker.cpp" line="268"/>
