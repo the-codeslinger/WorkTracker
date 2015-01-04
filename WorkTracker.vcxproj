@@ -539,7 +539,6 @@
     <ClInclude Include="build\GeneratedFiles\ui_selecttaskdialog.h" />
     <ClInclude Include="build\GeneratedFiles\ui_selectworkdaywidget.h" />
     <ClInclude Include="build\GeneratedFiles\ui_worktracker.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="src\controller\abstractcontroller.h" />
     <ClInclude Include="src\helper.h" />
     <ClInclude Include="src\model\datasource.h" />
