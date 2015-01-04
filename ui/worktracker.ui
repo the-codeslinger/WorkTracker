@@ -25,6 +25,10 @@
   <property name="windowTitle">
    <string>WorkTracker</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../icons.qrc">
+    <normaloff>:/icon/Icon128.png</normaloff>:/icon/Icon128.png</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -165,8 +169,6 @@
      </spacer>
     </item>
    </layout>
-   <zorder>frame</zorder>
-   <zorder>textEdit</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -174,7 +176,7 @@
      <x>0</x>
      <y>0</y>
      <width>499</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
