@@ -147,8 +147,8 @@ WorkDay::distinctTasks() const
         Task task = workTask.task();
         
         auto found = std::find_if(std::begin(tasks), std::end(tasks),
-                                  [task](const Task& task) {
-            return task.id() == task.id();
+                                  [task](const Task& knownTask) {
+            return task.id() == knownTask.id();
         });
 
         if (found == std::end(tasks)) {
