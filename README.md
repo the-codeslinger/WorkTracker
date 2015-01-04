@@ -1,11 +1,11 @@
 WorkTracker
 ===========
 
-WorkTracker helps record the amount of time you've spent on different tasks throughout the day. 
+WorkTracker helps record the amount of time you've spent on different tasks throughout the day. Since version 1.2.3 the application is supported on Windows and Linux.
 
 ![Main UI](https://raw.githubusercontent.com/drunk-on-pain/WorkTracker/master/img/Main%20UI.png)
 
-By starting a new "workday" you can add several tasks you've performed and at the end of the day, let WorkTracker show you a summary of how long you have worked on your tasks. If you're in a working environment with a lot of interruptions then WorkTracker can help you as well. All you need to do is to diligently start and stop the tasks you're performing and WorkTracker adds them all together.
+By starting a new "workday" you can add several tasks you've performed and at the end of the day, let WorkTracker show you a summary of how long you have worked on your tasks. If you're in a working environment with a lot of interruptions then WorkTracker can help you as well. All you need to do is to diligently start and stop the tasks you're performing and WorkTracker adds them all together. And if you ever run into the situation where you forgot to do this or couldn't do it, no worry, WorkTracker comes with an editor to help you out.
 
 ## Start Working
 
@@ -53,13 +53,25 @@ The source code and binary files are distributed under the [Apache 2.0 license](
 
 ## Binaries
 
-I only provide binaries for Windows 7 + 8 x64 operating systems on the [releases][] page. The application should be able to run on earlier version of Windows as well, given you are willing to compile it yourself (which, in theory, is quite easy). The mingw package should contain everything you need. Other operating systems like Mac OS X or Linux should also work. Again, you'll need to compile the application yourself.
+Binaries are provided for 64-bit versions of Windows 7 and 8 and since v1.2.3 for Debian flavored Linux distributions as well. You can download the 7z archive or deb files on the [releases][] page.
+
+The application should be able to run on earlier version of Windows as well, given you are willing to compile it yourself (which, in theory, is quite easy). The mingw package should contain everything you need. Other operating systems like Mac OS X or non-Debian based Linux distributions should also work. Again, you'll need to compile the application yourself.
+
+In the best case, all you need to do is the following.
+
+    qmake WorkTracker.pro
+    make 
+        or 
+    mingw32-make 
+        or 
+    nmake
+    
 
 ## Supported Platforms
 
-The application is able to run on all platforms that are supported by Qt 5.2. Development takes place on Windows. An early version of the application has been successfuly compiled and run on Linux, Mac OS X should be fine as well.
+The application is able to run on all platforms that are supported by Qt 5.2. Development takes mainly place on Windows. The Linux version is compiled on Linux Mint 17.1.
 
-You compiler of choice should support C++11 although this is not yet used extensibly (only `nullptr` and lambdas at the moment). The reference compiler used is Microsofts Visual Studio 2013.
+Your compiler of choice should support C++11. The reference compiler used is Microsofts Visual Studio 2013 and GCC 4.8.2.
 
 ## Database File
 
