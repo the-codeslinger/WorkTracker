@@ -40,6 +40,22 @@ DataSource::DataSource(DataSource&& temp)
     , m_location(std::move(temp.m_location))
 { }
 
+DataSource& 
+DataSource::operator=(const DataSource& other)
+{
+    m_dom = other.m_dom;
+    m_location = other.m_location;
+    return *this;
+}
+
+DataSource& 
+DataSource::operator=(DataSource&& temp)
+{
+    m_dom = std::move(temp.m_dom);
+    m_location = std::move(temp.m_location);
+    return *this;
+}
+
 bool
 DataSource::isNull() const
 {

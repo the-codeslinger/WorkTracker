@@ -18,6 +18,7 @@
 #define HELPER_H
 
 #include <functional>
+#include <algorithm>
 
 /*! \file
  * Contains useful helper methods that are not necessarily bound to a single class.
@@ -50,17 +51,16 @@ inline typename Container::const_iterator findIf(const Container& container, Fun
  * Iterates the container until `func` returns `true`. Returns the found element or a 
  * default constructed one.
  */
-template<typename Container>
+template<typename Container, typename Func>
 inline typename Container::value_type 
-firstOrDefault(const Container& container, 
-               std::function<bool(typename Container::value_type)> func)
+firstOrDefault(Container&& container, Func&& func)
 {
     for (const auto& item : container) {
         if (func(item)) {
             return item;
         }
     }
-    return Container::value_type();
+    return typename Container::value_type();
 }
 
 class QDomNodeList;

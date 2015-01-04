@@ -45,7 +45,17 @@ public:
      * Move-constructor.
      */
     DataSource(DataSource&& temp);
-
+    
+    /*!
+     * Assignment operator.
+     */
+    DataSource& operator=(const DataSource& other);
+    
+    /*!
+     * AMove-asignment operator.
+     */
+    DataSource& operator=(DataSource&& temp);
+    
     /*!
      * \return
      * Returns the state of the data source. If it is correctly loaded then `false` is
