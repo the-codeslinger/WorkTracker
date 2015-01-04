@@ -40,6 +40,9 @@ unix:!macx {
     deb.depends   = $(TARGET)
     deb.commands  = $(COPY_FILE) $$DESTDIR/WorkTracker $$WTROOT/deb                  && \
                     $(COPY_FILE) $$WTROOT/icon/Icon.svg $$WTROOT/deb/WorkTracker.svg && \
+                    $(COPY_FILE) $$WTROOT/l10n/qt_de_DE.qm $$WTROOT/deb              && \
+                    $(COPY_FILE) $$WTROOT/l10n/de_DE.qm    $$WTROOT/deb              && \
+                    $(COPY_FILE) $$WTROOT/l10n/en_US.qm    $$WTROOT/deb              && \
                     cd $$WTROOT/deb                                                  && \
                     dpkg-buildpackage -rfakeroot                                     && \
                     cd ..

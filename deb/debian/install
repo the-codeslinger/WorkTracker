@@ -1,3 +1,6 @@
 WorkTracker         /usr/bin
 WorkTracker.svg     /usr/share/icons/hicolor/scalable/apps
 worktracker.desktop /usr/share/applications
+qt_de_DE.qm         /usr/share/worktracker/l10n
+de_DE.qm            /usr/share/worktracker/l10n
+en_US.qm            /usr/share/worktracker/l10n
