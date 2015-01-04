@@ -44,7 +44,6 @@
  * signals to convey the current status as a result of the `toggle*()` methods.
  */
 class WorkTrackerController : public QObject, public AbstractController
-                              
 {
     Q_OBJECT
 public:
