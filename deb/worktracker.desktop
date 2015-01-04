@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=WorkTracker
+Comment=Track units of work
+Exec=WorkTracker
+Terminal=false
+Type=Application
+StartupNotify=true
+Icon=WorkTracker.svg
+Categories=Utility;

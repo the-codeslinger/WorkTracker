@@ -1,0 +1,13 @@
+Source: worktracker
+Section: unknown
+Priority: optional
+Maintainer: Robert <robert@unknown>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.4
+Homepage: https://github.com/typical-nerd/WorkTracker
+
+Package: worktracker
+Architecture: any
+Depends: libstdc++6, libc6 (>= 2.15), libgcc1 (>= 1:4.1.1), libqt5svg5 (>= 5.0.2), libqt5xml5 (>= 5.2.0), libqt5core5a (>= 5.2.0), libqt5gui5 (>= 5.0.2), libqt5widgets5 (>= 5.2.0), ${shlibs:Depends}
+Description: Track units of work.
+ WorkTracker helps record the amount of time you've spent on different tasks throughout the day. 
