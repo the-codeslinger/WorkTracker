@@ -225,3 +225,6 @@ pip-log.txt
 #############
 
 docs/html
+Makefile
+Makefile.Debug
+Makefile.Release
