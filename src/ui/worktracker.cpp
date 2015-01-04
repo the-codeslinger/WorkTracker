@@ -52,6 +52,9 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     setupLanguageMenu();
     loadTranslations();
 
+    // m_controller->load() is called in showEvent(QShowEvent*) to have the ui ready to
+    // be able to correctly elide text in the status bar.
+
     m_showAnimation.setTargetObject(this);
     m_showAnimation.setPropertyName("size");
     m_showAnimation.setDuration(200);
@@ -120,20 +123,23 @@ WorkTracker::~WorkTracker()
 }
 
 void
-WorkTracker::taskSelected()
+WorkTracker::workDayStarted(QDateTime now)
 {
-    QString taskName = ui->tasksEdit->text();
-    if (taskName.isEmpty()) {
-        ui->statusBar->showMessage(tr("You must enter a task description"), 3000);
-        return;
-    }
+    hideSummary();
 
-    m_controller->toggleTask(taskName);
-
+    ui->workdayButton->setText(tr("Stop &Workday"));
+    ui->workdayButton->setIcon(QIcon(":/icon/Stop-Day.svg"));
     ui->taskButton->setEnabled(true);
     ui->summaryButton->setEnabled(true);
+}
 
-    hideInput();
+void
+WorkTracker::workDayStopped(QDateTime now)
+{
+    ui->workdayButton->setText(tr("Start &New Workday"));
+    ui->workdayButton->setIcon(QIcon(":/icon/Start-Day.svg"));
+    ui->taskButton->setEnabled(false);
+    ui->summaryButton->setEnabled(!ui->textEdit->isVisible());
 }
 
 void
@@ -170,10 +176,28 @@ WorkTracker::workTaskStopped(QDateTime now, QString name)
 }
 
 void
+WorkTracker::taskSelected()
+{
+    QString taskName = ui->tasksEdit->text();
+    if (taskName.isEmpty()) {
+        ui->statusBar->showMessage(tr("You must enter a task description"), 3000);
+        return;
+    }
+
+    m_controller->toggleTask(taskName);
+
+    ui->taskButton->setEnabled(true);
+    ui->summaryButton->setEnabled(true);
+
+    hideInput();
+}
+
+void
 WorkTracker::showInput()
 {
     ui->textEdit->setVisible(false);
     ui->taskButton->setEnabled(false);
+    ui->summaryButton->setEnabled(false);
 
     QSize size = this->size();
     m_showAnimation.setStartValue(size);
@@ -203,41 +227,8 @@ WorkTracker::hideInput()
 }
 
 void
-WorkTracker::showAnimationFinished()
-{
-    // The frame can only be shown once there is enough room for it. Otherwise Qt would
-    // just create space for it on its own and the animation would add more space on top
-    // of that, resulting in a too large window.
-    m_animatedWidget->setVisible(true);
-    if (m_animatedWidget == ui->frame) {
-        ui->tasksEdit->setFocus();
-    }
-}
-
-void
-WorkTracker::workDayStarted(QDateTime now)
-{
-    hideSummary();
-
-    ui->workdayButton->setText(tr("Stop &Workday"));
-    ui->workdayButton->setIcon(QIcon(":/icon/Stop-Day.svg"));
-    ui->taskButton->setEnabled(true);
-}
-
-void
-WorkTracker::workDayStopped(QDateTime now)
-{
-    ui->workdayButton->setText(tr("Start &New Workday"));
-    ui->workdayButton->setIcon(QIcon(":/icon/Start-Day.svg"));
-    ui->taskButton->setEnabled(false);
-    ui->summaryButton->setEnabled(!ui->textEdit->isVisible());
-}
-
-void
 WorkTracker::showSummary()
 {
-    ui->summaryButton->setEnabled(false);
-
     if (!ui->textEdit->isVisible()) {
         ui->frame->setVisible(false);
 
@@ -247,10 +238,16 @@ WorkTracker::showSummary()
         QSize size = this->size();
         m_showAnimation.setStartValue(size);
 
-        size.setHeight(m_collapsedHeight + ui->textEdit->height());
+        auto contentHeight = ui->textEdit->document()->size();
+        size.setHeight(m_collapsedHeight + contentHeight.height());
         m_showAnimation.setEndValue(size);
         m_showAnimation.start();
         m_animatedWidget = ui->textEdit;
+
+        ui->summaryButton->setText(tr("Hide Summary"));
+    }
+    else {
+        hideSummary();
     }
 }
 
@@ -266,6 +263,20 @@ WorkTracker::hideSummary()
         size.setHeight(m_collapsedHeight);
         m_hideAnimation.setEndValue(size);
         m_hideAnimation.start();
+    }
+
+    ui->summaryButton->setText(tr("Summary"));
+}
+
+void
+WorkTracker::showAnimationFinished()
+{
+    // The frame can only be shown once there is enough room for it. Otherwise Qt would
+    // just create space for it on its own and the animation would add more space on top
+    // of that, resulting in a too large window.
+    m_animatedWidget->setVisible(true);
+    if (m_animatedWidget == ui->frame) {
+        ui->tasksEdit->setFocus();
     }
 }
 
@@ -379,6 +390,16 @@ WorkTracker::loadTranslations()
     // These are the languages the application supports
     QStringList locales = { "en_US", "de_DE" };
     
+#if defined(Q_OS_LINUX)
+    // On Linux the translations can be found in /usr/share/worktracker/l10n.
+    QString l10nPath = "/../share/worktracker/l10n/";
+#elif defined (Q_OS_WIN)
+    // On Windows the translations are in the l10n folder in the exe dir.
+    QString l10nPath = "/l10n/";
+#else
+    // On OS X the data is somewhere in the bundle.
+#endif
+    
     // Load the user settings. If none is selected (probably after an update) then try
     // the system language. If that is not supported then fall back to English.
     QSettings settings;
@@ -394,12 +415,12 @@ WorkTracker::loadTranslations()
     }
     
     // Now load the translationss and install one
-    QString appDir = QApplication::applicationDirPath();
+    QString appDir = QApplication::applicationDirPath() + l10nPath;
     
     for (const QString& locale : locales) {
         // Load Qt language file first
         QTranslator* qtLang = new QTranslator(this);
-        if (!qtLang->load(appDir + "/l10n/qt_" + locale + ".qm")) {
+        if (!qtLang->load(appDir + "qt_" + locale + ".qm")) {
             qDebug() << "Cannot load Qt language file <" << locale << "> use English";
             delete qtLang;
             qtLang = nullptr;
@@ -407,7 +428,7 @@ WorkTracker::loadTranslations()
         
         // Now load WorkTracker language file
         QTranslator* appLang = new QTranslator(this);
-        if (!appLang->load(appDir + "/l10n/" + locale + ".qm")) {
+        if (!appLang->load(appDir + locale + ".qm")) {
             qDebug() << "Cannot load WorkTracker language file <" << locale 
                      << "> use English";
             delete appLang;
