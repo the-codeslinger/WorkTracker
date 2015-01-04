@@ -147,7 +147,7 @@ work-tasks and all of their recorded times?</translation>
         <translation>Work-task &quot;%1&quot; has no start time</translation>
     </message>
     <message>
-        <location filename="../src/controller/editorcontroller.cpp" line="60"/>
+        <location filename="../src/controller/editorcontroller.cpp" line="61"/>
         <source>The following tasks are active or have more than one active time: %1</source>
         <translation>The following tasks are active or have more than one active time: %1</translation>
     </message>
@@ -155,7 +155,7 @@ work-tasks and all of their recorded times?</translation>
 <context>
     <name>EditorWizard</name>
     <message>
-        <location filename="../src/ui/editorwizard.cpp" line="29"/>
+        <location filename="../src/ui/editorwizard.cpp" line="30"/>
         <source>Edit Work Tasks</source>
         <translation>Edit Worktasks</translation>
     </message>
@@ -236,125 +236,135 @@ work-tasks and all of their recorded times?</translation>
         <translation>WorkTracker</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="47"/>
-        <location filename="../src/ui/worktracker.cpp" line="230"/>
-        <location filename="../src/ui/worktracker.cpp" line="360"/>
+        <location filename="../ui/worktracker.ui" line="51"/>
+        <location filename="../src/ui/worktracker.cpp" line="139"/>
+        <location filename="../src/ui/worktracker.cpp" line="369"/>
         <source>Start &amp;New Workday</source>
         <translation>Start &amp;New Workday</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="67"/>
-        <location filename="../src/ui/worktracker.cpp" line="166"/>
-        <location filename="../src/ui/worktracker.cpp" line="349"/>
+        <location filename="../ui/worktracker.ui" line="71"/>
+        <location filename="../src/ui/worktracker.cpp" line="172"/>
+        <location filename="../src/ui/worktracker.cpp" line="358"/>
         <source>Start &amp;Task</source>
         <translation>Start &amp;Task</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="93"/>
+        <location filename="../ui/worktracker.ui" line="97"/>
         <source>Show &amp;Summary</source>
         <translation>Show &amp;Summary</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="137"/>
+        <location filename="../ui/worktracker.ui" line="141"/>
         <source>S&amp;elect Task</source>
         <translation>S&amp;elect Task</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="182"/>
+        <location filename="../ui/worktracker.ui" line="184"/>
         <source>&amp;File</source>
         <translation>&amp;File</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="190"/>
+        <location filename="../ui/worktracker.ui" line="192"/>
         <source>&amp;Help</source>
         <translation>&amp;Help</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="197"/>
+        <location filename="../ui/worktracker.ui" line="199"/>
         <source>&amp;Language</source>
         <translation>&amp;Language</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="213"/>
+        <location filename="../ui/worktracker.ui" line="215"/>
         <source>&amp;Quit</source>
         <translation>&amp;Quit</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="216"/>
+        <location filename="../ui/worktracker.ui" line="218"/>
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="228"/>
+        <location filename="../ui/worktracker.ui" line="230"/>
         <source>&amp;About WorkTracker</source>
         <translation>&amp;About WorkTracker</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="240"/>
+        <location filename="../ui/worktracker.ui" line="242"/>
         <source>About &amp;Qt</source>
         <translation>About &amp;Qt</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="252"/>
+        <location filename="../ui/worktracker.ui" line="254"/>
         <source>&amp;Editor</source>
         <translation>&amp;Editor</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="255"/>
+        <location filename="../ui/worktracker.ui" line="257"/>
         <source>Ctrl+E</source>
         <translation>Ctrl+E</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="264"/>
+        <location filename="../ui/worktracker.ui" line="266"/>
         <source>Preferences</source>
         <translation>Preferences</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="267"/>
+        <location filename="../ui/worktracker.ui" line="269"/>
         <source>Ctrl+,</source>
         <translation>Ctrl+,</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="285"/>
+        <location filename="../ui/worktracker.ui" line="287"/>
         <source>&amp;English (US)</source>
         <translation>&amp;English (US)</translation>
     </message>
     <message>
-        <location filename="../ui/worktracker.ui" line="300"/>
+        <location filename="../ui/worktracker.ui" line="302"/>
         <source>&amp;German</source>
         <translation>&amp;Deutsch</translation>
     </message>
     <message>
-        <location filename="../src/ui/worktracker.cpp" line="309"/>
+        <location filename="../src/ui/worktracker.cpp" line="318"/>
         <source>Total time %1h %2m</source>
         <translation>Total time %1h %2m</translation>
     </message>
     <message>
-        <location filename="../src/ui/worktracker.cpp" line="127"/>
+        <location filename="../src/ui/worktracker.cpp" line="183"/>
         <source>You must enter a task description</source>
         <translation>You must enter a task description</translation>
     </message>
     <message>
-        <location filename="../src/ui/worktracker.cpp" line="150"/>
-        <location filename="../src/ui/worktracker.cpp" line="342"/>
+        <location filename="../src/ui/worktracker.cpp" line="156"/>
+        <location filename="../src/ui/worktracker.cpp" line="351"/>
         <source>Stop &amp;Task</source>
         <translation>Stop &amp;Task</translation>
     </message>
     <message>
-        <location filename="../src/ui/worktracker.cpp" line="153"/>
-        <location filename="../src/ui/worktracker.cpp" line="345"/>
+        <location filename="../src/ui/worktracker.cpp" line="159"/>
+        <location filename="../src/ui/worktracker.cpp" line="354"/>
         <source>%1 started at %2</source>
         <translation>%1 started at %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/worktracker.cpp" line="169"/>
-        <location filename="../src/ui/worktracker.cpp" line="352"/>
+        <location filename="../src/ui/worktracker.cpp" line="175"/>
+        <location filename="../src/ui/worktracker.cpp" line="361"/>
         <source>%1 stopped at %2</source>
         <translation>%1 stopped at %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/worktracker.cpp" line="222"/>
-        <location filename="../src/ui/worktracker.cpp" line="357"/>
+        <location filename="../src/ui/worktracker.cpp" line="247"/>
+        <source>Hide Summary</source>
+        <translation>Hide Summary</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/worktracker.cpp" line="268"/>
+        <source>Summary</source>
+        <translation>Summary</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/worktracker.cpp" line="130"/>
+        <location filename="../src/ui/worktracker.cpp" line="366"/>
         <source>Stop &amp;Workday</source>
         <translation>Stop &amp;Workday</translation>
     </message>
