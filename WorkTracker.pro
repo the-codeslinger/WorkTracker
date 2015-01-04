@@ -25,14 +25,18 @@ RC_FILE   = WorkTracker.rc
 SOURCES += \
     src/main.cpp\
     src/helper.cpp \
+    src/controller/abstractcontroller.cpp \
     src/controller/editorcontroller.cpp \
     src/controller/preferencescontroller.cpp \
     src/controller/worktrackercontroller.cpp \
+    src/model/datasource.cpp \
     src/model/task.cpp \
-    src/model/worktask.cpp \
+    src/model/tasklist.cpp \
     src/model/workday.cpp \
-    src/model/xmldata.cpp \
+    src/model/workdaylist.cpp \
+    src/model/worktask.cpp \
     src/model/worktime.cpp \
+    src/model/xmldata.cpp \
     src/ui/delegate/workdaydelegate.cpp \
     src/ui/delegate/taskdelegate.cpp \
     src/ui/model/tasklistmodel.cpp \
@@ -49,14 +53,18 @@ SOURCES += \
 
 HEADERS  += \
     src/helper.h \
+    src/controller/abstractcontroller.h \
     src/controller/worktrackercontroller.h \
     src/controller/editorcontroller.h \
     src/controller/preferencescontroller.h \
+    src/model/datasource.h \
     src/model/task.h \
-    src/model/worktask.h \
+    src/model/tasklist.h \
     src/model/workday.h \
-    src/model/xmldata.h \
+    src/model/workdaylist.h \
+    src/model/worktask.h \
     src/model/worktime.h \
+    src/model/xmldata.h \
     src/ui/delegate/workdaydelegate.h \
     src/ui/delegate/taskdelegate.h \
     src/ui/model/tasklistmodel.h \
