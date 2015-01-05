@@ -20,7 +20,7 @@
 #include <algorithm>
 
 WorkDayModel::WorkDayModel(QObject* p_parent)
-    : QAbstractListModel(p_parent)
+    : QAbstractListModel{p_parent}
 {
 }
 
@@ -47,21 +47,21 @@ QVariant
 WorkDayModel::data(const QModelIndex& p_index, int p_role) const
 {
     if (!p_index.isValid()) {
-        return QVariant();
+        return QVariant{};
     }
 
     if (Qt::DisplayRole == p_role || Qt::EditRole == p_role) {
         // Descending order means treating the last item in the tree as "0"
-        int reversedIndex = rowCount() - 1 - p_index.row();
-        WorkDay workday = m_workDayList.at(reversedIndex);
+        auto reversedIndex = rowCount() - 1 - p_index.row();
+        auto workday = m_workDayList.at(reversedIndex);
         if (workday.isNull()) {
-            return QVariant();
+            return QVariant{};
         }
 
-        QVariant value;
+        auto value = QVariant{};
         value.setValue(workday);
         return value;
     }
 
-    return QVariant();
+    return QVariant{};
 }

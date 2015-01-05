@@ -18,18 +18,18 @@
 #include "preferencescontroller.h"
 #include "../helper.h"
 
-#include <QDomDocument>
 #include <QDateTime>
+#include <QDomDocument>
 #include <QDebug>
-#include <QApplication>
-#include <QMapIterator>
-#include <QSettings>
+//#include <QMapIterator>
+
+#include <algorithm>
 
 static const int TIMER_TIMEOUT = 30 * 1000;
 
-WorkTrackerController::WorkTrackerController(const QString& databaseLocation)
-    : QObject()
-    , AbstractController(databaseLocation)
+WorkTrackerController::WorkTrackerController(QString databaseLocation)
+    : QObject{}
+    , AbstractController{std::move(databaseLocation)}
     , m_isNewWorkDay(false)
     , m_isRecording(false)
 {
@@ -74,7 +74,7 @@ WorkTrackerController::load()
 void
 WorkTrackerController::toggleWorkDay()
 {
-    QDateTime now = QDateTime::currentDateTimeUtc();
+    auto now = QDateTime::currentDateTimeUtc();
     if (!m_isNewWorkDay) {
         startWorkDay(now);
     }
@@ -86,7 +86,7 @@ WorkTrackerController::toggleWorkDay()
 }
 
 void
-WorkTrackerController::toggleTask(QString name)
+WorkTrackerController::toggleTask(const QString& name)
 {
     if (m_isRecording) {
         stopWorkTask(name);
@@ -125,19 +125,19 @@ WorkTrackerController::generateSummary() const
 }
 
 void
-WorkTrackerController::startWorkDay(QDateTime p_now)
+WorkTrackerController::startWorkDay(const QDateTime& p_now)
 {
-    m_workday = WorkDay(m_dataSource, p_now, QDateTime());
+    m_workday = WorkDay{m_dataSource, p_now, QDateTime{}};
 
-    QDomElement root = m_dataSource.document().documentElement();
-    QDomElement days = root.firstChildElement("workdays");
+    auto root = m_dataSource.document().documentElement();
+    auto days = root.firstChildElement("workdays");
 
-    QDomNode elem = m_workday.element();
+    auto elem = m_workday.element();
     if (elem.isNull()) {
         emit error(tr("Could not create <workday> XML element"));
     }
 
-    QDomNode result = days.appendChild(elem);
+    auto result = days.appendChild(elem);
     if (result.isNull()) {
         emit error(tr("Could not add <workday> to <workdays> XML element"));
     }
@@ -146,7 +146,7 @@ WorkTrackerController::startWorkDay(QDateTime p_now)
 }
 
 void
-WorkTrackerController::stopWorkDay(QDateTime now)
+WorkTrackerController::stopWorkDay(const QDateTime& now)
 {
     if (m_workday.isNull()) {
         emit error(tr("No active work-day"));
@@ -158,7 +158,7 @@ WorkTrackerController::stopWorkDay(QDateTime now)
 }
 
 void
-WorkTrackerController::startWorkTask(QString name)
+WorkTrackerController::startWorkTask(const QString& name)
 {
     if (name.isEmpty()) {
         emit error(tr("A task-name must be specified to start a new task"));
@@ -167,11 +167,11 @@ WorkTrackerController::startWorkTask(QString name)
     
     m_timer.start(TIMER_TIMEOUT);
     
-    QDateTime now = QDateTime::currentDateTimeUtc();
-    Task task = findOrCreateTask(name);
+    auto now  = QDateTime::currentDateTimeUtc();
+    auto task = findOrCreateTask(name);
 
     // Always reset before starting a new one.
-    m_recordingWorkTime = WorkTime(m_dataSource, now, QDateTime());
+    m_recordingWorkTime = WorkTime{m_dataSource, now, QDateTime{}};
     m_recordingWorkTask = m_workday.findWorkTask(task);
     if (m_recordingWorkTask.isNull()) {
         m_recordingWorkTask = WorkTask(m_dataSource, task);
@@ -190,7 +190,7 @@ WorkTrackerController::startWorkTask(QString name)
 }
 
 void
-WorkTrackerController::stopWorkTask(QString name)
+WorkTrackerController::stopWorkTask(const QString& name)
 {
     m_timer.stop();
     
@@ -198,21 +198,20 @@ WorkTrackerController::stopWorkTask(QString name)
     // and add the stop timestamp to our current values and be done with it. If the tasks
     // are different then we have to re-assign the work-time from the current work-task
     // to the new one.
-    Task newTask = findOrCreateTask(name);
-    
-    Task recTask = m_recordingWorkTask.task();
+    auto newTask = findOrCreateTask(name);
+    auto recTask = m_recordingWorkTask.task();
     
     if (newTask.id() != recTask.id()) {
-        WorkTask otherWorkTask = m_workday.findWorkTask(newTask);
+        auto otherWorkTask = m_workday.findWorkTask(newTask);
         if (otherWorkTask.isNull()) {
-            otherWorkTask = WorkTask(m_dataSource, newTask);
+            otherWorkTask = WorkTask{m_dataSource, newTask};
             m_workday.addWorkTask(otherWorkTask);
         }
         
         otherWorkTask.addTime(m_recordingWorkTime);
     }
     
-    QDateTime timestamp = QDateTime::currentDateTimeUtc();
+    auto timestamp = QDateTime::currentDateTimeUtc();
     if (m_recordingWorkTime.stop().isNull()) {
         m_recordingWorkTime.setStop(timestamp);
     }
@@ -221,8 +220,8 @@ WorkTrackerController::stopWorkTask(QString name)
     }
     
     // Always reset after it is not needed any more
-    m_recordingWorkTask = WorkTask();
-    m_recordingWorkTime = WorkTime();
+    m_recordingWorkTask = WorkTask{};
+    m_recordingWorkTime = WorkTime{};
 
     emit workTaskStopped(timestamp, name);
 }
@@ -230,10 +229,10 @@ WorkTrackerController::stopWorkTask(QString name)
 void
 WorkTrackerController::timeout()
 {
-    int totalMinutes = static_cast<int>(m_workday.totalTime() / 60);
+    auto totalMinutes = static_cast<int>(m_workday.totalTime() / 60);
 
-    int hours   = static_cast<int>(totalMinutes / 60);
-    int minutes = static_cast<int>(totalMinutes % 60);
+    auto hours   = static_cast<int>(totalMinutes / 60);
+    auto minutes = static_cast<int>(totalMinutes % 60);
 
     emit totalTimeChanged(hours, minutes);
 }
@@ -250,8 +249,8 @@ WorkTrackerController::setActiveTask(const WorkTask& p_task)
         m_recordingWorkTask = p_task;
     }
     
-    QString name  = m_recordingWorkTask.task().name();
-    QDateTime now = QDateTime::currentDateTimeUtc();
+    auto name = m_recordingWorkTask.task().name();
+    auto now  = QDateTime::currentDateTimeUtc();
     
     m_recordingWorkTime = p_task.activeTime();
     if (!m_recordingWorkTime.isNull()) {
@@ -286,7 +285,7 @@ WorkTrackerController::closeCurrentTask()
 Task 
 WorkTrackerController::findOrCreateTask(const QString& name)
 {
-    Task found = m_taskList.find(name);
+    auto found = m_taskList.find(name);
     if (found.isNull()) {
         found = Task(m_dataSource, name, QDate::currentDate());
         m_taskList.add(found);

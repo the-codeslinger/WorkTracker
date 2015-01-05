@@ -23,7 +23,7 @@
 #include <algorithm>
 
 SelectedWorkDayModel::SelectedWorkDayModel(QObject* p_parent)
-    : QAbstractListModel(p_parent)
+    : QAbstractListModel{p_parent}
 {
 }
 
@@ -37,15 +37,15 @@ QVariant
 SelectedWorkDayModel::data(const QModelIndex& p_index, int p_role) const
 {
     if (!p_index.isValid() || p_index.row() >= m_workday.countWorkTasks()) {
-        return QVariant();
+        return QVariant{};
     }
 
     if (Qt::DisplayRole == p_role || Qt::EditRole == p_role) {
         auto wt = m_workday.at(p_index.row());
-        return QVariant(wt.task().name());
+        return QVariant{wt.task().name()};
     }
 
-    return QVariant();
+    return QVariant{};
 }
 
 bool 
@@ -57,7 +57,7 @@ SelectedWorkDayModel::setData(const QModelIndex& p_index, const QVariant& p_valu
     }
     
     if (Qt::EditRole == p_role) {
-        QString name = p_value.toString();
+        auto name = p_value.toString();
         if (!name.isEmpty()) {
             auto dataSource = m_workday.dataSource();
             auto tlist      = TaskList{dataSource};
@@ -92,7 +92,7 @@ SelectedWorkDayModel::setData(const QModelIndex& p_index, const QVariant& p_valu
 Qt::ItemFlags 
 SelectedWorkDayModel::flags(const QModelIndex& p_index) const
 {
-    Qt::ItemFlags flags = QAbstractListModel::flags(p_index);
+    auto flags = QAbstractListModel::flags(p_index);
     flags |= Qt::ItemIsEditable;
     return flags;
 }
@@ -102,7 +102,7 @@ SelectedWorkDayModel::setWorkDay(const WorkDay& p_workday)
 {
     beginResetModel();
 
-    m_workday   = p_workday;
+    m_workday = p_workday;
 
     endResetModel();
 }
@@ -111,7 +111,7 @@ WorkTask
 SelectedWorkDayModel::workTask(const QModelIndex& p_index) const
 {
     if (!p_index.isValid() || p_index.row() >= m_workday.countWorkTasks()) {
-        return WorkTask();
+        return WorkTask{};
     }
 
     return m_workday.at(p_index.row());
@@ -139,7 +139,7 @@ SelectedWorkDayModel::appendTask(const QString& p_name)
     }
     
     auto count = m_workday.countWorkTasks();
-    beginInsertRows(QModelIndex(), count, count);
+    beginInsertRows(QModelIndex{}, count, count);
     
     // We know nothing about this task right now, other than it exists. The setData() 
     // method has to do all the heavy lifting to figure out where it belongs once it
@@ -164,12 +164,12 @@ SelectedWorkDayModel::removeTasks(QModelIndexList p_indexes)
         return p_second.row() < p_first.row();
     });
     
-    for (const QModelIndex& index : p_indexes) {
+    for (const auto& index : p_indexes) {
         if (!index.isValid() || index.row() >= m_workday.countWorkTasks()) {
             continue;
         }
         
-        beginRemoveRows(QModelIndex(), index.row(), index.row());
+        beginRemoveRows(QModelIndex{}, index.row(), index.row());
         
         auto workTask = m_workday.at(index.row());
         workTask.clear();

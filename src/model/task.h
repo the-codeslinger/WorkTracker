@@ -20,6 +20,8 @@
 #include "xmldata.h"
 #include "datasource.h"
 
+class QString;
+
 /*!
  * \brief A task is a named description of a certain kind of work.
  *

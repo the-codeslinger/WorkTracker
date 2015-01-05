@@ -22,8 +22,8 @@
 
 #include <QAbstractListModel>
 #include <QModelIndex>
-#include <QVariant>
-#include <QDomDocument>
+
+class QVariant;
 
 /*!
  * Internally this uses the DOM document as data source and the `Task` class to conform

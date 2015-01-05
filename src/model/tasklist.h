@@ -19,6 +19,7 @@
 
 #include "xmldata.h"
 #include "datasource.h"
+
 #include <functional>
 
 class Task;

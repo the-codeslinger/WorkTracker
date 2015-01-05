@@ -20,14 +20,28 @@
 #include "../../model/datasource.h"
 
 #include <QStyledItemDelegate>
-#include <QDomDocument>
 
+/*!
+ * Provides a completer for an item in a list of tasks.
+ */
 class TaskDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
+    /*!
+     * Create a new delegate.
+     *
+     * \param p_dataSource
+     * The database connection.
+     *
+     * \param p_parent
+     * Parent of the delegate.
+     */
     TaskDelegate(DataSource p_dataSource, QObject* p_parent = nullptr);
     
+    /*!
+     * Creates and returns the line-edit widget with a connected completer.
+     */
     QWidget* createEditor(QWidget* p_parent, const QStyleOptionViewItem& p_option, 
                           const QModelIndex& p_index) const;
     

@@ -21,8 +21,8 @@
 #include <QLineEdit>
 
 TaskDelegate::TaskDelegate(DataSource p_dataSource, QObject* p_parent)
-    : QStyledItemDelegate(p_parent)
-    , m_dataSource(std::move(p_dataSource))
+    : QStyledItemDelegate{p_parent}
+    , m_dataSource{std::move(p_dataSource)}
 {
 }
 
@@ -34,8 +34,8 @@ TaskDelegate::createEditor(QWidget* p_parent, const QStyleOptionViewItem& /* p_o
         return nullptr;
     }
     
-    QLineEdit*  lineEdit  = new QLineEdit(p_parent);
-    QCompleter* completer = new QCompleter(lineEdit);
+    auto* lineEdit  = new QLineEdit(p_parent);
+    auto* completer = new QCompleter(lineEdit);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setFilterMode(Qt::MatchContains);
     completer->setModel(new TaskListModel(m_dataSource, completer));

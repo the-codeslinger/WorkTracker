@@ -22,16 +22,53 @@
 
 class WorkDay;
 
+/*!
+ * Wrapper around the DOM node of all work-day nodes in the database.
+ */
 class WorkDayList : public XmlData
 {
 public:
+    /*!
+     * Create a new work-day list. In order to use the list a data source must be set
+     * first.
+     */
     WorkDayList();
+
+    /*!
+     * Create a new work-day list.
+     *
+     * \param dataSource
+     * The database from which the data is read.
+     */
     WorkDayList(DataSource dataSource);
     
+    /*!
+     * Set the database from which the data is read.
+     */
     void setDataSource(DataSource dataSource);
 
+    /*!
+     * \return
+     * Returns the number of work-days in the list.
+     */
     int size() const;
+
+    /*!
+     * \return
+     * If the latest work-day has not been finished then it is returned. Otherwise a
+     * null-object is returned.
+     */
     WorkDay findLastOpen() const;
+
+    /*!
+     * Get a specific work-day from the list.
+     *
+     * \param index
+     * The position of the work-day in the list.
+     *
+     * \return
+     * Returns the requested work-day or a null-object if the index is out of bounds.
+     */
     WorkDay at(int index) const;
 
 private:

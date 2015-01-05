@@ -23,11 +23,11 @@
 static const QString g_elementName = "tasks";
 
 TaskList::TaskList()
-    : XmlData()
+    : XmlData{}
 { }
 
 TaskList::TaskList(DataSource dataSource)
-    : XmlData(std::move(dataSource), QDomElement())
+    : XmlData{std::move(dataSource), QDomElement{}}
 {
     findOrCreateElement();
 }
@@ -60,10 +60,10 @@ Task
 TaskList::find(int id) const
 {
     return find([id](const QDomElement& element) {
-        QString value = element.attribute("id");
+        auto value = element.attribute("id");
         if (!value.isNull()) {
-            bool ok = false;
-            int foundId = value.toInt(&ok);
+            auto ok = false;
+            auto foundId = value.toInt(&ok);
             if (ok) {
                 return id == foundId;
             }
@@ -84,20 +84,20 @@ Task
 TaskList::find(std::function<bool(QDomElement)> predicate) const
 {
     if (m_element.isNull()) {
-        return Task();
+        return Task{};
     }
 
     auto found = findFirstNode(m_element.childNodes(), predicate);
     if (!found.isNull()) {
-        return Task(m_dataSource, found);
+        return Task{m_dataSource, found};
     }
-    return Task();
+    return Task{};
 }
 
 void 
 TaskList::findOrCreateElement()
 {
-    QDomElement root = m_dataSource.document().documentElement();
+    auto root = m_dataSource.document().documentElement();
     if (!root.isNull()) {
         m_element = root.firstChildElement(g_elementName);
         if (m_element.isNull()) {

@@ -34,7 +34,7 @@ public:
      * If specified the XML file at that location will be used as database file. 
      * Other the standard location in the user's data directory is used.
      */
-    DataSource(const QString& location = "");
+    DataSource(QString location = "");
 
     /*!
      * Copy-constructor.

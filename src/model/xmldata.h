@@ -20,7 +20,6 @@
 #include "datasource.h"
 
 #include <QDomElement>
-#include <QDomDocument>
 
 class QString;
 class QDate;
@@ -56,7 +55,7 @@ public:
      * \param dataSource
      * A loaded XML file. Ownership of the data source stays with the calling code.
      */
-    void setDataSource(const DataSource& dataSource);
+    void setDataSource(DataSource dataSource);
 
     /*!
      * \return

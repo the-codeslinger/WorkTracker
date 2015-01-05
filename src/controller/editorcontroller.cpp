@@ -21,28 +21,29 @@
 #include <QStringList>
 #include <QDateTime>
 
+#include <algorithm>
+
 EditorController::EditorController(DataSource dataSource, QObject* parent)
-    : QObject(parent)
-    , AbstractController(std::move(dataSource))
-{
-}
+    : QObject{parent}
+    , AbstractController{std::move(dataSource)}
+{ }
 
 void 
 EditorController::validateModel(const WorkDay& workDay)
 {
-    QStringList activeTasks;
+    auto activeTasks = QStringList{};
         
-    QList<WorkTask> workTasks = workDay.workTasks();
-    for (const WorkTask& workTask : workTasks) {
-        QString taskName = workTask.task().name();
+    auto workTasks = workDay.workTasks();
+    for (const auto& workTask : workTasks) {
+        auto taskName = workTask.task().name();
             
         if (taskName.isEmpty()) {
             emit validationError(tr("There is a work-task without a name"));
             return;
         }
             
-        QList<WorkTime> workTimes = workTask.times();
-        for (const WorkTime& workTime : workTimes) {
+        auto workTimes = workTask.times();
+        for (const auto& workTime : workTimes) {
             if (workTime.start().isNull()) {
                 emit validationError(tr("Work-task \"%1\" has no start time")
                                        .arg(workTask.task().name()));
@@ -71,15 +72,15 @@ EditorController::updateActiveWorkTasks()
 {
     // Find the latest workday and see what's active and what is not. The latest work-day
     // is number of work-days minus 1 (zero-based index).
-    WorkDayList workDayList(m_dataSource);
-    int countDays = workDayList.size();
-    WorkDay workDay = workDayList.at(countDays - 1);
+    auto workDayList = WorkDayList{m_dataSource};
+    auto countDays   = workDayList.size();
+    auto workDay     = workDayList.at(countDays - 1);
     
     if (!workDay.isNull()) {
-        WorkTask activeWorkTask;
+        auto activeWorkTask = WorkTask{};
         
-        QList<WorkTask> workTasks = workDay.workTasks();
-        for (const WorkTask& workTask : workTasks) {
+        auto workTasks = workDay.workTasks();
+        for (const auto& workTask : workTasks) {
             if (workTask.task().isNull()) {
                 continue;
             }

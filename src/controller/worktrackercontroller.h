@@ -25,12 +25,10 @@
 #include "../model/workdaylist.h"
 
 #include <QObject>
-#include <QString>
-#include <QDate>
-#include <QTime>
-#include <QDateTime>
 #include <QTimer>
-#include <QMap>
+#include <QString>
+
+class QDateTime;
 
 /*!
  * \brief Contains the business logic of the WorkTracker application.
@@ -40,8 +38,8 @@
  * have many methods to interact with. There are a few to set it up (`run()`,
  * `setUi(WorkTracker*)`) and exactly two that perform the task of tracking tasks.
  * `toggleWorkDay()` either starts a new or stops a running workday, based on the current
- * state of the application. The same goes for `toggleTask(QString)`. Both methods emit
- * signals to convey the current status as a result of the `toggle*()` methods.
+ * state of the application. The same goes for `toggleTask(const QString&)`. Both methods
+ * emit signals to convey the current status as a result of the `toggle*()` methods.
  */
 class WorkTrackerController : public QObject, public AbstractController
 {
@@ -53,7 +51,7 @@ public:
      * \param[in] location
      * Full filename of the database if specified by the user on the command line.
      */
-    WorkTrackerController(const QString& databaseLocation);
+    WorkTrackerController(QString databaseLocation);
 
     /*!
      * Search the database for the last open workday and load it. Emits 
@@ -100,7 +98,7 @@ signals:
      * \param start
      * The timestamp of the start in UTC format.
      */
-    void workDayStarted(QDateTime start);
+    void workDayStarted(const QDateTime& start);
 
     /*!
      * Emitted as a result to a call to `toggleWorkDay()` when a workday has been
@@ -109,7 +107,7 @@ signals:
      * \param now
      * The timestamp of the stop in UTC format.
      */
-    void workDayStopped(QDateTime now);
+    void workDayStopped(const QDateTime& now);
 
     /*!
      * Emitted as a result to a call to `toggleTask(QString)` when a worktask has been
@@ -121,11 +119,11 @@ signals:
      * \param name
      * The name of the task.
      */
-    void workTaskStarted(QDateTime now, QString name);
+    void workTaskStarted(const QDateTime& now, const QString& name);
 
     /*!
-     * Emitted as a result to a call to `toggleTask(QString)` when a worktask has been
-     * finished.
+     * Emitted as a result to a call to `toggleTask(const QString&)` when a worktask has
+     * been finished.
      *
      * \param now
      * The timestamp of the stop in UTC format.
@@ -133,7 +131,7 @@ signals:
      * \param name
      * The name of the task.
      */
-    void workTaskStopped(QDateTime now, QString name);
+    void workTaskStopped(const QDateTime& now, const QString& name);
 
     /*!
      * Emitted whenever there is an error processing the `toggle*()` methods.
@@ -141,7 +139,7 @@ signals:
      * \param text
      * Error description.
      */
-    void error(QString text);
+    void error(const QString& text);
 
     /*!
      * Emitted every minute if the status is recording, which means that a task is
@@ -158,18 +156,18 @@ signals:
 public slots:
     /*!
      * Starts or stops a new workday. The current state is managed by the controller and
-     * the signal `workDayStarted(QDateTime)` is emitted if a new day has been started or
-     * `workDayStopped(QDateTime)` if a running day has been finished.
+     * the signal `workDayStarted(const QDateTime&)` is emitted if a new day has been started or
+     * `workDayStopped(const QDateTime&)` if a running day has been finished.
      */
     void toggleWorkDay();
 
     /*!
      * Starts or stops a new worktask. The current state is managed by the controller and
-     * the signal `workTaskStarted(QDateTime, QString)` is emitted if a new task has been
-     * started or `workTaskStopped(QDateTime, QString)` if a running task has been
+     * the signal `workTaskStarted(const QDateTime&, const QString&)` is emitted if a new task has been
+     * started or `workTaskStopped(const QDateTime&, const QString&)` if a running task has been
      * finished.
      */
-    void toggleTask(QString name);
+    void toggleTask(const QString& name);
     
     /*!
      * Replaces the currently running task with a new one. If the current task is not yet
@@ -233,24 +231,24 @@ private:
     /*!
      * The actual implementation that starts a new workday. Called by `toggleWorkDay()`.
      */
-    void startWorkDay(QDateTime now);
+    void startWorkDay(const QDateTime& now);
 
     /*!
      * The actual implementation that stops a running workday. Called by
      * `toggleWorkDay()`.
      */
-    void stopWorkDay(QDateTime now);
+    void stopWorkDay(const QDateTime& now);
 
     /*!
-     * The actual implementation that starts a new task. Called by `toggleTask(QString)`.
+     * The actual implementation that starts a new task. Called by `toggleTask(const QString&)`.
      */
-    void startWorkTask(QString name);
+    void startWorkTask(const QString& name);
 
     /*!
      * The actual implementation that stops a running task. Called by
-     * `toggleTask(QString)`.
+     * `toggleTask(const QString&)`.
      */
-    void stopWorkTask(QString name);
+    void stopWorkTask(const QString& name);
 
     /*!
      * Looks up the task name in the list of tasks and returns the found one or creates 

@@ -27,17 +27,17 @@
 static const QString g_elementName = "workday";
 
 WorkDay::WorkDay()
-    : XmlData()
+    : XmlData{}
 { }
 
 
 WorkDay::WorkDay(DataSource dataSource, const QDomElement& node)
-    : XmlData(std::move(dataSource), node)
+    : XmlData{std::move(dataSource), node}
 {
 }
 
 WorkDay::WorkDay(DataSource dataSource, const QDateTime& start, const QDateTime& stop)
-    : XmlData(std::move(dataSource), g_elementName)
+    : XmlData{std::move(dataSource), g_elementName}
 {
     setAttribute("start", start);
     setAttribute("stop",  stop);
@@ -84,32 +84,32 @@ WorkDay::findWorkTask(const Task& task) const
 QString
 WorkDay::generateSummary() const
 {
-    QString value;
-    QTextStream html(&value);
+    auto value = QString{};
+    QTextStream html{&value};
     html << "<html>"
          << "<head><title>WorkTracker Summary</title></head>"
          << "<body><ul>";
 
-    QMap<QString, int> durations;
+    auto durations = QMap<QString, int>{};
     iterateWorkTasks([&durations](const WorkTask& workTask) {
-        Task task = workTask.task();
+        auto task = workTask.task();
         
-        QMap<QString, int>::iterator found = durations.find(task.name());
+        auto found = durations.find(task.name());
         if (found == durations.end()) {
             durations.insert(task.name(), workTask.timeInSeconds());
         }
         else {
-            int& totalTime = found.value();
+            auto& totalTime = found.value();
             totalTime += workTask.timeInSeconds();
         }
     });
 
-    QMapIterator<QString, int> iter(durations);
+    auto iter = QMapIterator<QString, int>{durations};
     while (iter.hasNext()) {
         auto item = iter.next();
 
-        float minutes = item.value() / 60.0f;
-        float hours   = minutes      / 60.0f;
+        auto minutes = item.value() / 60.0f;
+        auto hours   = minutes      / 60.0f;
 
         html << "<li><i>" << item.key() << "</i>: ";
         html << roundTwoDecimals(hours) << " h (" << qRound(minutes) << " min)";
@@ -132,7 +132,7 @@ WorkDay::activeWorkTask() const
 int
 WorkDay::totalTime() const
 {
-    int duration = 0;
+    auto duration = 0;
     iterateWorkTasks([&duration](const WorkTask& workTask) {
         duration += workTask.timeInSeconds();
     });
@@ -142,10 +142,9 @@ WorkDay::totalTime() const
 QList<Task>
 WorkDay::distinctTasks() const
 {
-    QList<Task> tasks;
+    auto tasks = QList<Task>{};
     iterateWorkTasks([&tasks](const WorkTask& workTask) {
-        Task task = workTask.task();
-        
+        auto task  = workTask.task();
         auto found = std::find_if(std::begin(tasks), std::end(tasks),
                                   [task](const Task& knownTask) {
             return task.id() == knownTask.id();
@@ -161,7 +160,7 @@ WorkDay::distinctTasks() const
 QList<WorkTask> 
 WorkDay::workTasks() const
 {
-    QList<WorkTask> tasks;
+    auto tasks = QList<WorkTask>{};
     
     forEachNode(m_element.childNodes(), [&tasks, this](const QDomElement& element) {
         tasks << WorkTask(m_dataSource, element);
@@ -195,7 +194,7 @@ WorkDay::findWorkTask(std::function<bool(const WorkTask&)> predicate) const
         return WorkTask(m_dataSource, element);
     }
     
-    return WorkTask();
+    return WorkTask{};
 }
 
 WorkTask 

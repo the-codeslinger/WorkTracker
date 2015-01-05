@@ -16,12 +16,14 @@
 
 #include "abstractcontroller.h"
 
+#include <algorithm>
+
 AbstractController::AbstractController(QString databaseLocation)
-    : m_dataSource(std::move(databaseLocation))
+    : m_dataSource{std::move(databaseLocation)}
 { }
 
 AbstractController::AbstractController(DataSource dataSource)
-    : m_dataSource(std::move(dataSource))
+    : m_dataSource{std::move(dataSource)}
 { }
 
 DataSource

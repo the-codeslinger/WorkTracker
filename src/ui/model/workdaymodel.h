@@ -21,7 +21,6 @@
 #include "../../model/workdaylist.h"
 
 #include <QAbstractListModel>
-#include <QDomDocument>
 
 /*!
  * Returns a read-only list of all the workdays in the database.

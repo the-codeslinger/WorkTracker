@@ -80,25 +80,25 @@ public slots:
      * \see
      * WorkTrackerController::workDayStarted(QDateTime)
      */
-    void workDayStarted(QDateTime now);
+    void workDayStarted(const QDateTime& now);
 
     /*!
      * \see
      * WorkTrackerController::workDayStopped(QDateTime)
      */
-    void workDayStopped(QDateTime now);
+    void workDayStopped(const QDateTime& now);
 
     /*!
      * \see
      * WorkTrackerController::workTaskStarted(QDateTime, QString)
      */
-    void workTaskStarted(QDateTime now, QString name);
+    void workTaskStarted(const QDateTime& now, const QString&);
 
     /*!
      * \see
      * WorkTrackerController::workTaskStopped(QDateTime, QString)
      */
-    void workTaskStopped(QDateTime now, QString name);
+    void workTaskStopped(const QDateTime& now, const QString&);
 
     /*!
      * \see
@@ -232,7 +232,7 @@ private:
      * Following values are needed for setting the correct status message text after the
      * language changes.
      */
-    QString m_name;
+    QString   m_name;
     QDateTime m_timestamp;
     int m_hours;
     int m_minutes;

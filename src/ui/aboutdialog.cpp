@@ -18,9 +18,9 @@
 #include "ui_aboutdialog.h"
 
 AboutDialog::AboutDialog(QWidget* parent)
-    : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint
-                    | Qt::WindowCloseButtonHint)
-    , ui(new Ui::AboutDialog)
+    : QDialog{parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint
+                    | Qt::WindowCloseButtonHint}
+    , ui{new Ui::AboutDialog}
 {
     ui->setupUi(this);
     ui->licenseLabel->setOpenExternalLinks(true);

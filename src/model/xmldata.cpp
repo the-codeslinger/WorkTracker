@@ -24,29 +24,28 @@ XmlData::XmlData()
 { }
 
 XmlData::XmlData(DataSource dataSource, const QString& name)
-    : m_dataSource(std::move(dataSource))
+    : m_dataSource{std::move(dataSource)}
 {
     if (!dataSource.isNull()) {
-
         m_element = m_dataSource.document().createElement(name);
     }
 }
 
 XmlData::XmlData(DataSource dataSource, const QDomElement& element)
-    : m_dataSource(std::move(dataSource))
-    , m_element(element)
+    : m_dataSource{std::move(dataSource)}
+    , m_element{element}
 { }
 
 XmlData::XmlData(const XmlData& other)
-    : m_dataSource(other.m_dataSource)
-    , m_element(other.m_element)
+    : m_dataSource{other.m_dataSource}
+    , m_element{other.m_element}
 { }
 
 XmlData&
 XmlData::operator=(const XmlData& other)
 {
     m_dataSource = other.m_dataSource;
-    m_element = other.m_element;
+    m_element    = other.m_element;
     return *this;
 }
 
@@ -57,11 +56,11 @@ XmlData::dataSource() const
 }
 
 void
-XmlData::setDataSource(const DataSource& dataSource)
+XmlData::setDataSource(DataSource dataSource)
 {
     // New data source means to reset the connection to the current DOM.
     m_element.clear();
-    m_dataSource = dataSource;
+    m_dataSource = std::move(dataSource);
     if (!dataSource.isNull()) {
         m_element = m_dataSource.document().createElement(elementName());
     }
@@ -141,7 +140,7 @@ XmlData::setAttribute(const QString& name, const QString& value)
 void 
 XmlData::setAttribute(const QString& name, const QDateTime& value)
 {
-    QString string;
+    auto string = QString{};
     if (!value.isNull()) {
         string = value.toUTC().toString(Qt::ISODate);
     }
@@ -152,7 +151,7 @@ XmlData::setAttribute(const QString& name, const QDateTime& value)
 void 
 XmlData::setAttribute(const QString& name, const QDate& value)
 {
-    QString string;
+    auto string = QString{};
     if (!value.isNull()) {
         string = value.toString(Qt::ISODate);
     }
@@ -211,8 +210,8 @@ XmlData::attributeInt(const QString& name) const
 int 
 XmlData::attributeInt(const QString& name, const QDomElement& element) const
 {
-    QString dt = attributeString(name, element);
-    bool ok = false;
-    int number = dt.toInt(&ok);
+    auto dt = attributeString(name, element);
+    auto ok = false;
+    auto number = dt.toInt(&ok);
     return ok ? number : XmlData::invalidId;
 }

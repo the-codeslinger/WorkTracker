@@ -19,7 +19,7 @@
 #include <QDateTime>
 
 WorkTaskModel::WorkTaskModel(QObject* p_parent)
-    : QAbstractItemModel(p_parent)
+    : QAbstractItemModel{p_parent}
 {
 }
 
@@ -51,7 +51,7 @@ WorkTaskModel::headerData(int p_section, Qt::Orientation p_orientation,
     // Vertical orientation or an index out of bounds for an "array of size 2" return
     // nothing (only two columns supported)
     if (Qt::DisplayRole != p_role || Qt::Vertical == p_orientation || 2 <= p_section) {
-        return QVariant();
+        return QVariant{};
     }
 
     if (0 == p_section) {
@@ -63,7 +63,7 @@ WorkTaskModel::headerData(int p_section, Qt::Orientation p_orientation,
     }
 
     // Practically impossible to get here
-    return QVariant();
+    return QVariant{};
 }
 
 QVariant
@@ -71,13 +71,13 @@ WorkTaskModel::data(const QModelIndex& p_index, int p_role) const
 {
     if (!p_index.isValid() || p_index.row() >= m_workTimes.count()
             || p_index.column() >= 2) {
-        return QVariant();
+        return QVariant{};
     }
 
     if (Qt::DisplayRole == p_role || Qt::EditRole == p_role) {
-        WorkTime wt = m_workTimes.at(p_index.row());
+        auto wt = m_workTimes.at(p_index.row());
         
-        QDateTime timestamp;
+        auto timestamp = QDateTime{};
         if (0 == p_index.column()) {
             timestamp = wt.start().toLocalTime();
         }
@@ -92,7 +92,7 @@ WorkTaskModel::data(const QModelIndex& p_index, int p_role) const
         return timestamp;
     }
 
-    return QVariant();
+    return QVariant{};
 }
 
 bool
@@ -104,8 +104,8 @@ WorkTaskModel::setData(const QModelIndex& p_index, const QVariant& p_value, int 
     }
 
     if (Qt::EditRole == p_role && p_value.canConvert<QDateTime>()) {
-        WorkTime  wt = m_workTimes.at(p_index.row());
-        QDateTime dt = qvariant_cast<QDateTime>(p_value);
+        auto wt = m_workTimes.at(p_index.row());
+        auto dt = qvariant_cast<QDateTime>(p_value);
 
         if (0 == p_index.column()) {
             wt.setStart(dt.toUTC());
@@ -131,7 +131,7 @@ QModelIndex
 WorkTaskModel::index(int p_row, int p_column, const QModelIndex& /* ignored */) const
 {
     if (p_row >= m_workTimes.count() || p_column >= 2) {
-        return QModelIndex();
+        return QModelIndex{};
     }
 
     return this->createIndex(p_row, p_column);
@@ -140,15 +140,15 @@ WorkTaskModel::index(int p_row, int p_column, const QModelIndex& /* ignored */) 
 QModelIndex
 WorkTaskModel::parent(const QModelIndex& /* ignored */) const
 {
-    return QModelIndex();
+    return QModelIndex{};
 }
 
 void
 WorkTaskModel::appendTime()
 {
-    beginInsertRows(QModelIndex(), m_workTimes.size(), m_workTimes.size());
+    beginInsertRows(QModelIndex{}, m_workTimes.size(), m_workTimes.size());
     
-    WorkTime workTime(m_workTask.dataSource(), QDateTime(), QDateTime());
+    auto workTime = WorkTime{m_workTask.dataSource(), QDateTime{}, QDateTime{}};
     m_workTask.addTime(workTime);
     m_workTimes.append(workTime);
     
@@ -172,10 +172,10 @@ WorkTaskModel::removeTimes(QModelIndexList p_indexes)
     
     // The magic now lies in detecting whether one row can be completely removed from the
     // model or if just one data value shall be set to nothing.
-    QMutableListIterator<QModelIndex> iter(p_indexes);
+    auto iter = QMutableListIterator<QModelIndex>{p_indexes};
     while (iter.hasNext()) {
-        QModelIndex curIndex  = iter.next();
-        QModelIndex nextIndex;
+        auto curIndex  = iter.next();
+        auto nextIndex = QModelIndex{};
         if (iter.hasNext()) {
             nextIndex = iter.peekNext();
         }
@@ -184,8 +184,8 @@ WorkTaskModel::removeTimes(QModelIndexList p_indexes)
             continue;
         }
         
-        WorkTime workTime = m_workTimes.at(curIndex.row());
-        bool removeRow = false;
+        auto workTime = m_workTimes.at(curIndex.row());
+        auto removeRow = false;
         
         if (nextIndex.isValid() && curIndex.row() == nextIndex.row()) {
             // Remove the whole row (= work-time DOM node)
@@ -196,10 +196,10 @@ WorkTaskModel::removeTimes(QModelIndexList p_indexes)
         else {
             // Column 0 is the start time and column 1 the stop time.
             if (0 == curIndex.column()) {
-                workTime.setStart(QDateTime());
+                workTime.setStart(QDateTime{});
             }
             else {
-                workTime.setStop(QDateTime());
+                workTime.setStop(QDateTime{});
             }
             
             // If both values are null then we might as well just remove the row.
@@ -212,7 +212,7 @@ WorkTaskModel::removeTimes(QModelIndexList p_indexes)
         }
         
         if (removeRow) {
-            beginRemoveRows(QModelIndex(), curIndex.row(), curIndex.row());
+            beginRemoveRows(QModelIndex{}, curIndex.row(), curIndex.row());
             
             m_workTimes.removeAt(curIndex.row());
             workTime.clear();

@@ -17,15 +17,14 @@
 #include "tasklistmodel.h"
 #include "../../model/task.h"
 
-#include <QDomElement>
-#include <QDomNamedNodeMap>
-#include <QDate>
-#include <QDebug>
+#include <QVariant>
+
+#include <algorithm>
 
 TaskListModel::TaskListModel(DataSource dataSource, QObject* parent)
-    : QAbstractListModel(parent)
-    , m_dataSource(dataSource)
-    , m_taskList(dataSource)
+    : QAbstractListModel{parent}
+    , m_dataSource{std::move(dataSource)}
+    , m_taskList{dataSource}
 {
 }
 
@@ -40,20 +39,20 @@ QVariant
 TaskListModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid()) {
-        return QVariant();
+        return QVariant{};
     }
 
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
 
-        Task item = m_taskList.find(index.row());
+        auto item = m_taskList.find(index.row());
         if (item.isNull()) {
-            return QVariant();
+            return QVariant{};
         }
 
-        return QVariant(item.name());
+        return QVariant{item.name()};
     }
 
-    return QVariant();
+    return QVariant{};
 }
 
 
@@ -70,14 +69,14 @@ TaskListModel::flags(const QModelIndex& index) const
 QVariant
 TaskListModel::headerData(int , Qt::Orientation, int) const
 {
-    return QVariant("Tasks");
+    return QVariant{"Tasks"};
 }
 
 void
 TaskListModel::itemAppended()
 {
-    int position = rowCount();
-    beginInsertRows(QModelIndex(), position, position + 1);
+    auto position = rowCount();
+    beginInsertRows(QModelIndex{}, position, position + 1);
     endInsertRows();
 }
 

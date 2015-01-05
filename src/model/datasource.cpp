@@ -26,24 +26,24 @@
 
 #include <algorithm>
 
-DataSource::DataSource(const QString& location)
-    : m_location(location)
+DataSource::DataSource(QString location)
+    : m_location{std::move(location)}
 { }
 
 DataSource::DataSource(const DataSource& other)
-    : m_dom(other.m_dom)
-    , m_location(other.m_location)
+    : m_dom{other.m_dom}
+    , m_location{other.m_location}
 { }
 
 DataSource::DataSource(DataSource&& temp)
-    : m_dom(std::move(temp.m_dom))
-    , m_location(std::move(temp.m_location))
+    : m_dom{std::move(temp.m_dom)}
+    , m_location{std::move(temp.m_location)}
 { }
 
 DataSource& 
 DataSource::operator=(const DataSource& other)
 {
-    m_dom = other.m_dom;
+    m_dom      = other.m_dom;
     m_location = other.m_location;
     return *this;
 }
@@ -51,7 +51,7 @@ DataSource::operator=(const DataSource& other)
 DataSource& 
 DataSource::operator=(DataSource&& temp)
 {
-    m_dom = std::move(temp.m_dom);
+    m_dom      = std::move(temp.m_dom);
     m_location = std::move(temp.m_location);
     return *this;
 }

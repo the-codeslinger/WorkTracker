@@ -26,32 +26,32 @@
 static const QString g_elementName = "task";
 
 WorkTask::WorkTask()
-    : XmlData()
+    : XmlData{}
 { }
 
 WorkTask::WorkTask(DataSource dataSource, const QDomElement& element)
-    : XmlData(std::move(dataSource), element)
+    : XmlData{std::move(dataSource), element}
 { }
 
 WorkTask::WorkTask(DataSource dataSource, const Task& task)
-    : XmlData(std::move(dataSource), g_elementName)
+    : XmlData{std::move(dataSource), g_elementName}
 {
     setTask(task);
 }
 
 WorkTask::WorkTask(const WorkTask& other)
-    : XmlData(other)
+    : XmlData{other}
 { }
 
 Task
 WorkTask::task() const
 {
-    int id = attributeInt("id");
+    auto id = attributeInt("id");
     if (XmlData::invalidId != id) {
-        TaskList tl(m_dataSource);
+        auto tl = TaskList{m_dataSource};
         return tl.find(id);
     }
-    return Task();
+    return Task{};
 }
 
 void
@@ -71,11 +71,11 @@ WorkTask::addTime(const WorkTime& time)
 QList<WorkTime> 
 WorkTask::times() const
 {
-    QList<WorkTime> goodTimes;
+    auto goodTimes = QList<WorkTime>{};
     
     auto children = m_element.childNodes();
     forEachNode(children, [&goodTimes, this](const QDomElement& element) {
-        goodTimes << WorkTime(m_dataSource, element);
+        goodTimes << WorkTime{m_dataSource, element};
     });
     
     return goodTimes;
@@ -84,7 +84,7 @@ WorkTask::times() const
 qint64
 WorkTask::timeInSeconds() const
 {
-    qint64 totalTime = 0;
+    auto totalTime = qint64{0};
 
     forEach(times(), [&totalTime](const WorkTime& time) {
         totalTime += time.timeInSeconds();

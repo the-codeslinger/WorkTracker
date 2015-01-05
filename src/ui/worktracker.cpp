@@ -41,12 +41,12 @@
 #include <QSettings>
 
 WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::WorkTracker)
-    , m_controller(controller)
-    , m_collapsedHeight(0)
-    , m_hours(0)
-    , m_minutes(0)
+    : QMainWindow{parent}
+    , ui{new Ui::WorkTracker}
+    , m_controller{controller}
+    , m_collapsedHeight{0}
+    , m_hours{0}
+    , m_minutes{0}
 {
     ui->setupUi(this);
     setupLanguageMenu();
@@ -66,8 +66,8 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     ui->frame->setVisible(false);
     ui->textEdit->setVisible(false);
 
-    m_statusRecording = new QLabel(this);
-    m_statusDuration  = new QLabel(this);
+    m_statusRecording = new QLabel{this};
+    m_statusDuration  = new QLabel{this};
     ui->statusBar->addWidget(m_statusRecording, 1);
     ui->statusBar->addWidget(m_statusDuration, 0);
     translate();
@@ -76,12 +76,12 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     // to only take up as much space as is needed with the edit field and text edit not
     // being visible. Since this also changes the width we restore it using the value
     // saved earliert. Voila, our UI looks correct.
-    int width = this->width();
+    auto width = this->width();
     this->adjustSize();
     this->resize(width, this->height());
     m_collapsedHeight = this->height();
 
-    QCompleter *completer = new QCompleter(this);
+    auto* completer = new QCompleter{this};
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setFilterMode(Qt::MatchContains);
     ui->tasksEdit->setCompleter(completer);
@@ -123,29 +123,29 @@ WorkTracker::~WorkTracker()
 }
 
 void
-WorkTracker::workDayStarted(QDateTime now)
+WorkTracker::workDayStarted(const QDateTime& /* now */)
 {
     hideSummary();
 
     ui->workdayButton->setText(tr("Stop &Workday"));
-    ui->workdayButton->setIcon(QIcon(":/icon/Stop-Day.svg"));
+    ui->workdayButton->setIcon(QIcon{":/icon/Stop-Day.svg"});
     ui->taskButton->setEnabled(true);
     ui->summaryButton->setEnabled(true);
 }
 
 void
-WorkTracker::workDayStopped(QDateTime now)
+WorkTracker::workDayStopped(const QDateTime& /* now */)
 {
     ui->workdayButton->setText(tr("Start &New Workday"));
-    ui->workdayButton->setIcon(QIcon(":/icon/Start-Day.svg"));
+    ui->workdayButton->setIcon(QIcon{":/icon/Start-Day.svg"});
     ui->taskButton->setEnabled(false);
     ui->summaryButton->setEnabled(!ui->textEdit->isVisible());
 }
 
 void
-WorkTracker::workTaskStarted(QDateTime now, QString name)
+WorkTracker::workTaskStarted(const QDateTime& now, const QString& name)
 {
-    QString dateString = now.toLocalTime().toString(Qt::TextDate);
+    auto dateString = now.toLocalTime().toString(Qt::TextDate);
     
     m_name = name;
     m_timestamp = now;
@@ -154,15 +154,15 @@ WorkTracker::workTaskStarted(QDateTime now, QString name)
     ui->workdayButton->setEnabled(false);
     ui->taskButton->setEnabled(true);
     ui->taskButton->setText(tr("Stop &Task"));
-    ui->taskButton->setIcon(QIcon(":/icon/Stop-Task.svg"));
+    ui->taskButton->setIcon(QIcon{":/icon/Stop-Task.svg"});
     ui->tasksEdit->setText(name); // After restart this would be empty
     setShortenedTaskStatusText(tr("%1 started at %2").arg(name).arg(dateString));
 }
 
 void
-WorkTracker::workTaskStopped(QDateTime now, QString name)
+WorkTracker::workTaskStopped(const QDateTime& now, const QString& name)
 {
-    QString dateString = now.toLocalTime().toString(Qt::TextDate);
+    auto dateString = now.toLocalTime().toString(Qt::TextDate);
     
     m_name = name;
     m_timestamp = now;
@@ -170,7 +170,7 @@ WorkTracker::workTaskStopped(QDateTime now, QString name)
     hideSummary();
     ui->workdayButton->setEnabled(true);
     ui->taskButton->setText(tr("Start &Task"));
-    ui->taskButton->setIcon(QIcon(":/icon/Start-Task.svg"));
+    ui->taskButton->setIcon(QIcon{":/icon/Start-Task.svg"});
 
     setShortenedTaskStatusText(tr("%1 stopped at %2").arg(name).arg(dateString));
 }
@@ -178,7 +178,7 @@ WorkTracker::workTaskStopped(QDateTime now, QString name)
 void
 WorkTracker::taskSelected()
 {
-    QString taskName = ui->tasksEdit->text();
+    auto taskName = ui->tasksEdit->text();
     if (taskName.isEmpty()) {
         ui->statusBar->showMessage(tr("You must enter a task description"), 3000);
         return;
@@ -199,7 +199,7 @@ WorkTracker::showInput()
     ui->taskButton->setEnabled(false);
     ui->summaryButton->setEnabled(false);
 
-    QSize size = this->size();
+    auto size = this->size();
     m_showAnimation.setStartValue(size);
 
     size.setHeight(m_collapsedHeight + ui->frame->height());
@@ -208,7 +208,7 @@ WorkTracker::showInput()
     m_animatedWidget = ui->frame;
 
     // Model is owned by the completer. We create a new one to always be up-to-date.
-    auto* model = new TaskListModel(m_controller->dataSource(), ui->tasksEdit);
+    auto* model = new TaskListModel{m_controller->dataSource(), ui->tasksEdit};
     ui->tasksEdit->completer()->setModel(model);
 }
 
@@ -218,7 +218,7 @@ WorkTracker::hideInput()
     // Hide the frame and shrink the window
     ui->frame->setVisible(false);
 
-    QSize size = this->size();
+    auto size = this->size();
     m_hideAnimation.setStartValue(size);
 
     size.setHeight(m_collapsedHeight);
@@ -232,10 +232,10 @@ WorkTracker::showSummary()
     if (!ui->textEdit->isVisible()) {
         ui->frame->setVisible(false);
 
-        QString html = m_controller->generateSummary();
+        auto html = m_controller->generateSummary();
         ui->textEdit->setHtml(html);
 
-        QSize size = this->size();
+        auto size = this->size();
         m_showAnimation.setStartValue(size);
 
         auto contentHeight = ui->textEdit->document()->size();
@@ -257,7 +257,7 @@ WorkTracker::hideSummary()
     if (ui->textEdit->isVisible()) {
         ui->textEdit->setVisible(false);
 
-        QSize size = this->size();
+        auto size = this->size();
         m_hideAnimation.setStartValue(size);
 
         size.setHeight(m_collapsedHeight);
@@ -304,10 +304,9 @@ WorkTracker::showEditor()
 void
 WorkTracker::setShortenedTaskStatusText(const QString& text) const
 {
-    int maxWidth = m_statusRecording->width();
-
-    QFontMetrics metrics = m_statusRecording->fontMetrics();
-    QString elidedString = metrics.elidedText(text, Qt::ElideMiddle, maxWidth);
+    auto maxWidth     = m_statusRecording->width();
+    auto metrics      = m_statusRecording->fontMetrics();
+    auto elidedString = metrics.elidedText(text, Qt::ElideMiddle, maxWidth);
 
     m_statusRecording->setText(elidedString);
 }
@@ -345,7 +344,7 @@ WorkTracker::showEvent(QShowEvent* event)
 void 
 WorkTracker::translate()
 {
-    QString dateString = m_timestamp.toLocalTime().toString(Qt::TextDate);
+    auto dateString = m_timestamp.toLocalTime().toString(Qt::TextDate);
     
     if (m_controller->isRecording()) {
         ui->taskButton->setText(tr("Stop &Task"));
@@ -376,8 +375,8 @@ WorkTracker::translate()
 void 
 WorkTracker::setupLanguageMenu()
 {
-    ui->actionEnUS->setData(QVariant("en_US"));
-    ui->actionDeDE->setData(QVariant("de_DE"));
+    ui->actionEnUS->setData(QVariant{"en_US"});
+    ui->actionDeDE->setData(QVariant{"de_DE"});
     
     connect(ui->actionEnUS, &QAction::triggered, this, &WorkTracker::languageSelected);
     connect(ui->actionDeDE, &QAction::triggered, this, &WorkTracker::languageSelected);
@@ -388,14 +387,14 @@ void
 WorkTracker::loadTranslations()
 {
     // These are the languages the application supports
-    QStringList locales = { "en_US", "de_DE" };
+    auto locales = QStringList{ "en_US", "de_DE" };
     
 #if defined(Q_OS_LINUX)
     // On Linux the translations can be found in /usr/share/worktracker/l10n.
-    QString l10nPath = "/../share/worktracker/l10n/";
+    auto l10nPath = "/../share/worktracker/l10n/";
 #elif defined (Q_OS_WIN)
     // On Windows the translations are in the l10n folder in the exe dir.
-    QString l10nPath = "/l10n/";
+    auto l10nPath = "/l10n/";
 #else
     // On OS X the data is somewhere in the bundle.
 #endif
@@ -403,9 +402,9 @@ WorkTracker::loadTranslations()
     // Load the user settings. If none is selected (probably after an update) then try
     // the system language. If that is not supported then fall back to English.
     QSettings settings;
-    QString appLocale = settings.value("Locale").toString();
+    auto appLocale = settings.value("Locale").toString();
     if (appLocale.isEmpty()) {
-        appLocale = QLocale().name();
+        appLocale = QLocale{}.name();
         settings.setValue("Language", appLocale);
     }
     
@@ -415,11 +414,11 @@ WorkTracker::loadTranslations()
     }
     
     // Now load the translationss and install one
-    QString appDir = QApplication::applicationDirPath() + l10nPath;
+    auto appDir = QApplication::applicationDirPath() + l10nPath;
     
-    for (const QString& locale : locales) {
+    for (const auto& locale : locales) {
         // Load Qt language file first
-        QTranslator* qtLang = new QTranslator(this);
+        auto* qtLang = new QTranslator{this};
         if (!qtLang->load(appDir + "qt_" + locale + ".qm")) {
             qDebug() << "Cannot load Qt language file <" << locale << "> use English";
             delete qtLang;
@@ -427,7 +426,7 @@ WorkTracker::loadTranslations()
         }
         
         // Now load WorkTracker language file
-        QTranslator* appLang = new QTranslator(this);
+        auto* appLang = new QTranslator{this};
         if (!appLang->load(appDir + locale + ".qm")) {
             qDebug() << "Cannot load WorkTracker language file <" << locale 
                      << "> use English";
@@ -438,7 +437,7 @@ WorkTracker::loadTranslations()
         m_translations.insert(locale, qMakePair(qtLang, appLang));
         
         if (locale == appLocale) {
-            QLocale::setDefault(QLocale(appLocale));
+            QLocale::setDefault(QLocale{appLocale});
             qApp->installTranslator(qtLang);
             qApp->installTranslator(appLang);
             m_currentLocale = appLocale;
@@ -450,13 +449,13 @@ WorkTracker::loadTranslations()
 void 
 WorkTracker::languageSelected()
 {
-    QAction* source = qobject_cast<QAction*>(sender());
+    auto* source = qobject_cast<QAction*>(sender());
     if (nullptr == source) {
         qDebug() << "Sender is not a QAction. Cannot change language.";
         return;
     }
     
-    QString locale = source->data().toString();
+    auto locale = source->data().toString();
     setLanguageChecked(locale);
     emit languageChanged(locale);
 }
@@ -464,8 +463,8 @@ WorkTracker::languageSelected()
 void 
 WorkTracker::setLanguageChecked(const QString& p_locale)
 {
-    for (QAction* action : ui->menuLanguage->actions()) {
-        QString locale = action->data().toString();
+    for (auto* action : ui->menuLanguage->actions()) {
+        auto locale = action->data().toString();
         action->setChecked(locale == p_locale);
     }
 }
@@ -484,7 +483,7 @@ WorkTracker::setLanguage(const QString& p_locale)
     qApp->removeTranslator(current.first);
     qApp->removeTranslator(current.second);
     
-    QLocale::setDefault(QLocale(p_locale));
+    QLocale::setDefault(QLocale{p_locale});
     
     qApp->installTranslator(translation.first);
     qApp->installTranslator(translation.second);
