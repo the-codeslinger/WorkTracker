@@ -49,6 +49,10 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     , m_minutes{0}
 {
     ui->setupUi(this);
+
+    QSettings settings;
+    restoreGeometry(settings.value("Geometry").toByteArray());
+
     setupLanguageMenu();
     loadTranslations();
 
@@ -99,16 +103,16 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     connect(ui->tasksEdit,        SIGNAL(returnPressed()),
             ui->selectTaskButton, SIGNAL(clicked()));
 
-    connect(m_controller, SIGNAL(workDayStarted(QDateTime)),
-            this,         SLOT(workDayStarted(QDateTime)));
-    connect(m_controller, SIGNAL(workDayStopped(QDateTime)),
-            this,         SLOT(workDayStopped(QDateTime)));
-    connect(m_controller, SIGNAL(workTaskStarted(QDateTime, QString)),
-            this,         SLOT(workTaskStarted(QDateTime, QString)));
-    connect(m_controller, SIGNAL(workTaskStopped(QDateTime, QString)),
-            this,         SLOT(workTaskStopped(QDateTime, QString)));
-    connect(m_controller, SIGNAL(totalTimeChanged(int, int)),
-            this,         SLOT(totalTimeChanged(int, int)));
+    connect(m_controller,         SIGNAL(workDayStarted(QDateTime)),
+            this,                 SLOT(workDayStarted(QDateTime)));
+    connect(m_controller,         SIGNAL(workDayStopped(QDateTime)),
+            this,                 SLOT(workDayStopped(QDateTime)));
+    connect(m_controller,         SIGNAL(workTaskStarted(QDateTime, QString)),
+            this,                 SLOT(workTaskStarted(QDateTime, QString)));
+    connect(m_controller,         SIGNAL(workTaskStopped(QDateTime, QString)),
+            this,                 SLOT(workTaskStopped(QDateTime, QString)));
+    connect(m_controller,         SIGNAL(totalTimeChanged(int, int)),
+            this,                 SLOT(totalTimeChanged(int, int)));
 
     // Menu
     connect(ui->actionQuit,     SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -492,4 +496,12 @@ WorkTracker::setLanguage(const QString& p_locale)
     
     QSettings settings;
     settings.setValue("Locale", p_locale);
+}
+
+void 
+WorkTracker::closeEvent(QCloseEvent* event)
+{
+    QSettings settings;
+    settings.setValue("Geometry", saveGeometry());
+    QMainWindow::closeEvent(event);
 }

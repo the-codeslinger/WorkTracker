@@ -178,6 +178,11 @@ protected:
      */
     void showEvent(QShowEvent* event);
 
+    /*!
+     * Saves the state and geometry of the main window.
+     */
+    void closeEvent(QCloseEvent* event);
+
 private:
     /*!
      * Contains the UI widgets from the form file.
