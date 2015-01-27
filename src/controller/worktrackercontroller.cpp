@@ -33,7 +33,15 @@ WorkTrackerController::WorkTrackerController(QString databaseLocation)
     , m_isNewWorkDay(false)
     , m_isRecording(false)
 {
+    m_timer.setInterval(TIMER_TIMEOUT);
+
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
+    connect(this,     SIGNAL(workTaskStarted(QDateTime, QString)), 
+            &m_timer, SLOT(start()));
+    connect(this,     SIGNAL(workTaskStopped(QDateTime, QString)), 
+            &m_timer, SLOT(stop()));
+    connect(this,     SIGNAL(workDayStopped(QDateTime)), 
+            &m_timer, SLOT(stop()));
 }
 
 bool
@@ -165,8 +173,6 @@ WorkTrackerController::startWorkTask(const QString& name)
         return;
     }
     
-    m_timer.start(TIMER_TIMEOUT);
-    
     auto now  = QDateTime::currentDateTimeUtc();
     auto task = findOrCreateTask(name);
 
@@ -192,8 +198,6 @@ WorkTrackerController::startWorkTask(const QString& name)
 void
 WorkTrackerController::stopWorkTask(const QString& name)
 {
-    m_timer.stop();
-    
     // If the currently recording task and the new task are the same then we can continue
     // and add the stop timestamp to our current values and be done with it. If the tasks
     // are different then we have to re-assign the work-time from the current work-task
