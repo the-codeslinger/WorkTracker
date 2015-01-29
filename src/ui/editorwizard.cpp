@@ -27,7 +27,7 @@ EditorWizard::EditorWizard(EditorController* controller, QWidget* parent)
     , m_controller{controller}
     , m_resized{false}
 {
-    setWindowTitle(tr("Edit Work Tasks"));
+    setWindowTitle(QObject::tr("Edit Work Tasks"));
 
     m_selectWorkDayPage = new SelectWorkDayPage{controller, this};
     m_editWorkTaskPage  = new EditWorkTaskPage{controller, m_selectWorkDayPage, this};

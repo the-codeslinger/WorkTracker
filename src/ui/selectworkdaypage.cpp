@@ -33,9 +33,10 @@ SelectWorkDayPage::SelectWorkDayPage(EditorController* p_controller, QWidget* p_
     ui->daysListView->setModel(new WorkDayModel{ui->daysListView});
     ui->daysListView->setItemDelegate(new WorkDayDelegate{ui->daysListView});
 
-    setTitle(tr("Select Workday"));
-    setSubTitle(tr("Select the specific workday for which you want to edit individual "
-                   "task items. You can always come back to this page."));
+    setTitle(QObject::tr("Select Workday"));
+    setSubTitle(QObject::tr("Select the specific workday for which you want to edit "
+                            "individual task items. You can always come back to this "
+                            "page."));
 
     connect(ui->daysListView, SIGNAL(clicked(QModelIndex)),
             this,             SLOT(itemSelected(QModelIndex)));

@@ -51,10 +51,10 @@ EditWorkTaskPage::EditWorkTaskPage(EditorController*  controller,
     ui->splitter->setStretchFactor(0, 1);
     ui->splitter->setStretchFactor(1, 1);
 
-    setTitle(tr("Edit Worktask"));
-    setSubTitle(tr("Select the task you want to edit. Changes are immediately saved. You "
-                   "can also go back to the previous page and select a different day to "
-                   "edit."));
+    setTitle(QObject::tr("Edit Worktask"));
+    setSubTitle(QObject::tr("Select the task you want to edit. Changes are immediately "
+                            "saved. You can also go back to the previous page and select "
+                            "a different day to edit."));
     
     auto* rmTask = new QShortcut{QKeySequence{Qt::Key_Delete}, ui->tasksListView,
                                  0, 0, Qt::WidgetWithChildrenShortcut};
