@@ -21,6 +21,7 @@
 #include "datasource.h"
 
 #include <functional>
+#include <QList>
 
 class Task;
 
@@ -69,6 +70,11 @@ public:
      * Search for a task by its name. Name's are compared case insensitive.
      */
     Task find(const QString& name) const;
+
+    /*!
+     * Returns a list of all the names of tasks sorted by their last used date.
+     */
+    QList<Task> tasksSortedByLastUsed() const;
 
 private:
     Task find(std::function<bool(QDomElement)> predicate) const;

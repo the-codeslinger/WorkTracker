@@ -19,6 +19,7 @@
 #include "../helper.h"
 
 #include <algorithm>
+#include <QDate>
 
 static const QString g_elementName = "tasks";
 
@@ -105,4 +106,26 @@ TaskList::findOrCreateElement()
             root.appendChild(m_element);
         }
     }
+}
+
+QList<Task>
+TaskList::tasksSortedByLastUsed() const
+{
+    auto list = QList<Task>{};
+
+    auto children = m_element.childNodes();
+    
+    int size = children.size();
+    for (int i = 0; i < size; i++) {
+        auto taskNode = children.at(i);
+        if (taskNode.isElement()) {
+            list << Task{ m_dataSource, taskNode.toElement() };
+        }
+    }
+
+    std::sort(std::begin(list), std::end(list), [](const Task& left, const Task& right) {
+        return left.lastUsed() > right.lastUsed();
+    });
+
+    return list;
 }

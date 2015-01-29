@@ -20,6 +20,8 @@
 #include "xmldata.h"
 #include "datasource.h"
 
+#include <QMetaType>
+
 class QString;
 
 /*!
@@ -100,5 +102,12 @@ public:
 protected:
     QString elementName() const;
 };
+
+/*! 
+ * For use in a QVariant.
+ *
+ * \see TaskListModel
+ */
+Q_DECLARE_METATYPE(Task)
 
 #endif // TASK_H

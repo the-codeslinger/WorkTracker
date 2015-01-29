@@ -18,6 +18,7 @@
 #include "aboutdialog.h"
 #include "editorwizard.h"
 #include "ui_worktracker.h"
+#include "model/tasklistmodel.h"
 #include "../model/worktask.h"
 #include "../model/task.h"
 #include "../controller/worktrackercontroller.h"
@@ -212,8 +213,9 @@ WorkTracker::showInput()
     m_animatedWidget = ui->frame;
 
     // Model is owned by the completer. We create a new one to always be up-to-date.
-    auto* model = new TaskListModel{m_controller->dataSource(), ui->tasksEdit};
-    ui->tasksEdit->completer()->setModel(model);
+    auto completer = ui->tasksEdit->completer();
+    auto model     = new TaskListModel{m_controller->dataSource(), completer};
+    completer->setModel(model);
 }
 
 void
@@ -281,6 +283,7 @@ WorkTracker::showAnimationFinished()
     m_animatedWidget->setVisible(true);
     if (m_animatedWidget == ui->frame) {
         ui->tasksEdit->setFocus();
+        ui->tasksEdit->completer()->complete();
     }
 }
 

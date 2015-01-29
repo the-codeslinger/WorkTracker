@@ -88,11 +88,7 @@ public slots:
     void endAddTask();
 
 private:
-    /*!
-     * The data source that has been passed via the constructor.
-     */
-    DataSource m_dataSource;
-    TaskList   m_taskList;
+    QList<Task> m_taskList;
 
 };
 

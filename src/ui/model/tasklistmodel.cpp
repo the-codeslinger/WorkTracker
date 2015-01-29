@@ -18,14 +18,15 @@
 #include "../../model/task.h"
 
 #include <QVariant>
+#include <QDate>
 
 #include <algorithm>
 
 TaskListModel::TaskListModel(DataSource dataSource, QObject* parent)
     : QAbstractListModel{parent}
-    , m_dataSource{std::move(dataSource)}
-    , m_taskList{dataSource}
 {
+    auto taskList = TaskList{dataSource};
+    m_taskList = taskList.tasksSortedByLastUsed();
 }
 
 int
@@ -43,8 +44,7 @@ TaskListModel::data(const QModelIndex& index, int role) const
     }
 
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
-
-        auto item = m_taskList.find(index.row());
+        auto item = m_taskList.at(index.row());
         if (item.isNull()) {
             return QVariant{};
         }
