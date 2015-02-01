@@ -40,6 +40,26 @@
 #include <QShowEvent>
 #include <QTranslator>
 #include <QSettings>
+#include <QEvent>
+
+class CompleteEvent : public QEvent
+{
+public:
+    CompleteEvent(QLineEdit* lineEdit)
+        : QEvent(QEvent::User)
+        , m_lineEdit(lineEdit)
+    { }
+
+    void complete()
+    {
+        if (nullptr != m_lineEdit) {
+            m_lineEdit->completer()->complete();
+        }
+    }
+
+private:
+    QLineEdit* m_lineEdit;
+};
 
 WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     : QMainWindow{parent}
@@ -103,6 +123,8 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
             this,                 SLOT(showAnimationFinished()));
     connect(ui->tasksEdit,        SIGNAL(returnPressed()),
             ui->selectTaskButton, SIGNAL(clicked()));
+    connect(ui->tasksEdit,        SIGNAL(textEdited(QString)),
+            this,                 SLOT(taskInputEdited(QString)));
 
     connect(m_controller,         SIGNAL(workDayStarted(QDateTime)),
             this,                 SLOT(workDayStarted(QDateTime)));
@@ -507,4 +529,21 @@ WorkTracker::closeEvent(QCloseEvent* event)
     QSettings settings;
     settings.setValue("Geometry", saveGeometry());
     QMainWindow::closeEvent(event);
+}
+
+void 
+WorkTracker::taskInputEdited(const QString& text)
+{
+    if (text.isEmpty()) {
+        qApp->postEvent(this, new CompleteEvent(ui->tasksEdit));
+    }
+}
+
+void 
+WorkTracker::customEvent(QEvent* event)
+{
+    QMainWindow::customEvent(event);
+    if (QEvent::User == event->type()) {
+        static_cast<CompleteEvent*>(event)->complete();
+    }
 }

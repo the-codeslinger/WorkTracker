@@ -25,6 +25,7 @@ namespace Ui {
     class WorkTracker;
 }
 
+class QEvent;
 class QLabel;
 class QTranslator;
 class WorkTrackerController;
@@ -161,6 +162,11 @@ private slots:
      * language is not changed.
      */
     void setLanguage(const QString& p_locale);
+
+    /*!
+     * Displays the completer when `text` is empty.
+     */
+    void taskInputEdited(const QString& text);
     
 protected:
     /*!
@@ -180,6 +186,11 @@ protected:
      * Saves the state and geometry of the main window.
      */
     void closeEvent(QCloseEvent* event);
+
+    /*!
+     * Shows the completer popup.
+     */
+    void customEvent(QEvent* event);
 
 private:
     /*!
