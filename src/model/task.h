@@ -50,13 +50,13 @@ public:
     /*!
      * Creates a new instance with a data source, a name and the last-used date.
      */
-    Task(DataSource p_dataSource, const QString& p_name, const QDate& p_lastUsed);
+    Task(DataSource p_dataSource, const QString& p_name, const QDateTime& p_lastUsed);
 
     /*!
      * Creates a new instance with a data source, an id, a name and the last-used date.
      */
     Task(DataSource p_dataSource, int p_id, const QString& p_name, 
-         const QDate& p_lastUsed);
+         const QDateTime& p_lastUsed);
 
     /*!
      * Copies the values from another `Task` instance. This is not a deep copy. In the end
@@ -92,12 +92,12 @@ public:
      * \return
      * Returns the last-used date.
      */
-    QDate lastUsed() const;
+    QDateTime lastUsed() const;
 
     /*!
      * Set a new `lastUsed` date.
      */
-    void setLastUsed(const QDate& p_lastUsed);
+    void setLastUsed(const QDateTime& p_lastUsed);
 
 protected:
     QString elementName() const;

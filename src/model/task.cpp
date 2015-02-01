@@ -27,11 +27,11 @@ Task::Task()
     : XmlData{}
 { }
 
-Task::Task(DataSource dataSource, const QString& name, const QDate& lastUsed)
+Task::Task(DataSource dataSource, const QString& name, const QDateTime& lastUsed)
     : Task{std::move(dataSource), Task::invalidId, name, lastUsed}
 { }
 
-Task::Task(DataSource dataSource, int p_id, const QString& name, const QDate& lastUsed)
+Task::Task(DataSource dataSource, int p_id, const QString& name, const QDateTime& lastUsed)
     : XmlData{std::move(dataSource), g_elementName}
 {
     setAttribute("id", p_id);
@@ -71,14 +71,14 @@ Task::setName(const QString& name)
     setAttribute("name", name);
 }
 
-QDate
+QDateTime
 Task::lastUsed() const
 {
-    return attributeDate("last_used");
+    return attributeDateTime("last_used");
 }
 
 void
-Task::setLastUsed(const QDate& lastUsed)
+Task::setLastUsed(const QDateTime& lastUsed)
 {
     setAttribute("last_used", lastUsed);
 }

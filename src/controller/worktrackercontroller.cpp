@@ -289,10 +289,14 @@ WorkTrackerController::closeCurrentTask()
 Task 
 WorkTrackerController::findOrCreateTask(const QString& name)
 {
+    auto now   = QDateTime::currentDateTimeUtc();
     auto found = m_taskList.find(name);
     if (found.isNull()) {
-        found = Task(m_dataSource, name, QDate::currentDate());
+        found = Task(m_dataSource, name, now);
         m_taskList.add(found);
+    }
+    else {
+        found.setLastUsed(now);
     }
     return found;
 }

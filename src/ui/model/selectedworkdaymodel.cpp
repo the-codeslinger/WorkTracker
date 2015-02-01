@@ -63,7 +63,7 @@ SelectedWorkDayModel::setData(const QModelIndex& p_index, const QVariant& p_valu
             auto tlist      = TaskList{dataSource};
             auto task       = tlist.find(name);
             if (task.isNull()) {
-                task = Task{dataSource, name, QDate::currentDate()};
+                task = Task{dataSource, name, QDateTime::currentDateTimeUtc()};
                 tlist.add(task);
             }
             
@@ -128,7 +128,7 @@ SelectedWorkDayModel::appendTask(const QString& p_name)
     auto tlist      = TaskList{dataSource};
     auto task       = tlist.find(p_name);
     if (task.isNull()) {
-        task = Task{dataSource, p_name, QDate::currentDate()};
+        task = Task{dataSource, p_name, QDateTime::currentDateTimeUtc()};
         tlist.add(task);
     }
     
