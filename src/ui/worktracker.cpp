@@ -106,10 +106,7 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     this->resize(width, this->height());
     m_collapsedHeight = this->height();
 
-    auto* completer = new QCompleter{this};
-    completer->setCaseSensitivity(Qt::CaseInsensitive);
-    completer->setFilterMode(Qt::MatchContains);
-    ui->tasksEdit->setCompleter(completer);
+    ui->tasksEdit->setClearButtonEnabled(true);
 
     connect(ui->workdayButton,    SIGNAL(clicked()),  
             m_controller,         SLOT(toggleWorkDay()));
@@ -234,10 +231,17 @@ WorkTracker::showInput()
     m_showAnimation.start();
     m_animatedWidget = ui->frame;
 
-    // Model is owned by the completer. We create a new one to always be up-to-date.
-    auto completer = ui->tasksEdit->completer();
+    // Set a new completer every time so that we get the full unfiltered popup to choose
+    // from. Otherwise, when the first typing occurs the completer remembers the filter
+    // until it is shown the next time.
+    auto completer = new QCompleter{this};
     auto model     = new TaskListModel{m_controller->dataSource(), completer};
+    
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    completer->setFilterMode(Qt::MatchContains);
     completer->setModel(model);
+    
+    ui->tasksEdit->setCompleter(completer);
 }
 
 void
