@@ -76,7 +76,8 @@ SOURCES += \
     src/ui/preferencesdialog.cpp \
     src/ui/selecttaskdialog.cpp \
     src/ui/editorwizard.cpp \
-    src/ui/worktracker.cpp 
+    src/ui/worktracker.cpp \ 
+    src/ui/completerlineedit.cpp
 
 HEADERS  += \
     src/helper.h \
@@ -104,7 +105,8 @@ HEADERS  += \
     src/ui/editworktaskpage.h \
     src/ui/preferencesdialog.h \
     src/ui/selecttaskdialog.h \
-    src/ui/editorwizard.h
+    src/ui/editorwizard.h \
+    src/ui/completerlineedit.h
 
 FORMS    += \
     ui/worktracker.ui \

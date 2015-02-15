@@ -106,6 +106,12 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
     this->resize(width, this->height());
     m_collapsedHeight = this->height();
 
+    auto completer = new QCompleter{this};
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    completer->setFilterMode(Qt::MatchContains);
+    
+    ui->tasksEdit->setCompleter(completer);
+
     ui->tasksEdit->setClearButtonEnabled(true);
 
     connect(ui->workdayButton,    SIGNAL(clicked()),  
@@ -120,8 +126,6 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
             this,                 SLOT(showAnimationFinished()));
     connect(ui->tasksEdit,        SIGNAL(returnPressed()),
             ui->selectTaskButton, SIGNAL(clicked()));
-    connect(ui->tasksEdit,        SIGNAL(textEdited(QString)),
-            this,                 SLOT(taskInputEdited(QString)));
 
     connect(m_controller,         SIGNAL(workDayStarted(QDateTime)),
             this,                 SLOT(workDayStarted(QDateTime)));
@@ -231,17 +235,14 @@ WorkTracker::showInput()
     m_showAnimation.start();
     m_animatedWidget = ui->frame;
 
-    // Set a new completer every time so that we get the full unfiltered popup to choose
-    // from. Otherwise, when the first typing occurs the completer remembers the filter
-    // until it is shown the next time.
-    auto completer = new QCompleter{this};
+    // Create a new model every time so that we always have the most current data to 
+    // work with. The completer's filter string (completion prefix) is also reset in 
+    // order to have the whole list to choose from. This is supposed to save typing.
+    auto completer = ui->tasksEdit->completer();
     auto model     = new TaskListModel{m_controller->dataSource(), completer};
     
-    completer->setCaseSensitivity(Qt::CaseInsensitive);
-    completer->setFilterMode(Qt::MatchContains);
     completer->setModel(model);
-    
-    ui->tasksEdit->setCompleter(completer);
+    completer->setCompletionPrefix("");
 }
 
 void
@@ -533,21 +534,4 @@ WorkTracker::closeEvent(QCloseEvent* event)
     QSettings settings;
     settings.setValue("Geometry", saveGeometry());
     QMainWindow::closeEvent(event);
-}
-
-void 
-WorkTracker::taskInputEdited(const QString& text)
-{
-    if (text.isEmpty()) {
-        qApp->postEvent(this, new CompleteEvent(ui->tasksEdit));
-    }
-}
-
-void 
-WorkTracker::customEvent(QEvent* event)
-{
-    QMainWindow::customEvent(event);
-    if (QEvent::User == event->type()) {
-        static_cast<CompleteEvent*>(event)->complete();
-    }
 }

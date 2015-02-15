@@ -284,6 +284,7 @@
     <ClCompile Include="src\model\worktime.cpp" />
     <ClCompile Include="src\model\xmldata.cpp" />
     <ClCompile Include="src\ui\aboutdialog.cpp" />
+    <ClCompile Include="src\ui\completerlineedit.cpp" />
     <ClCompile Include="src\ui\delegate\taskdelegate.cpp" />
     <ClCompile Include="src\ui\delegate\workdaydelegate.cpp" />
     <ClCompile Include="src\ui\editorwizard.cpp" />
@@ -674,6 +675,7 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
     </CustomBuild>
+    <ClInclude Include="src\ui\completerlineedit.h" />
     <ClInclude Include="src\ui\model\tasklistmodel.h" />
     <CustomBuild Include="src\ui\model\worktaskmodel.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing worktaskmodel.h...</Message>
