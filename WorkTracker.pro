@@ -49,6 +49,8 @@ unix:!macx {
     QMAKE_EXTRA_TARGETS += deb
 }
 
+INCLUDEPATH += src
+
 SOURCES += \
     src/main.cpp\
     src/helper.cpp \
