@@ -77,9 +77,8 @@ Your compiler of choice should support C++11. The reference compiler used is Mic
 
 All data is written to and read from an XML file that is located in the current user's `AppData` folder on Windows, e.g. `C:\Users\Robert\AppData\Local\Typical Nerd\WorkTracker\Database.xml`.
 
-## Future Plans
+## Known Issues
 
-*   Support global hotkeys
-*   Hide UI in sys-tray and only show an input field for the task description on demand 
+*   UI doesn't stay put on Linux (Mint, Cinnamon Desktop) when being animated.
 
 [releases]: https://github.com/drunk-on-pain/WorkTracker/releases
