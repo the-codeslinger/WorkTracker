@@ -232,15 +232,15 @@ work-tasks and all of their recorded times?</source>
     </message>
     <message>
         <location filename="../ui/worktracker.ui" line="51"/>
-        <location filename="../src/ui/worktracker.cpp" line="144"/>
-        <location filename="../src/ui/worktracker.cpp" line="375"/>
+        <location filename="../src/ui/worktracker.cpp" line="167"/>
+        <location filename="../src/ui/worktracker.cpp" line="402"/>
         <source>Start &amp;New Workday</source>
         <translation>&amp;Neuer Arbeitstag</translation>
     </message>
     <message>
         <location filename="../ui/worktracker.ui" line="71"/>
-        <location filename="../src/ui/worktracker.cpp" line="177"/>
-        <location filename="../src/ui/worktracker.cpp" line="364"/>
+        <location filename="../src/ui/worktracker.cpp" line="200"/>
+        <location filename="../src/ui/worktracker.cpp" line="391"/>
         <source>Start &amp;Task</source>
         <translation>Beginne &amp;Aufgabe</translation>
     </message>
@@ -320,46 +320,46 @@ work-tasks and all of their recorded times?</source>
         <translation>&amp;Deutsch</translation>
     </message>
     <message>
-        <location filename="../src/ui/worktracker.cpp" line="324"/>
+        <location filename="../src/ui/worktracker.cpp" line="351"/>
         <source>Total time %1h %2m</source>
         <translation>Gesamt %1h %2m</translation>
     </message>
     <message>
-        <location filename="../src/ui/worktracker.cpp" line="188"/>
+        <location filename="../src/ui/worktracker.cpp" line="211"/>
         <source>You must enter a task description</source>
         <translation>Es muss eine Aufgabenbeschreibung angegeben werden</translation>
     </message>
     <message>
-        <location filename="../src/ui/worktracker.cpp" line="161"/>
-        <location filename="../src/ui/worktracker.cpp" line="357"/>
+        <location filename="../src/ui/worktracker.cpp" line="184"/>
+        <location filename="../src/ui/worktracker.cpp" line="384"/>
         <source>Stop &amp;Task</source>
         <translation>Beende &amp;Aufgabe</translation>
     </message>
     <message>
-        <location filename="../src/ui/worktracker.cpp" line="164"/>
-        <location filename="../src/ui/worktracker.cpp" line="360"/>
+        <location filename="../src/ui/worktracker.cpp" line="187"/>
+        <location filename="../src/ui/worktracker.cpp" line="387"/>
         <source>%1 started at %2</source>
         <translation>%1 begonnen am %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/worktracker.cpp" line="180"/>
-        <location filename="../src/ui/worktracker.cpp" line="367"/>
+        <location filename="../src/ui/worktracker.cpp" line="203"/>
+        <location filename="../src/ui/worktracker.cpp" line="394"/>
         <source>%1 stopped at %2</source>
         <translation>%1 beendet am %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/worktracker.cpp" line="253"/>
+        <location filename="../src/ui/worktracker.cpp" line="280"/>
         <source>Hide Summary</source>
-        <translation>Schließen</translation>
+        <translation>Schl&amp;ießen</translation>
     </message>
     <message>
-        <location filename="../src/ui/worktracker.cpp" line="274"/>
+        <location filename="../src/ui/worktracker.cpp" line="301"/>
         <source>Summary</source>
-        <translation>Zusammenfassung</translation>
+        <translation>&amp;Zusammenfassung</translation>
     </message>
     <message>
-        <location filename="../src/ui/worktracker.cpp" line="135"/>
-        <location filename="../src/ui/worktracker.cpp" line="372"/>
+        <location filename="../src/ui/worktracker.cpp" line="158"/>
+        <location filename="../src/ui/worktracker.cpp" line="399"/>
         <source>Stop &amp;Workday</source>
         <translation>Arbeitstag &amp;Beenden</translation>
     </message>
