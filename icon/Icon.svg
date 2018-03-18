@@ -15,9 +15,9 @@
    version="1.1"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
    sodipodi:docname="Icon.svg"
-   inkscape:export-filename="D:\RobertLohr\Programmieren\Cpp\WorkTracker\icon\Icon256.png"
-   inkscape:export-xdpi="22.524746"
-   inkscape:export-ydpi="22.524746">
+   inkscape:export-filename="D:\drunk\Programmieren\Cpp\WorkTracker\icon\Icon16.png"
+   inkscape:export-xdpi="1.5"
+   inkscape:export-ydpi="1.5">
   <defs
      id="defs3092" />
   <sodipodi:namedview
@@ -27,17 +27,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.175"
-     inkscape:cx="-380.70272"
-     inkscape:cy="665.38204"
+     inkscape:zoom="0.7"
+     inkscape:cx="892.0001"
+     inkscape:cy="570.84798"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1017"
-     inkscape:window-x="1912"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1" />
+     inkscape:window-width="1278"
+     inkscape:window-height="1361"
+     inkscape:window-x="-7"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0" />
   <metadata
      id="metadata3095">
     <rdf:RDF>
@@ -144,25 +144,14 @@
      id="layer2"
      inkscape:label="Clock"
      style="display:inline">
-    <rect
-       style="display:inline;fill:#000000;fill-opacity:0;stroke-width:2.49099207"
-       y="0"
-       x="0"
-       height="1024"
-       width="1024"
-       id="rect4479-0"
-       inkscape:export-xdpi="3"
-       inkscape:export-ydpi="3" />
     <g
-       id="g213"
-       transform="translate(-34.125135,-42.857205)"
-       inkscape:export-xdpi="3"
-       inkscape:export-ydpi="3">
+       id="g840"
+       transform="matrix(1.3999244,0,0,1.114693,-204.7613,-58.722814)">
       <ellipse
          ry="302.51178"
          rx="310.03616"
-         cy="653.17352"
-         cx="549.86786"
+         cy="610.31635"
+         cx="515.74274"
          id="path208"
          style="fill:#eeeeec;fill-opacity:1;stroke-width:1.00022745" />
       <path
@@ -170,7 +159,7 @@
          inkscape:export-xdpi="3"
          inkscape:connector-curvature="0"
          id="path4016-0"
-         d="m 546.51519,95.537911 c -101.41638,0 -183.062,15.382279 -183.062,34.480139 v 64.17573 c 0,14.9202 49.81757,27.58043 119.97842,32.39989 v 61.4714 c -172.11496,29.73386 -303.0405,179.79326 -303.0405,360.40339 0,201.98698 163.72105,365.70804 365.70801,365.70804 201.98702,0 365.76004,-163.72106 365.76004,-365.70804 0,-180.61013 -130.92551,-330.66953 -303.04047,-360.40339 v -61.41939 c 70.56655,-4.77952 120.75853,-17.47708 120.75853,-32.4519 v -64.17573 c 0,-19.09786 -81.64568,-34.480139 -183.06203,-34.480139 z m -0.41607,307.356969 c 135.61985,0 245.5736,109.95372 245.5736,245.57358 0,135.61982 -109.95375,245.52156 -245.5736,245.52156 -135.61982,0 -245.52152,-109.90174 -245.52152,-245.52156 0,-135.61986 109.9017,-245.57358 245.52152,-245.57358 z"
+         d="m 512.39005,52.680706 c -101.41638,0 -183.062,15.382279 -183.062,34.480139 v 64.175725 c 0,14.9202 49.81757,27.58044 119.97842,32.39989 v 61.4714 c -172.11496,29.73386 -303.0405,179.79326 -303.0405,360.4034 0,201.98698 163.72105,365.70803 365.70801,365.70803 201.98702,0 365.76004,-163.72105 365.76004,-365.70803 0,-180.61014 -130.92551,-330.66953 -303.04047,-360.40339 v -61.41939 c 70.56655,-4.77952 120.75853,-17.47708 120.75853,-32.4519 V 87.160845 c 0,-19.09786 -81.64568,-34.480139 -183.06203,-34.480139 z m -0.41607,307.356964 c 135.61986,0 245.57361,109.95372 245.57361,245.57359 0,135.61982 -109.95375,245.52156 -245.5736,245.52156 -135.61982,0 -245.52152,-109.90174 -245.52152,-245.52156 0,-135.61987 109.9017,-245.57358 245.52151,-245.57359 z"
          style="display:inline;fill:#0066cc;fill-opacity:1;stroke:none;stroke-width:1.94191217" />
       <path
          inkscape:export-ydpi="3"
@@ -180,11 +169,11 @@
          sodipodi:type="arc"
          style="display:inline;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.58851504"
          id="path3923-9-2"
-         sodipodi:cx="547.70197"
-         sodipodi:cy="648.3869"
+         sodipodi:cx="513.57684"
+         sodipodi:cy="605.52972"
          sodipodi:rx="181.99904"
          sodipodi:ry="190.02913"
-         d="M 547.70197,458.35777 A 181.99904,190.02913 0 0 1 729.701,648.3869 l -181.99903,0 z" />
+         d="m 513.57685,415.5006 a 181.99904,190.02913 0 0 1 181.99903,190.02912 l -181.99904,0 z" />
     </g>
     <rect
        style="display:inline;fill:#000000;fill-opacity:0;stroke-width:2.49099207"

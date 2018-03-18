@@ -54,6 +54,12 @@
          <iconset resource="../icons.qrc">
           <normaloff>:/icon/Start-Day.svg</normaloff>:/icon/Start-Day.svg</iconset>
         </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
        </widget>
       </item>
       <item>
@@ -73,6 +79,12 @@
         <property name="icon">
          <iconset resource="../icons.qrc">
           <normaloff>:/icon/Start-Task.svg</normaloff>:/icon/Start-Task.svg</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
         </property>
        </widget>
       </item>
@@ -99,6 +111,12 @@
         <property name="icon">
          <iconset resource="../icons.qrc">
           <normaloff>:/icon/Summary.svg</normaloff>:/icon/Summary.svg</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
         </property>
        </widget>
       </item>
@@ -133,16 +151,29 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="CompleterLineEdit" name="tasksEdit"/>
+        <widget class="CompleterLineEdit" name="tasksEdit">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
        </item>
        <item row="1" column="1">
         <widget class="QPushButton" name="selectTaskButton">
          <property name="text">
-          <string>S&amp;elect Task</string>
+          <string>S&amp;elect</string>
          </property>
          <property name="icon">
           <iconset resource="../icons.qrc">
            <normaloff>:/icon/Select.svg</normaloff>:/icon/Select.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
          </property>
         </widget>
        </item>

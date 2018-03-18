@@ -27,15 +27,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.175"
-     inkscape:cx="-2432.9825"
-     inkscape:cy="1507.8026"
+     inkscape:zoom="0.24748737"
+     inkscape:cx="669.82363"
+     inkscape:cy="836.00134"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1017"
-     inkscape:window-x="1912"
+     inkscape:window-width="2560"
+     inkscape:window-height="1377"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
@@ -219,23 +219,12 @@
      inkscape:label="Clock"
      style="display:inline">
     <rect
-       style="display:inline;fill:#000000;fill-opacity:0;stroke-width:2.49099207"
-       y="1.3476563e-006"
-       x="3.9062502e-006"
-       height="1024"
-       width="1024"
-       id="rect4479-9-0-5"
-       inkscape:export-xdpi="24"
-       inkscape:export-ydpi="24" />
-    <rect
-       style="fill:#0066cc;fill-opacity:1;stroke-width:1.69084918"
-       id="rect4523"
-       width="204.40479"
-       height="731.65302"
-       x="-617.33319"
-       y="147.0238"
-       transform="matrix(0.00164921,-0.99999864,0.99999864,0.00165072,0,0)"
-       inkscape:export-xdpi="24"
-       inkscape:export-ydpi="24" />
+       style="display:inline;fill:#0066cc;fill-opacity:1;stroke-width:2.36537623"
+       id="rect4523-3"
+       width="285.94781"
+       height="1023.5298"
+       x="-654.12805"
+       y="1.078795"
+       transform="matrix(0.00164921,-0.99999864,0.99999864,0.00165072,0,0)" />
   </g>
 </svg>

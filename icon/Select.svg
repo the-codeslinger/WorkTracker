@@ -27,15 +27,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.12374369"
-     inkscape:cx="-2361.7728"
-     inkscape:cy="1304.6861"
+     inkscape:zoom="0.35000001"
+     inkscape:cx="-609.14279"
+     inkscape:cy="616.31041"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1017"
-     inkscape:window-x="1912"
+     inkscape:window-width="2560"
+     inkscape:window-height="1377"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
@@ -55,17 +55,8 @@
      id="layer2"
      inkscape:label="Clock"
      style="display:inline">
-    <rect
-       style="display:inline;fill:#000000;fill-opacity:0;stroke-width:2.49099207"
-       y="-2.2265625e-005"
-       x="2.7832032e-006"
-       height="1024"
-       width="1024"
-       id="rect4479-9-0-5"
-       inkscape:export-xdpi="24"
-       inkscape:export-ydpi="24" />
     <g
-       transform="matrix(2.3354823,0.34130386,-0.34130386,2.3354823,-4868.6803,-392.91087)"
+       transform="matrix(2.8706503,0.50016939,-0.4195125,3.4225712,-6114.2928,-839.97934)"
        style="display:inline;fill:#0066cc;fill-opacity:1"
        id="g721-2"
        inkscape:export-xdpi="24"

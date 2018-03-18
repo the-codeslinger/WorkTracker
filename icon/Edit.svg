@@ -14,7 +14,7 @@
    id="svg3090"
    version="1.1"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
-   sodipodi:docname="Edit ohne.svg"
+   sodipodi:docname="Edit.svg"
    inkscape:export-filename="D:\RobertLohr\Programmieren\Cpp\WorkTracker\icon\Icon256.png"
    inkscape:export-xdpi="22.524746"
    inkscape:export-ydpi="22.524746">
@@ -27,15 +27,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.175"
-     inkscape:cx="-1437.7143"
-     inkscape:cy="1585.7432"
+     inkscape:zoom="0.7"
+     inkscape:cx="426.68624"
+     inkscape:cy="631.9458"
      inkscape:document-units="px"
-     inkscape:current-layer="layer4"
+     inkscape:current-layer="layer2"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1017"
-     inkscape:window-x="1912"
+     inkscape:window-width="2560"
+     inkscape:window-height="1377"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
@@ -212,25 +212,15 @@
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="Flag"
-     style="display:inline">
-    <rect
-       style="display:inline;fill:#000000;fill-opacity:0;stroke-width:2.49099207"
-       y="0"
-       x="0"
-       height="1024"
-       width="1024"
-       id="rect4479-9-0-5"
-       inkscape:export-xdpi="24"
-       inkscape:export-ydpi="24" />
-  </g>
+     style="display:inline" />
   <g
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="Clock"
      style="display:inline">
     <path
-       style="fill:#0066cc;fill-opacity:1;stroke:none"
-       d="m 709.28519,175.29624 -0.2505,0.33554 -49.24386,-35.39328 -409.71505,548.80782 0.071,0.25706 c -0.1491,0.0766 -0.2721,0.13605 -0.4215,0.21269 l -33.2485,194.24543 180.9801,-88.0656 c 0.025,-0.14993 0.029,-0.2752 0.055,-0.42488 l 0.2963,-0.0448 409.71504,-548.80782 -49.24388,-35.39328 0.2505,-0.33554 -49.24388,-35.39327 z"
+       style="fill:#0066cc;fill-opacity:1;stroke:none;stroke-width:1.37549806"
+       d="m 808.89341,49.506612 -0.34526,0.460615 -67.87076,-48.58587 -564.69327,753.371993 0.0979,0.35288 c -0.20549,0.10518 -0.37502,0.18676 -0.58093,0.29196 L 129.67601,1022.0472 379.11339,901.1558 c 0.0344,-0.20583 0.04,-0.37779 0.0758,-0.58326 l 0.40838,-0.0615 564.69324,-753.37199 -67.87079,-48.58587 0.34525,-0.46062 -67.8708,-48.58585 z"
        id="rect3105"
        inkscape:connector-curvature="0"
        inkscape:export-xdpi="24"
