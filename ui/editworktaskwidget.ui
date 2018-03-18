@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>553</width>
-    <height>327</height>
+    <width>871</width>
+    <height>536</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -164,13 +164,13 @@
           <bool>false</bool>
          </attribute>
          <attribute name="horizontalHeaderDefaultSectionSize">
-          <number>100</number>
+          <number>150</number>
          </attribute>
          <attribute name="horizontalHeaderHighlightSections">
           <bool>false</bool>
          </attribute>
          <attribute name="horizontalHeaderMinimumSectionSize">
-          <number>100</number>
+          <number>150</number>
          </attribute>
          <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
           <bool>false</bool>
