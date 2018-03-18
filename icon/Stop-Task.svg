@@ -28,7 +28,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.49497474"
-     inkscape:cx="285.55941"
+     inkscape:cx="-155.87726"
      inkscape:cy="446.09464"
      inkscape:document-units="px"
      inkscape:current-layer="layer4"
@@ -72,44 +72,36 @@
     <g
        id="g4102"
        transform="translate(-1.3576082,-1.9375554)" />
+    <rect
+       style="display:inline;fill:#eeeeec;fill-opacity:1;stroke:none;stroke-width:1.2809571"
+       id="rect4206-9"
+       width="821.27716"
+       height="564.00403"
+       x="93.265472"
+       y="295.18118" />
     <g
-       id="g66"
-       transform="matrix(1.0940922,0,0,1.1464399,-74.45391,-127.06392)">
+       id="g32-2-1-8"
+       style="display:inline;fill:#ff6600"
+       transform="matrix(1.0940922,0,0,1.1464399,-51.071956,-67.71976)">
+      <circle
+         r="51.143002"
+         cy="475.02554"
+         cx="270.97888"
+         id="path5460-2-2-5-3-4-1"
+         style="display:inline;fill:#ff6600;fill-opacity:1;stroke:none;stroke-width:1.61072254" />
       <rect
-         inkscape:export-ydpi="24"
-         inkscape:export-xdpi="24"
-         id="rect4479"
-         width="763.38068"
-         height="452.25366"
-         x="140.99992"
-         y="386.27942"
-         style="fill:#0066cc;fill-opacity:1;stroke-width:1.42933488" />
-      <rect
-         y="368.30984"
-         x="219.77158"
-         height="491.96127"
-         width="584.45685"
-         id="rect4206-9"
-         style="display:inline;fill:#eeeeec;fill-opacity:1;stroke:none;stroke-width:1.00923026" />
+         y="438.88254"
+         x="406.36646"
+         height="82.286003"
+         width="366.33472"
+         id="rect5462-4-3-6-4-4-5"
+         style="display:inline;fill:#ff6600;fill-opacity:1;stroke:none;stroke-width:1.34482729" />
+    </g>
+    <g
+       id="g58"
+       transform="translate(-2.4421417e-6,-5.6336092e-5)">
       <g
-         transform="translate(21.3711,51.763865)"
-         style="display:inline;fill:#ff6600"
-         id="g32-2-1-8">
-        <circle
-           style="display:inline;fill:#ff6600;fill-opacity:1;stroke:none;stroke-width:1.61072254"
-           id="path5460-2-2-5-3-4-1"
-           cx="270.97888"
-           cy="475.02554"
-           r="51.143002" />
-        <rect
-           style="display:inline;fill:#ff6600;fill-opacity:1;stroke:none;stroke-width:1.34482729"
-           id="rect5462-4-3-6-4-4-5"
-           width="366.33472"
-           height="82.286003"
-           x="406.36646"
-           y="438.88254" />
-      </g>
-      <g
+         transform="matrix(1.0940922,0,0,1.1464399,-74.45391,-127.06392)"
          style="fill:#0066cc;fill-opacity:1"
          id="g47">
         <rect
@@ -163,7 +155,7 @@
            inkscape:connector-curvature="0" />
       </g>
       <g
-         transform="matrix(1.5922454,0,0,1.5922454,-594.60651,-594.63418)"
+         transform="matrix(1.7420633,0,0,1.8254137,-725.00825,-808.77627)"
          id="g108">
         <ellipse
            cy="845.20483"
