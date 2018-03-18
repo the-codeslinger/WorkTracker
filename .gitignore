@@ -228,3 +228,4 @@ docs/html
 Makefile
 Makefile.Debug
 Makefile.Release
+.vs/

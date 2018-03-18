@@ -65,6 +65,6 @@ EditorWizard::showEvent(QShowEvent* event)
         m_resized = true;
         
         auto s = size();
-        resize(s.width() * 1.10, s.height() * 1.10);
+        resize(s.width() * 1.30, s.height() * 1.30);
     }
 }
