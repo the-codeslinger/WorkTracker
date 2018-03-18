@@ -27,9 +27,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.35"
-     inkscape:cx="251.48418"
-     inkscape:cy="612.8773"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="546.45629"
+     inkscape:cy="479.51049"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="false"
@@ -176,15 +176,15 @@
        inkscape:export-ydpi="3" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.11220074px;line-height:0%;font-family:Verdana;-inkscape-font-specification:'Verdana Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.09268332;"
-       x="304.64108"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.11220074px;line-height:0%;font-family:Cambria;-inkscape-font-specification:'Cambria Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.09268332"
+       x="331.13409"
        y="879.5235"
        id="text4326"
        transform="scale(1.0089798,0.99110012)"><tspan
          sodipodi:role="line"
          id="tspan4328"
-         x="304.64108"
+         x="331.13409"
          y="879.5235"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:764.19293213px;line-height:1.25;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93 Bold';stroke-width:1.09268332;fill:#000000;">?</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:764.19293213px;line-height:1.25;font-family:Cambria;-inkscape-font-specification:'Cambria Bold';fill:#000000;stroke-width:1.09268332">?</tspan></text>
   </g>
 </svg>
