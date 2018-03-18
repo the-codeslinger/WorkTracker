@@ -74,28 +74,29 @@ EditorController::updateActiveWorkTasks()
     // is number of work-days minus 1 (zero-based index).
     auto workDayList = WorkDayList{m_dataSource};
     auto countDays   = workDayList.size();
-    auto workDay     = workDayList.at(countDays - 1);
-    
-    if (!workDay.isNull()) {
-        auto activeWorkTask = WorkTask{};
-        
-        auto workTasks = workDay.workTasks();
-        for (const auto& workTask : workTasks) {
-            if (workTask.task().isNull()) {
-                continue;
-            }
-            
-            if (workTask.isActiveTask()) {
-                activeWorkTask = workTask;
-                break;
-            }
-        }
-        
-        if (activeWorkTask.isNull()) {
-            emit currentTaskClosed();
-        }
-        else {
-            emit activeTaskChanged(activeWorkTask);
-        }
-    }
+	if (0 < countDays) {
+		auto workDay = workDayList.at(countDays - 1);
+		if (!workDay.isNull()) {
+			auto activeWorkTask = WorkTask{};
+
+			auto workTasks = workDay.workTasks();
+			for (const auto& workTask : workTasks) {
+				if (workTask.task().isNull()) {
+					continue;
+				}
+
+				if (workTask.isActiveTask()) {
+					activeWorkTask = workTask;
+					break;
+				}
+			}
+
+			if (activeWorkTask.isNull()) {
+				emit currentTaskClosed();
+			}
+			else {
+				emit activeTaskChanged(activeWorkTask);
+			}
+		}
+	}
 }
