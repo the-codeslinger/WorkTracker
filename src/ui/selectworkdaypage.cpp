@@ -32,6 +32,7 @@ SelectWorkDayPage::SelectWorkDayPage(EditorController* p_controller, QWidget* p_
     ui->setupUi(this);
     ui->daysListView->setModel(new WorkDayModel{ui->daysListView});
     ui->daysListView->setItemDelegate(new WorkDayDelegate{ui->daysListView});
+    ui->daysListView->setMouseTracking(true);
 
     setTitle(QObject::tr("Select Workday"));
     setSubTitle(QObject::tr("Select the specific workday for which you want to edit "

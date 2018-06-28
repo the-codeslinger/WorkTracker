@@ -18,6 +18,7 @@
 #define WORKDAYDELEGATE_H
 
 #include <QStyledItemDelegate>
+#include <QMap>
 
 /*!
  * Custom renderer for a list of `WorkDay` items. Paints a three-line layout with the
@@ -26,6 +27,11 @@
 class WorkDayDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
+
+    // Use the top position of a row as identifier for clicked-states. If en extra enum were
+    // introduced one list would be enough.
+    QMap<int, bool> buttonMouseOver;
+    QMap<int, bool> buttonClicked;
 public:
     /*!
      * Create a new instance.
@@ -48,6 +54,19 @@ public:
     QSize sizeHint(const QStyleOptionViewItem& p_option,
                    const QModelIndex& p_index) const;
 
+    /*!
+     * \return
+     * `true` if the event was handled or `false` if not.
+     */
+    bool editorEvent(QEvent* event, QAbstractItemModel* model,
+                     const QStyleOptionViewItem& option,
+                     const QModelIndex& index);
+
+private:
+    // Cannot be static because access to the `tr()` function is required.
+    QRect calcButtonRect(const QStyleOptionViewItem &options) const;
+    bool isMouseOverButton(QEvent* event, const QStyleOptionViewItem& option) const;
+    bool isButtonClick(QEvent* event, const QStyleOptionViewItem& option) const;
 };
 
 #endif // WORKDAYDELEGATE_H

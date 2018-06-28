@@ -129,7 +129,18 @@ WorkTrackerController::isActiveDay() const
 QString
 WorkTrackerController::generateSummary() const
 {
-    return m_workday.generateSummary();
+    if (m_workday.isNull()) {
+        // Pick the last day from the database until the user starts a new one. This situation
+        // occurs when the application starts but finds no active workday.
+        auto last = m_workDayList.at(m_workDayList.size() - 1);
+        if (last.isNull()) {
+            return tr("No previous data available");
+        }
+        return last.generateSummary();
+    }
+    else {
+        return m_workday.generateSummary();
+    }
 }
 
 void

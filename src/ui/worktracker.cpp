@@ -158,7 +158,6 @@ WorkTracker::workDayStarted(const QDateTime& /* now */)
     ui->workdayButton->setText(tr("Stop &Workday"));
     ui->workdayButton->setIcon(QIcon{":/icon/Stop-Day.svg"});
     ui->taskButton->setEnabled(true);
-    ui->summaryButton->setEnabled(true);
 }
 
 void
@@ -167,7 +166,6 @@ WorkTracker::workDayStopped(const QDateTime& /* now */)
     ui->workdayButton->setText(tr("Start &New Workday"));
     ui->workdayButton->setIcon(QIcon{":/icon/Start-Day.svg"});
     ui->taskButton->setEnabled(false);
-    ui->summaryButton->setEnabled(!ui->textEdit->isVisible());
 }
 
 void
