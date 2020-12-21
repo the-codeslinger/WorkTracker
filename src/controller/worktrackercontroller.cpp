@@ -132,6 +132,10 @@ WorkTrackerController::generateSummary() const
     if (m_workday.isNull()) {
         // Pick the last day from the database until the user starts a new one. This situation
         // occurs when the application starts but finds no active workday.
+        if (0 == m_workDayList.size()) {
+            return tr("No previous data available");
+        }
+
         auto last = m_workDayList.at(m_workDayList.size() - 1);
         if (last.isNull()) {
             return tr("No previous data available");

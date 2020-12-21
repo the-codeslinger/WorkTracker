@@ -182,7 +182,7 @@ WorkTracker::workTaskStarted(const QDateTime& now, const QString& name)
     ui->taskButton->setText(tr("Stop &Task"));
     ui->taskButton->setIcon(QIcon{":/icon/Stop-Task.svg"});
     ui->tasksEdit->setText(name); // After restart this would be empty
-    setShortenedTaskStatusText(tr("%1 started at %2").arg(name).arg(dateString));
+    setShortenedTaskStatusText(tr("%1 started at %2").arg(name, dateString));
 }
 
 void
@@ -198,7 +198,7 @@ WorkTracker::workTaskStopped(const QDateTime& now, const QString& name)
     ui->taskButton->setText(tr("Start &Task"));
     ui->taskButton->setIcon(QIcon{":/icon/Start-Task.svg"});
 
-    setShortenedTaskStatusText(tr("%1 stopped at %2").arg(name).arg(dateString));
+    setShortenedTaskStatusText(tr("%1 stopped at %2").arg(name, dateString));
 }
 
 void
@@ -382,14 +382,14 @@ WorkTracker::translate()
         ui->taskButton->setText(tr("Stop &Task"));
         
         if (!m_name.isEmpty()) {
-            setShortenedTaskStatusText(tr("%1 started at %2").arg(m_name).arg(dateString));
+            setShortenedTaskStatusText(tr("%1 started at %2").arg(m_name, dateString));
         }
     }
     else {
         ui->taskButton->setText(tr("Start &Task"));
         
         if (!m_name.isEmpty()) {
-            setShortenedTaskStatusText(tr("%1 stopped at %2").arg(m_name).arg(dateString));
+            setShortenedTaskStatusText(tr("%1 stopped at %2").arg(m_name, dateString));
         }
     }
     
@@ -419,7 +419,7 @@ void
 WorkTracker::loadTranslations()
 {
     // These are the languages the application supports
-    auto locales = QStringList{ "en_US", "de_DE" };
+    auto locales = QVector<QString>{ "en_US", "de_DE" };
     
 #if defined(Q_OS_LINUX)
     // On Linux the translations can be found in /usr/share/worktracker/l10n.
