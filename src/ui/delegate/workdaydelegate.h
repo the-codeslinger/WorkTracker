@@ -67,6 +67,8 @@ private:
     QRect calcButtonRect(const QStyleOptionViewItem &options) const;
     bool isMouseOverButton(QEvent* event, const QStyleOptionViewItem& option) const;
     bool isButtonClick(QEvent* event, const QStyleOptionViewItem& option) const;
+    QString localDateString(const QDate& date) const;
+    QString localTimeString(const QTime& time) const;
 };
 
 #endif // WORKDAYDELEGATE_H

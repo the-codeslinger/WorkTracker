@@ -17,7 +17,7 @@
 #include "workdaydelegate.h"
 #include "../../model/workday.h"
 
-#include <QStyleOptionViewItemV4>
+#include <QStyleOptionViewItem>
 #include <QPainter>
 #include <QModelIndex>
 #include <QRect>
@@ -28,6 +28,7 @@
 #include <QMouseEvent>
 #include <QMessageBox>
 #include <QIcon>
+#include <QLocale>
 
 WorkDayDelegate::WorkDayDelegate(QObject* p_parent)
     : QStyledItemDelegate{p_parent}
@@ -41,7 +42,7 @@ WorkDayDelegate::paint(QPainter* p_painter, const QStyleOptionViewItem& p_option
     if (p_index.data().canConvert<WorkDay>()) {
         auto workday = qvariant_cast<WorkDay>(p_index.data());
 
-        auto option = QStyleOptionViewItemV4{p_option};
+        auto option = QStyleOptionViewItem{p_option};
         initStyleOption(&option, p_index);
 
         p_painter->save();
@@ -71,7 +72,7 @@ WorkDayDelegate::paint(QPainter* p_painter, const QStyleOptionViewItem& p_option
         auto localStart = workday.start().toLocalTime();
         auto localEnd   = workday.stop().toLocalTime();
 
-        auto startDay     = localStart.date().toString(Qt::DefaultLocaleLongDate);
+        auto startDay     = localDateString(localStart.date());
         auto totalMinutes = static_cast<int>(workday.totalTime() / 60);
 
         auto hours   = static_cast<int>(totalMinutes / 60);
@@ -81,9 +82,9 @@ WorkDayDelegate::paint(QPainter* p_painter, const QStyleOptionViewItem& p_option
         // to the time
         auto endDateStr = localEnd.time().toString();
         if (localStart.date() != localEnd.date()) {
-            endDateStr = QString{"%1 %2"}
-                            .arg(localEnd.date().toString(Qt::DefaultLocaleLongDate))
-                            .arg(localEnd.time().toString(Qt::DefaultLocaleShortDate));
+            endDateStr = QString{"%1 %2"}.arg(
+                        localDateString(localEnd.date()),
+                        localTimeString(localEnd.time()));
         }
 
         auto topString = tr("%1 (%2h %3m)").arg(startDay).arg(hours).arg(minutes);
@@ -152,7 +153,7 @@ WorkDayDelegate::editorEvent(QEvent* event, QAbstractItemModel* model,
 
             auto data  = qvariant_cast<WorkDay>(index.data());
             auto day   = data.start().toLocalTime().date();
-            auto title = tr("Summary for %1").arg(day.toString(Qt::DefaultLocaleLongDate));
+            auto title = tr("Summary for %1").arg(localDateString(day));
 
             QIcon i(":/icon/Summary.svg");
             QMessageBox b{ QMessageBox::NoIcon, title, data.generateSummary(), QMessageBox::Ok };
@@ -199,4 +200,16 @@ WorkDayDelegate::isButtonClick(QEvent* event, const QStyleOptionViewItem& option
     // By virtue of when this method is called this cast is safe.
     return static_cast<QMouseEvent*>(event)->button() == Qt::LeftButton 
            && isMouseOverButton(event, option);
+}
+
+QString
+WorkDayDelegate::localDateString(const QDate& date) const
+{
+    return QLocale().toString(date, QLocale::LongFormat);
+}
+
+QString
+WorkDayDelegate::localTimeString(const QTime& time) const
+{
+    return QLocale().toString(time, QLocale::LongFormat);
 }

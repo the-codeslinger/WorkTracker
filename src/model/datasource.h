@@ -20,6 +20,8 @@
 #include <QString>
 #include <QDomDocument>
 
+class QFile;
+
 /*!
  * Represents the XML database file loaded into memory. If the file doesn't exist it
  * will be created.
@@ -91,6 +93,10 @@ public:
 private:
     QDomDocument m_dom;
     QString      m_location;
+
+    void makeDatabaseFilename();
+    void createEmptyInMemoryDatabase();
+    bool readDatabase(QFile& xmlFile);
 };
 
 #endif

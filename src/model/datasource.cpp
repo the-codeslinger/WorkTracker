@@ -71,42 +71,16 @@ DataSource::document() const
 bool
 DataSource::load() 
 {
-    if (m_location.isEmpty())  {
-        // Set up the data source for our application, i.e. load an existing database or,
-        // e.g. on the first start, create a new database.
-        QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-
-        QDir dir(path);
-        if (!dir.exists()) {
-            if (dir.mkpath(path)) {
-                qDebug() << "Cannot create database dir: " << path;
-                return false;
-            }
-        }
-        m_location = path + "/Database.xml";
-    }
+    makeDatabaseFilename();
 
     QFile xmlFile(m_location);
-    if (!m_dom.setContent(&xmlFile)) {
-        qDebug() << "No database file found; Create new";
-
-        QString procInstruction = "version=\"1.0\" encoding=\"UTF-8\"";
-        QDomNode xmlNode = m_dom.createProcessingInstruction("xml", procInstruction);
-        m_dom.appendChild(xmlNode);
-
-        QDomElement root = m_dom.createElement("worktracker");
-        m_dom.appendChild(root);
-
-        QDomElement version = m_dom.createElement("version");
-        version.appendChild(m_dom.createTextNode("1.0"));
-        root.appendChild(version);
-
-        root.appendChild(m_dom.createElement("tasks"));
-        root.appendChild(m_dom.createElement("workdays"));
+    if (!xmlFile.exists()) {
+        createEmptyInMemoryDatabase();
+        return true;
     }
-    xmlFile.close();
-
-    return true;
+    else {
+        return readDatabase(xmlFile);
+    }
 }
 
 bool
@@ -120,7 +94,7 @@ DataSource::save() const
         }
         else {
             QTextStream out(&xmlFile);
-            out.setCodec("UTF-8");
+            out.setEncoding(QStringConverter::Utf8);
             m_dom.save(out, 2, QDomNode::EncodingFromTextStream);
             xmlFile.close();
             return true;
@@ -128,4 +102,64 @@ DataSource::save() const
     }
 
     return false;
+}
+
+void
+DataSource::makeDatabaseFilename()
+{
+    if (m_location.isEmpty())  {
+        // Set up the data source for our application, i.e. load an existing database or,
+        // e.g. on the first start, create a new database.
+        QString path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+
+        QDir dir(path);
+        if (!dir.exists()) {
+            if (!dir.mkpath(path)) {
+                qDebug() << "Cannot create database dir: " << path;
+            }
+        }
+        m_location = path + "/Database.xml";
+    }
+}
+
+void
+DataSource::createEmptyInMemoryDatabase()
+{
+    qDebug() << "No database file found; Create new";
+
+    QString procInstruction = "version=\"1.0\" encoding=\"UTF-8\"";
+    QDomNode xmlNode = m_dom.createProcessingInstruction("xml", procInstruction);
+    m_dom.appendChild(xmlNode);
+
+    QDomElement root = m_dom.createElement("worktracker");
+    m_dom.appendChild(root);
+
+    QDomElement version = m_dom.createElement("version");
+    version.appendChild(m_dom.createTextNode("1.0"));
+    root.appendChild(version);
+
+    root.appendChild(m_dom.createElement("tasks"));
+    root.appendChild(m_dom.createElement("workdays"));
+}
+
+bool
+DataSource::readDatabase(QFile& xmlFile)
+{
+    if (!xmlFile.open(QIODevice::ReadOnly)) {
+        qDebug() << "Unable to open database file " << m_location;
+        return false;
+    }
+
+    QByteArray xmlData = xmlFile.readAll();
+    xmlFile.close();
+
+    QString errorMsg;
+    int errorLine = 0;
+    int errorColumn = 0;
+    if (!m_dom.setContent(xmlData, false, &errorMsg, &errorLine, &errorColumn)) {
+        qDebug() << "Database read error; " << errorMsg
+                 << " Line: " << errorLine << " Col: " << errorColumn;
+        return false;
+    }
+    return true;
 }
