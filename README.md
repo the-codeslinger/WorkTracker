@@ -1,7 +1,7 @@
 WorkTracker
 ===========
 
-WorkTracker helps record the amount of time you've spent on different tasks throughout the day. Since version 1.2.3 the application is supported on Windows and Linux.
+WorkTracker helps record the amount of time you've spent on different tasks throughout the day.
 
 ![Main UI](https://raw.githubusercontent.com/drunk-on-pain/WorkTracker/master/img/Main%20UI.png)
 
@@ -53,25 +53,18 @@ The source code and binary files are distributed under the [Apache 2.0 license](
 
 ## Binaries
 
-Binaries are provided for 64-bit versions of Windows 10. With version 1.3.1.0 I stopped supplying Debian packages because I deleted the VM I did that on and didn't care enough to set up a new one; sorry folks). You can download the 7z archive on the [releases][] page.
+Binaries are provided for 64-bit versions of Windows. With version 1.3.1.0 I stopped supplying Debian packages because I deleted the VM I did that on and didn't care enough to set up a new one. Sorry everybody. You can download the Windows binaries on the [releases][] page.
 
-The application should be able to run on earlier version of Windows as well, given you are willing to compile it yourself (which, in theory, is quite easy). The mingw package contains everything you need. Other operating systems like macOS or non-Debian based Linux distributions also work (both tested, although not provides as binary). Again, you'll need to compile the application yourself.
+The application should be able to run on earlier version of Windows as well, given you are willing to compile it yourself (which, in theory, is quite easy). The mingw package contains everything you need. Other operating systems like macOS or non-Debian based Linux distributions also work (both tested, although not provided as binary). Again, you'll need to compile the application yourself.
 
-In the best case, all you need to do is the following.
-
-    qmake WorkTracker.pro
-    make 
-        or 
-    mingw32-make 
-        or 
-    nmake
-    
+Building the application requires [CMake](https://cmake.org/download/).
+Qt also bundles CMake with their online installer.
 
 ## Supported Platforms
 
-The application is able to run on all platforms that are supported by Qt 5.10. Development takes place on Windows 10.
+The application is able to run on all platforms that are supported by Qt 6.4. Development takes place on Windows 11.
 
-Your compiler of choice should support C++11. The reference compiler used is Microsofts Visual Studio 2017.
+Your compiler of choice should support C++11. The reference compiler used is MinGW 11.2.0.
 
 ## Database File
 
