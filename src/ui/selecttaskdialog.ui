@@ -14,7 +14,7 @@
    <string>Select Task</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../icons.qrc">
+   <iconset>
     <normaloff>:/icon/Icon128.png</normaloff>:/icon/Icon128.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -46,9 +46,7 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../icons.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>
