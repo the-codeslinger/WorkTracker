@@ -95,3 +95,19 @@ qt6_add_resources(WorkTracker "icons"
     FILES
         ${icons_resource_files}
 )
+
+get_target_property(_qmake_executable Qt6::qmake IMPORTED_LOCATION)
+get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
+
+# Create application bundles for release on GitHub.
+IF(WIN32)
+    find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
+
+ELSEIF(APPLE)
+    find_program(MACDEPLOYQT_EXECUTABLE macdeployqt HINTS "${_qt_bin_dir}")
+
+    add_custom_command(TARGET WorkTracker POST_BUILD
+        COMMAND "${MACDEPLOYQT_EXECUTABLE}"
+        ARGS "WorkTracker.app" "-dmg"
+        COMMENT "Execute macdeployqt to create macOS bundle")
+ENDIF()

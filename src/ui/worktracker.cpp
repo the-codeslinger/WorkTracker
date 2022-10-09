@@ -429,6 +429,7 @@ WorkTracker::loadTranslations()
     auto l10nPath = "/l10n/";
 #else
     // On OS X the data is somewhere in the bundle.
+    auto l10nPath = "";
 #endif
     
     // Load the user settings. If none is selected (probably after an update) then try
