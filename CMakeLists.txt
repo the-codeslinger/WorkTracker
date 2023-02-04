@@ -46,28 +46,6 @@ set(worktracker_src
     src/ui/worktracker.ui
 )
 
-IF (WIN32)
-    list(APPEND worktracker_src "WorkTracker.rc")
-ENDIF()
-
-add_executable(WorkTracker ${worktracker_src})
-
-target_include_directories(WorkTracker PUBLIC
-    src
-)
-
-target_link_libraries(WorkTracker PUBLIC
-    Qt::Core
-    Qt::Gui
-    Qt::Xml
-    Qt::Widgets
-)
-
-set_target_properties(WorkTracker PROPERTIES
-    WIN32_EXECUTABLE ON
-    MACOSX_BUNDLE ON
-)
-
 # Resources:
 set(icons_resource_files
     "icon/About-Qt.svg"
@@ -89,25 +67,50 @@ set(icons_resource_files
     "icon/Summary.svg"
 )
 
-qt6_add_resources(WorkTracker "icons"
+get_target_property(_qmake_executable Qt6::qmake IMPORTED_LOCATION)
+get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
+
+# Create application bundles for release on GitHub.
+IF(WIN32)
+    list(APPEND worktracker_src "WorkTracker.rc")
+    find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
+
+    add_executable(WorkTracker ${worktracker_src})
+ELSEIF(APPLE)
+    # https://doc-snapshots.qt.io/qt6-dev/appicon.html#using-cmake-on-macos
+    set(MACOSX_BUNDLE_ICON_FILE icon.icns)
+    set(app_icon_macos "${CMAKE_SOURCE_DIR}/icon/icon.icns")
+    set_source_files_properties(${app_icon_macos} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+
+    qt_add_executable(WorkTracker MACOSX_BUNDLE ${worktracker_src} ${app_icon_macos})
+
+    # https://riptutorial.com/qt/example/24133/integrating-with-cmake
+    find_program(MACDEPLOYQT_EXECUTABLE macdeployqt HINTS "${_qt_bin_dir}")
+    add_custom_command(TARGET WorkTracker POST_BUILD
+        COMMAND "${MACDEPLOYQT_EXECUTABLE}"
+        ARGS "WorkTracker.app" "-dmg"
+        COMMENT "Execute macdeployqt to create macOS bundle")
+ENDIF()
+
+qt6_add_resources(WorkTracker "icon"
     PREFIX
         "/"
     FILES
         ${icons_resource_files}
 )
 
-get_target_property(_qmake_executable Qt6::qmake IMPORTED_LOCATION)
-get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
+target_include_directories(WorkTracker PUBLIC
+    src
+)
 
-# Create application bundles for release on GitHub.
-IF(WIN32)
-    find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
+target_link_libraries(WorkTracker PUBLIC
+    Qt::Core
+    Qt::Gui
+    Qt::Xml
+    Qt::Widgets
+)
 
-ELSEIF(APPLE)
-    find_program(MACDEPLOYQT_EXECUTABLE macdeployqt HINTS "${_qt_bin_dir}")
-
-    add_custom_command(TARGET WorkTracker POST_BUILD
-        COMMAND "${MACDEPLOYQT_EXECUTABLE}"
-        ARGS "WorkTracker.app" "-dmg"
-        COMMENT "Execute macdeployqt to create macOS bundle")
-ENDIF()
+set_target_properties(WorkTracker PROPERTIES
+    WIN32_EXECUTABLE ON
+    MACOSX_BUNDLE ON
+)
