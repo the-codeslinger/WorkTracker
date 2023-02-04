@@ -76,6 +76,10 @@ IF(WIN32)
     find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
 
     add_executable(WorkTracker ${worktracker_src})
+
+    set_target_properties(WorkTracker PROPERTIES
+        WIN32_EXECUTABLE ON
+    )
 ELSEIF(APPLE)
     # https://doc-snapshots.qt.io/qt6-dev/appicon.html#using-cmake-on-macos
     set(MACOSX_BUNDLE_ICON_FILE icon.icns)
@@ -83,6 +87,10 @@ ELSEIF(APPLE)
     set_source_files_properties(${app_icon_macos} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 
     qt_add_executable(WorkTracker MACOSX_BUNDLE ${worktracker_src} ${app_icon_macos})
+
+    set_target_properties(WorkTracker PROPERTIES
+        MACOSX_BUNDLE ON
+    )
 
     # https://riptutorial.com/qt/example/24133/integrating-with-cmake
     find_program(MACDEPLOYQT_EXECUTABLE macdeployqt HINTS "${_qt_bin_dir}")
@@ -108,9 +116,4 @@ target_link_libraries(WorkTracker PUBLIC
     Qt::Gui
     Qt::Xml
     Qt::Widgets
-)
-
-set_target_properties(WorkTracker PROPERTIES
-    WIN32_EXECUTABLE ON
-    MACOSX_BUNDLE ON
 )
