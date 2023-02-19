@@ -68,9 +68,9 @@ set(icons_resource_files
 )
 
 set(l10n_files
-    "l10n/qt_de_DE.qm"
-    "l10n/de_DE.qm"
-    "l10n/en_US.qm"
+    "${CMAKE_SOURCE_DIR}/l10n/qt_de_DE.qm"
+    "${CMAKE_SOURCE_DIR}/l10n/de_DE.qm"
+    "${CMAKE_SOURCE_DIR}/l10n/en_US.qm"
 )
 
 get_target_property(_qmake_executable Qt6::qmake IMPORTED_LOCATION)
@@ -91,10 +91,7 @@ ELSEIF(APPLE)
     set(MACOSX_BUNDLE_ICON_FILE icon.icns)
     set(app_icon_macos "${CMAKE_SOURCE_DIR}/icon/icon.icns")
     set_source_files_properties(${app_icon_macos} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
-
-    foreach(l10n_file ${l10n_files})
-        set_property(SOURCE "${CMAKE_SOURCE_DIR}/${l10n_file}" PROPERTY MACOSX_PACKAGE_LOCATION "Resources/l10n")
-    endforeach()
+    set_source_files_properties(${l10n_files} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/l10n")
 
     qt_add_executable(WorkTracker MACOSX_BUNDLE ${worktracker_src} ${app_icon_macos} ${l10n_files})
 
