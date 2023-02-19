@@ -20,7 +20,6 @@
 #include "ui_worktracker.h"
 #include "model/tasklistmodel.h"
 #include "../model/worktask.h"
-#include "../model/task.h"
 #include "../controller/worktrackercontroller.h"
 #include "../controller/editorcontroller.h"
 
@@ -34,6 +33,7 @@
 #include <QDateTime>
 #include <QLabel>
 #include <QTextEdit>
+#include <QLineEdit>
 #include <QDir>
 #include <QIcon>
 #include <QFontMetrics>
@@ -131,12 +131,12 @@ WorkTracker::WorkTracker(WorkTrackerController* controller, QWidget *parent)
             this,                 SLOT(workDayStarted(QDateTime)));
     connect(m_controller,         SIGNAL(workDayStopped(QDateTime)),
             this,                 SLOT(workDayStopped(QDateTime)));
-    connect(m_controller,         SIGNAL(workTaskStarted(QDateTime, QString)),
-            this,                 SLOT(workTaskStarted(QDateTime, QString)));
-    connect(m_controller,         SIGNAL(workTaskStopped(QDateTime, QString)),
-            this,                 SLOT(workTaskStopped(QDateTime, QString)));
-    connect(m_controller,         SIGNAL(totalTimeChanged(int, int)),
-            this,                 SLOT(totalTimeChanged(int, int)));
+    connect(m_controller,         SIGNAL(workTaskStarted(QDateTime,QString)),
+            this,                 SLOT(workTaskStarted(QDateTime,QString)));
+    connect(m_controller,         SIGNAL(workTaskStopped(QDateTime,QString)),
+            this,                 SLOT(workTaskStopped(QDateTime,QString)));
+    connect(m_controller,         SIGNAL(totalTimeChanged(int,int)),
+            this,                 SLOT(totalTimeChanged(int,int)));
 
     // Menu
     connect(ui->actionQuit,     SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -427,9 +427,9 @@ WorkTracker::loadTranslations()
 #elif defined (Q_OS_WIN)
     // On Windows the translations are in the l10n folder in the exe dir.
     auto l10nPath = "/l10n/";
-#else
+#elif defined (Q_OS_MAC)
     // On OS X the data is somewhere in the bundle.
-    auto l10nPath = "";
+    auto l10nPath = "/../Resources/l10n/";
 #endif
     
     // Load the user settings. If none is selected (probably after an update) then try
@@ -446,9 +446,9 @@ WorkTracker::loadTranslations()
         settings.setValue("Language", appLocale);
     }
     
-    // Now load the translationss and install one
+    // Now load the translationss and install one.
     auto appDir = QApplication::applicationDirPath() + l10nPath;
-    
+
     for (const auto& locale : locales) {
         // Load Qt language file first
         auto* qtLang = new QTranslator{this};

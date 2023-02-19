@@ -67,6 +67,12 @@ set(icons_resource_files
     "icon/Summary.svg"
 )
 
+set(l10n_files
+    "l10n/qt_de_DE.qm"
+    "l10n/de_DE.qm"
+    "l10n/en_US.qm"
+)
+
 get_target_property(_qmake_executable Qt6::qmake IMPORTED_LOCATION)
 get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
 
@@ -86,7 +92,11 @@ ELSEIF(APPLE)
     set(app_icon_macos "${CMAKE_SOURCE_DIR}/icon/icon.icns")
     set_source_files_properties(${app_icon_macos} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 
-    qt_add_executable(WorkTracker MACOSX_BUNDLE ${worktracker_src} ${app_icon_macos})
+    foreach(l10n_file ${l10n_files})
+        set_property(SOURCE "${CMAKE_SOURCE_DIR}/${l10n_file}" PROPERTY MACOSX_PACKAGE_LOCATION "Resources/l10n")
+    endforeach()
+
+    qt_add_executable(WorkTracker MACOSX_BUNDLE ${worktracker_src} ${app_icon_macos} ${l10n_files})
 
     set_target_properties(WorkTracker PROPERTIES
         MACOSX_BUNDLE ON
