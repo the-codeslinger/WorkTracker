@@ -26,7 +26,7 @@
    <string>About WorkTracker</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../icons.qrc">
+   <iconset>
     <normaloff>:/icon/Icon16.png</normaloff>:/icon/Icon16.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -41,7 +41,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="../../icons.qrc">:/icon/Icon128.png</pixmap>
+        <pixmap>:/icon/Icon128.png</pixmap>
        </property>
        <property name="scaledContents">
         <bool>false</bool>
@@ -66,21 +66,22 @@
        <item>
         <widget class="QLabel" name="versionLabel">
          <property name="text">
-          <string>Version 1.5.1</string>
+          <string>Version 1.5.2</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QLabel" name="licenseLabel">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Published under the &lt;a href=&quot;http://www.apache.org/licenses/LICENSE-2.0&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Apache License, Version 2&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Published under the &lt;a href=&quot;https://www.gnu.org/licenses/agpl-3.0.de.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;GNU AFFERO GENERAL PUBLIC LICENSE
+, Version 3&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QLabel" name="copyrightLabel">
          <property name="text">
-          <string>Copyright 2022, Robert Lohr</string>
+          <string>Copyright 2023, Robert Lohr</string>
          </property>
         </widget>
        </item>
@@ -114,9 +115,7 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../../icons.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>
