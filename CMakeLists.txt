@@ -86,6 +86,19 @@ IF(WIN32)
     set_target_properties(WorkTracker PROPERTIES
         WIN32_EXECUTABLE ON
     )
+
+    set(l10n_out_dir "${CMAKE_CURRENT_BINARY_DIR}/l10n")
+    message("${l10n_out_dir}/")
+    file(MAKE_DIRECTORY "${l10n_out_dir}/")
+    foreach(l10n_file ${l10n_files}) 
+        file(COPY ${l10n_file} DESTINATION ${l10n_out_dir})
+    endforeach()
+
+    find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
+    add_custom_command(TARGET WorkTracker POST_BUILD
+        COMMAND "${WINDEPLOYQT_EXECUTABLE}"
+        ARGS "WorkTracker.exe"
+        COMMENT "Execute windeployqt to create Windows release")
 ELSEIF(APPLE)
     # https://doc-snapshots.qt.io/qt6-dev/appicon.html#using-cmake-on-macos
     set(MACOSX_BUNDLE_ICON_FILE icon.icns)
