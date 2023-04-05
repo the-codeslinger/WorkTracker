@@ -7,7 +7,10 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Xml Widgets)
-qt_standard_project_setup()
+#qt_standard_project_setup()
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
 
 set(worktracker_src
     src/controller/abstractcontroller.cpp src/controller/abstractcontroller.h
@@ -118,6 +121,8 @@ ELSEIF(APPLE)
         COMMAND "${MACDEPLOYQT_EXECUTABLE}"
         ARGS "WorkTracker.app" "-dmg"
         COMMENT "Execute macdeployqt to create macOS bundle")
+ELSE()
+    add_executable(WorkTracker ${worktracker_src})
 ENDIF()
 
 qt6_add_resources(WorkTracker "icon"
