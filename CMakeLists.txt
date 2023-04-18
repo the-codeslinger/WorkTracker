@@ -12,43 +12,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-set(worktracker_src
-    src/controller/abstractcontroller.cpp src/controller/abstractcontroller.h
-    src/controller/editorcontroller.cpp src/controller/editorcontroller.h
-    src/controller/preferencescontroller.cpp src/controller/preferencescontroller.h
-    src/controller/worktrackercontroller.cpp src/controller/worktrackercontroller.h
-    src/helper.cpp src/helper.h
-    src/main.cpp
-    src/model/datasource.cpp src/model/datasource.h
-    src/model/task.cpp src/model/task.h
-    src/model/tasklist.cpp src/model/tasklist.h
-    src/model/workday.cpp src/model/workday.h
-    src/model/workdaylist.cpp src/model/workdaylist.h
-    src/model/worktask.cpp src/model/worktask.h
-    src/model/worktime.cpp src/model/worktime.h
-    src/model/xmldata.cpp src/model/xmldata.h
-    src/ui/aboutdialog.cpp src/ui/aboutdialog.h
-    src/ui/completerlineedit.cpp src/ui/completerlineedit.h
-    src/ui/delegate/taskdelegate.cpp src/ui/delegate/taskdelegate.h
-    src/ui/delegate/workdaydelegate.cpp src/ui/delegate/workdaydelegate.h
-    src/ui/editorwizard.cpp src/ui/editorwizard.h
-    src/ui/editworktaskpage.cpp src/ui/editworktaskpage.h
-    src/ui/model/selectedworkdaymodel.cpp src/ui/model/selectedworkdaymodel.h
-    src/ui/model/tasklistmodel.cpp src/ui/model/tasklistmodel.h
-    src/ui/model/workdaymodel.cpp src/ui/model/workdaymodel.h
-    src/ui/model/worktaskmodel.cpp src/ui/model/worktaskmodel.h
-    src/ui/preferencesdialog.cpp src/ui/preferencesdialog.h
-    src/ui/selecttaskdialog.cpp src/ui/selecttaskdialog.h
-    src/ui/selectworkdaypage.cpp src/ui/selectworkdaypage.h
-    src/ui/worktracker.cpp src/ui/worktracker.h
-    src/ui/aboutdialog.ui
-    src/ui/editworktaskwidget.ui
-    src/ui/preferencesdialog.ui
-    src/ui/selecttaskdialog.ui
-    src/ui/selectworkdaywidget.ui
-    src/ui/worktracker.ui
-)
-
 # Resources:
 set(icons_resource_files
     "icon/About-Qt.svg"
@@ -81,15 +44,17 @@ get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
 
 # Create application bundles for release on GitHub.
 IF(WIN32)
-    list(APPEND worktracker_src "WorkTracker.rc")
-    find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
-
-    add_executable(WorkTracker ${worktracker_src})
+    add_executable(WorkTracker "")
+    target_sources(WorkTracker
+        PRIVATE
+            "${CMAKE_CURRENT_SOURCE_DIR}/WorkTracker.rc"
+    )
 
     set_target_properties(WorkTracker PROPERTIES
         WIN32_EXECUTABLE ON
     )
 
+    # Copy language files to build directory.
     set(l10n_out_dir "${CMAKE_CURRENT_BINARY_DIR}/l10n")
     message("${l10n_out_dir}/")
     file(MAKE_DIRECTORY "${l10n_out_dir}/")
@@ -97,10 +62,11 @@ IF(WIN32)
         file(COPY ${l10n_file} DESTINATION ${l10n_out_dir})
     endforeach()
 
+    # Run windeployqt to gather all Qt and runtime libraries.
     find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
     add_custom_command(TARGET WorkTracker POST_BUILD
         COMMAND "${WINDEPLOYQT_EXECUTABLE}"
-        ARGS "WorkTracker.exe"
+        ARGS "WorkTracker.exe" "--no-translations"
         COMMENT "Execute windeployqt to create Windows release")
 ELSEIF(APPLE)
     # https://doc-snapshots.qt.io/qt6-dev/appicon.html#using-cmake-on-macos
@@ -109,7 +75,7 @@ ELSEIF(APPLE)
     set_source_files_properties(${app_icon_macos} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
     set_source_files_properties(${l10n_files} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/l10n")
 
-    qt_add_executable(WorkTracker MACOSX_BUNDLE ${worktracker_src} ${app_icon_macos} ${l10n_files})
+    qt_add_executable(WorkTracker MACOSX_BUNDLE "" ${app_icon_macos} ${l10n_files})
 
     set_target_properties(WorkTracker PROPERTIES
         MACOSX_BUNDLE ON
@@ -124,6 +90,76 @@ ELSEIF(APPLE)
 ELSE()
     add_executable(WorkTracker ${worktracker_src})
 ENDIF()
+
+target_sources(WorkTracker
+    PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp"
+        
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/controller/abstractcontroller.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/controller/abstractcontroller.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/controller/editorcontroller.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/controller/editorcontroller.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/controller/preferencescontroller.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/controller/preferencescontroller.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/controller/worktrackercontroller.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/controller/worktrackercontroller.h"
+        
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/helper.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/helper.h"
+        
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/datasource.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/datasource.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/task.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/task.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/tasklist.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/tasklist.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/workday.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/workday.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/workdaylist.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/workdaylist.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/worktask.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/worktask.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/worktime.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/worktime.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/xmldata.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/xmldata.h"
+        
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/aboutdialog.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/aboutdialog.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/completerlineedit.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/completerlineedit.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/delegate/taskdelegate.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/delegate/taskdelegate.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/delegate/workdaydelegate.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/delegate/workdaydelegate.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/editorwizard.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/editorwizard.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/editworktaskpage.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/editworktaskpage.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/model/selectedworkdaymodel.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/model/selectedworkdaymodel.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/model/tasklistmodel.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/model/tasklistmodel.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/model/workdaymodel.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/model/workdaymodel.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/model/worktaskmodel.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/model/worktaskmodel.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/preferencesdialog.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/preferencesdialog.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/selecttaskdialog.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/selecttaskdialog.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/selectworkdaypage.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/selectworkdaypage.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/worktracker.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/worktracker.h"
+        
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/aboutdialog.ui"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/editworktaskwidget.ui"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/preferencesdialog.ui"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/selecttaskdialog.ui"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/selectworkdaywidget.ui"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/ui/worktracker.ui"
+)
 
 qt6_add_resources(WorkTracker "icon"
     PREFIX
