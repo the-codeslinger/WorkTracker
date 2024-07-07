@@ -1,7 +1,7 @@
 # Generated from WorkTracker.pro.
 
 cmake_minimum_required(VERSION 3.16)
-project(WorkTracker VERSION 1.5.2 LANGUAGES CXX)
+project(WorkTracker VERSION 1.5.3 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
